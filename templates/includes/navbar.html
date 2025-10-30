@@ -1,0 +1,124 @@
+<nav class="sticky top-0 z-50 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-md shadow-2xl border-b border-slate-700/50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <!-- Logo -->
+            <a href="{% url 'core:homepage' %}" class="flex items-center gap-2">
+                <span class="text-3xl">✨</span>
+                <div class="text-2xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300">
+                    MeroCoffee
+                </div>
+            </a>
+            <!-- Desktop Navigation Links -->
+            <div class="hidden lg:flex items-center gap-8">
+                <a href="{% url 'core:homepage' %}"
+                   class="text-slate-300 hover:text-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-500 hover:bg-clip-text font-medium transition-all duration-300 relative group">
+                    Home
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="{% url 'creators:creators_list' %}"
+                   class="text-slate-300 hover:text-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-500 hover:bg-clip-text font-medium transition-all duration-300 relative group">
+                    Browse Creators
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="{% url 'core:how_it_works' %}"
+                   class="text-slate-300 hover:text-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-500 hover:bg-clip-text font-medium transition-all duration-300 relative group">
+                    How It Works
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-full transition-all duration-300"></span>
+                </a>
+                <a href="{% url 'core:pricing' %}"
+                   class="text-slate-300 hover:text-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-500 hover:bg-clip-text font-medium transition-all duration-300 relative group">
+                    Pricing
+                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-full transition-all duration-300"></span>
+                </a>
+            </div>
+            <!-- Desktop Auth Buttons -->
+            <div class="hidden lg:flex items-center gap-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard:dashboard' %}"
+                       class="text-slate-300 hover:text-red-400 font-medium transition-colors duration-300">
+                        Dashboard
+                    </a>
+                    <a href="{% url 'accounts:login' %}"
+                       class="px-6 py-2 rounded-full font-semibold bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg hover:shadow-2xl hover:shadow-red-500/50 hover:-translate-y-1 transition-all duration-300">
+                        Logout
+                    </a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}"
+                       class="text-slate-300 hover:text-red-400 font-medium transition-colors duration-300">Login</a>
+                    <a href="{% url 'accounts:login' %}"
+                       class="px-6 py-2 rounded-full font-semibold bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg hover:shadow-2xl hover:shadow-red-500/50 hover:-translate-y-1 transition-all duration-300">
+                        Start My Page
+                    </a>
+                {% endif %}
+            </div>
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn"
+                    class="lg:hidden p-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-red-500 transition-colors duration-300">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <!-- Mobile Menu -->
+    <div id="mobile-menu"
+         class="hidden lg:hidden bg-gradient-to-b from-slate-800 to-slate-900 border-t border-slate-700/50 shadow-xl">
+        <div class="px-4 pt-2 pb-4 space-y-2">
+            <a href="{% url 'creators:creators_list' %}"
+               class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium">
+                Browse Creators
+            </a>
+            <a href="{% url 'core:how_it_works' %}"
+               class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium">
+                How It Works
+            </a>
+            <a href="{% url 'core:pricing' %}"
+               class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium">
+                Pricing
+            </a>
+            <div class="border-t border-slate-700 pt-4 mt-4 space-y-2">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard:dashboard' %}"
+                       class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium">
+                        Dashboard
+                    </a>
+                    <a href="{% url 'accounts:login' %}"
+                       class="block px-4 py-3 rounded-lg bg-gradient-to-r from-red-500 to-orange-600 text-white font-semibold hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 text-center">
+                        Logout
+                    </a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}"
+                       class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium">
+                        Login
+                    </a>
+                    <a href="{% url 'accounts:signup' %}"
+                       class="block px-4 py-3 rounded-lg bg-gradient-to-r from-red-500 to-orange-600 text-white font-semibold hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 text-center">
+                        Start My Page
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</nav>
+<script>
+  const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  mobileMenuBtn.addEventListener('click', function() {
+    mobileMenu.classList.toggle('hidden');
+  });
+
+  // Close menu when clicking on a link
+  document.querySelectorAll('#mobile-menu a').forEach(link => {
+    link.addEventListener('click', function() {
+      mobileMenu.classList.add('hidden');
+    });
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener('click', function(event) {
+    if (!event.target.closest('nav')) {
+      mobileMenu.classList.add('hidden');
+    }
+  });
+</script>

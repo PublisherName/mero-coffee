@@ -48,7 +48,11 @@ THIRD_PARTY_APPS = []
 
 # Project Apps
 PROJECT_APPS = [
+    "apps.core",
     "apps.accounts",
+    "apps.creators",
+    "apps.dashboard",
+    "apps.payments",
 ]
 
 # Combining all app groups
@@ -69,7 +73,7 @@ ROOT_URLCONF = "root.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": ["templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -112,6 +116,8 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+AUTH_USER_MODEL = "accounts.User"
 
 
 # Internationalization

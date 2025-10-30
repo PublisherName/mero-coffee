@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}
+    Thank You - MeroCoffee
+{% endblock title %}
+{% block content %}
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-2xl border border-slate-700/50 p-8 text-center">
+            <div class="text-7xl mb-6 animate-bounce">🎉</div>
+            <h1 class="text-4xl font-bold mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                Thank You for Your Support!
+            </h1>
+            <p class="text-xl text-slate-300 mb-8">
+                You've successfully supported Subash Ghimire with <span class="font-bold">Rs. 500</span>
+            </p>
+            <div class="bg-slate-900/50 border border-slate-700/50 p-6 rounded-lg mb-8 text-left">
+                <h2 class="font-bold text-white mb-4 text-lg">Transaction Details</h2>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between text-slate-300">
+                        <span class="text-slate-400">Transaction ID:</span>
+                        <span class="font-mono text-white">TXN123456789</span>
+                    </div>
+                    <div class="flex justify-between text-slate-300">
+                        <span class="text-slate-400">Amount:</span>
+                        <span class="font-semibold text-red-500">Rs. 500</span>
+                    </div>
+                    <div class="flex justify-between text-slate-300">
+                        <span class="text-slate-400">Date:</span>
+                        <span class="text-white">Oct 30, 2025</span>
+                    </div>
+                    <div class="flex justify-between text-slate-300">
+                        <span class="text-slate-400">Payment Method:</span>
+                        <span class="text-white">eSewa</span>
+                    </div>
+                </div>
+            </div>
+            <p class="text-slate-400 mb-8">A receipt has been sent to your email address.</p>
+            <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                <a href="{% url 'creators:creators_list' %}"
+                   class="px-8 py-3 bg-slate-700 hover:bg-slate-600 text-white rounded-lg font-semibold transition-all duration-300">
+                    Support Another Creator
+                </a>
+                <a href="{% url 'accounts:signup' %}"
+                   class="px-8 py-3 bg-gradient-to-r from-red-500 to-orange-600 text-white rounded-lg font-semibold hover:shadow-2xl hover:shadow-red-500/50 transition-all duration-300">
+                    Become a Creator
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

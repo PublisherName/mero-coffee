@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+{% block title %}
+    How It Works - MeroCoffee
+{% endblock title %}
+{% block content %}
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white py-20 overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 right-0 w-96 h-96 bg-red-500/20 rounded-full blur-3xl opacity-30"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
+                How It Works
+            </h1>
+            <p class="text-xl text-slate-300">Get started in just 3 simple steps</p>
+        </div>
+    </section>
+    <!-- Step-by-Step Section -->
+    <section class="py-20 bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="space-y-12">
+                <!-- Step 1 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="order-2 md:order-1">
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700/50">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="bg-gradient-to-r from-red-500 to-orange-600 w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg shadow-red-500/50">
+                                    1
+                                </div>
+                                <h2 class="text-3xl font-bold text-white">Create Your Page</h2>
+                            </div>
+                            <p class="text-slate-300 mb-6 text-lg leading-relaxed">
+                                Sign up with your email in just 2 minutes. Fill in your profile details, add a bio, and set your coffee price. Your page will be live instantly on merocoffee.com/yourname.
+                            </p>
+                            <ul class="space-y-3 text-slate-300">
+                                <li class="flex items-center gap-3">
+                                    <span class="text-green-500 text-xl">✓</span>
+                                    <span>Free account setup</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="text-green-500 text-xl">✓</span>
+                                    <span>Personalized profile page</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="text-green-500 text-xl">✓</span>
+                                    <span>Customizable coffee price</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2">
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700/50 h-96 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-6xl mb-4">📝</div>
+                                <p class="text-slate-400">Profile creation form</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700/50 h-96 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-6xl mb-4">📱</div>
+                                <p class="text-slate-400">Share your unique link</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700/50">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="bg-gradient-to-r from-orange-500 to-yellow-600 w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg shadow-orange-500/50">
+                                    2
+                                </div>
+                                <h2 class="text-3xl font-bold text-white">Share Your Link</h2>
+                            </div>
+                            <p class="text-slate-300 mb-6 text-lg leading-relaxed">
+                                Copy your unique MeroCoffee link and share it on your social media, blog, YouTube, or anywhere your fans are. Every click counts!
+                            </p>
+                            <ul class="space-y-3 text-slate-300">
+                                <li class="flex items-center gap-3">
+                                    <span class="text-green-500 text-xl">✓</span>
+                                    <span>Share on Instagram, TikTok, Twitter</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="text-green-500 text-xl">✓</span>
+                                    <span>Add to YouTube channel</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="text-green-500 text-xl">✓</span>
+                                    <span>Track clicks and visits</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="order-2 md:order-1">
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700/50">
+                            <div class="flex items-center gap-4 mb-6">
+                                <div class="bg-gradient-to-r from-yellow-500 to-red-600 w-16 h-16 rounded-full flex items-center justify-center text-3xl font-bold text-white shadow-lg shadow-yellow-500/50">
+                                    3
+                                </div>
+                                <h2 class="text-3xl font-bold text-white">Get Paid Instantly</h2>
+                            </div>
+                            <p class="text-slate-300 mb-6 text-lg leading-relaxed">
+                                Your fans can support you instantly using eSewa or Khalti. No payment gateway setup needed. Money goes directly to your wallet.
+                            </p>
+                            <ul class="space-y-3 text-slate-300">
+                                <li class="flex items-center gap-3">
+                                    <span class="text-green-500 text-xl">✓</span>
+                                    <span>Instant payments via eSewa & Khalti</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="text-green-500 text-xl">✓</span>
+                                    <span>First Rs. 5,000/month free</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <span class="text-green-500 text-xl">✓</span>
+                                    <span>Easy withdrawal to your bank</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="order-1 md:order-2">
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700/50 h-96 flex items-center justify-center">
+                            <div class="text-center">
+                                <div class="text-6xl mb-4">💰</div>
+                                <p class="text-slate-400">Payment received notification</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- FAQ Section -->
+    <section class="py-20 bg-gradient-to-b from-slate-800 to-slate-900">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                Frequently Asked Questions
+            </h2>
+            <p class="text-center text-slate-400 mb-12">Everything you need to know</p>
+            <div class="space-y-4">
+                <details class="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6 group cursor-pointer hover:border-red-500/50 transition-all duration-300">
+                    <summary class="flex justify-between items-center font-bold text-white text-lg">
+                        How long does it take to get paid?
+                        <span class="text-red-500 group-open:rotate-180 transition-transform duration-300">▼</span>
+                    </summary>
+                    <p class="text-slate-400 mt-4">
+                        Payments are processed instantly through eSewa and Khalti. You can withdraw to your bank account within 24 hours.
+                    </p>
+                </details>
+                <details class="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6 group cursor-pointer hover:border-red-500/50 transition-all duration-300">
+                    <summary class="flex justify-between items-center font-bold text-white text-lg">
+                        What are the fees?
+                        <span class="text-red-500 group-open:rotate-180 transition-transform duration-300">▼</span>
+                    </summary>
+                    <p class="text-slate-400 mt-4">
+                        First Rs. 5,000 earned every month is completely free. After that, we charge 3-5% transaction fee. No hidden charges!
+                    </p>
+                </details>
+                <details class="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6 group cursor-pointer hover:border-red-500/50 transition-all duration-300">
+                    <summary class="flex justify-between items-center font-bold text-white text-lg">
+                        Can I change my coffee price?
+                        <span class="text-red-500 group-open:rotate-180 transition-transform duration-300">▼</span>
+                    </summary>
+                    <p class="text-slate-400 mt-4">
+                        Yes! You can change your coffee price anytime from your dashboard. Your fans will see the updated price.
+                    </p>
+                </details>
+                <details class="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6 group cursor-pointer hover:border-red-500/50 transition-all duration-300">
+                    <summary class="flex justify-between items-center font-bold text-white text-lg">
+                        Is my data secure?
+                        <span class="text-red-500 group-open:rotate-180 transition-transform duration-300">▼</span>
+                    </summary>
+                    <p class="text-slate-400 mt-4">
+                        Absolutely! We use industry-standard encryption and partner with trusted payment gateways. Your data is always secure.
+                    </p>
+                </details>
+                <details class="bg-slate-800/50 border border-slate-700/50 rounded-lg p-6 group cursor-pointer hover:border-red-500/50 transition-all duration-300">
+                    <summary class="flex justify-between items-center font-bold text-white text-lg">
+                        Can I delete my account?
+                        <span class="text-red-500 group-open:rotate-180 transition-transform duration-300">▼</span>
+                    </summary>
+                    <p class="text-slate-400 mt-4">
+                        Yes, you can delete your account anytime. We'll process any pending payments first, then remove all your data.
+                    </p>
+                </details>
+            </div>
+        </div>
+    </section>
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-slate-900 via-red-900/20 to-slate-900 border-t border-b border-slate-700/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl font-bold mb-6 text-white">Ready to Get Started?</h2>
+            <p class="text-xl text-slate-300 mb-8">Create your page in 2 minutes and start receiving support today</p>
+            <a href="{% url 'accounts:signup' %}"
+               class="inline-block bg-gradient-to-r from-red-500 to-orange-600 text-white px-10 py-4 rounded-lg font-semibold hover:shadow-2xl hover:shadow-red-500/50 hover:-translate-y-1 transition-all duration-300">
+                Create Your Free Page
+            </a>
+        </div>
+    </section>
+{% endblock content %}

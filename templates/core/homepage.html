@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+{% block content %}
+    <!-- Hero Section -->
+    <section class="relative bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white py-20 md:py-32 overflow-hidden">
+        <div class="absolute inset-0 overflow-hidden pointer-events-none">
+            <div class="absolute top-20 right-0 w-96 h-96 bg-red-500/20 rounded-full blur-3xl opacity-30"></div>
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl opacity-30"></div>
+        </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
+                Support Nepali Creators
+            </h1>
+            <p class="text-xl md:text-2xl mb-8 text-slate-300">
+                The easiest way to receive support from your fans using eSewa & Khalti
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <a href="{% url 'accounts:signup' %}"
+                   class="bg-gradient-to-r from-red-500 to-orange-600 text-white px-8 py-4 rounded-lg font-semibold hover:shadow-2xl hover:shadow-red-500/50 hover:-translate-y-1 transition-all duration-300">
+                    Start My Page
+                </a>
+                <a href="#how-it-works"
+                   class="bg-slate-800 border-2 border-slate-700 text-white px-8 py-4 rounded-lg font-semibold hover:border-red-500 hover:bg-slate-700 transition-all duration-300">
+                    See How It Works
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- Features Section -->
+    <section class="py-20 bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                Why Choose MeroCoffee?
+            </h2>
+            <p class="text-center text-slate-400 mb-12">Everything you need to get paid for your creative work</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for feature in features %}
+                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700/50 hover:border-red-500/50 hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 group">
+                        <div class="text-6xl mb-4 group-hover:scale-110 transition-transform duration-300">{{ feature.icon }}</div>
+                        <h3 class="text-2xl font-bold mb-3 text-white">{{ feature.title }}</h3>
+                        <p class="text-slate-400 leading-relaxed">{{ feature.description }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- How It Works Section -->
+    <section id="how-it-works"
+             class="py-20 bg-gradient-to-b from-slate-800 to-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                How It Works
+            </h2>
+            <p class="text-center text-slate-400 mb-12">Get started in just 3 simple steps</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {% for step in how_it_works %}
+                    <div class="relative">
+                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700/50 hover:border-orange-500/50 transition-all duration-300">
+                            <div class="bg-gradient-to-r from-red-500 to-orange-600 w-14 h-14 rounded-full flex items-center justify-center text-2xl font-bold text-white mb-4 shadow-lg shadow-red-500/50">
+                                {{ step.step }}
+                            </div>
+                            <h3 class="text-xl font-bold mb-3 text-white">{{ step.title }}</h3>
+                            <p class="text-slate-400 leading-relaxed">{{ step.description }}</p>
+                        </div>
+                        {% if step.step < 3 %}
+                            <div class="hidden md:block absolute top-1/2 -right-4 w-8 h-0.5 bg-gradient-to-r from-red-500 to-orange-500"></div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- Featured Creators Section -->
+    <section class="py-20 bg-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                Featured Creators
+            </h2>
+            <p class="text-center text-slate-400 mb-12">Join creators already earning through MeroCoffee</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {% for creator in featured_creators %}
+                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/50 hover:border-red-500/50 hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300 text-center group">
+                        <div class="w-20 h-20 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold shadow-lg group-hover:scale-110 transition-transform duration-300"
+                             style="background: linear-gradient(135deg, {{ creator.avatar_color }} 0%, {{ creator.avatar_color }}dd 100%)">
+                            {{ creator.name|slice:":1" }}
+                        </div>
+                        <h4 class="font-bold text-lg mb-1 text-white">{{ creator.name }}</h4>
+                        <p class="text-sm text-slate-400 italic mb-3">{{ creator.category }}</p>
+                        <p class="text-sm text-slate-500 mb-1">{{ creator.supporters }} Supporters</p>
+                        <p class="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                            {{ creator.monthly }}/month
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- Pricing Comparison Section -->
+    <section class="py-20 bg-gradient-to-b from-slate-800 to-slate-900">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl md:text-5xl font-bold text-center mb-4 bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">
+                Why We're Better
+            </h2>
+            <p class="text-center text-slate-400 mb-12">Designed for Nepali creators, by Nepali creators</p>
+            <div class="overflow-x-auto">
+                <table class="w-full rounded-xl overflow-hidden border border-slate-700/50">
+                    <thead class="bg-gradient-to-r from-red-600 to-orange-600 text-white">
+                        <tr>
+                            <th class="px-6 py-4 text-left font-bold">Platform</th>
+                            <th class="px-6 py-4 text-left font-bold">Fee Structure</th>
+                            <th class="px-6 py-4 text-left font-bold">Payment Methods</th>
+                            <th class="px-6 py-4 text-left font-bold">Currency</th>
+                            <th class="px-6 py-4 text-left font-bold">Withdrawal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="bg-slate-800/50 border-b border-slate-700/50 hover:bg-slate-800 transition-colors duration-300">
+                            <td class="px-6 py-4 font-semibold text-white">{{ pricing_comparison.nepal_platform.name }}</td>
+                            <td class="px-6 py-4 text-slate-300">{{ pricing_comparison.nepal_platform.fee_structure }}</td>
+                            <td class="px-6 py-4 text-slate-300">{{ pricing_comparison.nepal_platform.payment_methods }}</td>
+                            <td class="px-6 py-4 text-slate-300">{{ pricing_comparison.nepal_platform.currency }}</td>
+                            <td class="px-6 py-4 text-slate-300">{{ pricing_comparison.nepal_platform.withdrawal }}</td>
+                        </tr>
+                        <tr class="bg-slate-900/50 hover:bg-slate-800 transition-colors duration-300">
+                            <td class="px-6 py-4 font-semibold text-white">{{ pricing_comparison.buy_me_coffee.name }}</td>
+                            <td class="px-6 py-4 text-slate-400">{{ pricing_comparison.buy_me_coffee.fee_structure }}</td>
+                            <td class="px-6 py-4 text-slate-400">{{ pricing_comparison.buy_me_coffee.payment_methods }}</td>
+                            <td class="px-6 py-4 text-slate-400">{{ pricing_comparison.buy_me_coffee.currency }}</td>
+                            <td class="px-6 py-4 text-slate-400">{{ pricing_comparison.buy_me_coffee.withdrawal }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+    <!-- CTA Section -->
+    <section class="py-20 bg-gradient-to-r from-slate-900 via-red-900/20 to-slate-900 border-t border-b border-slate-700/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 class="text-4xl md:text-5xl font-bold mb-6 text-white">Ready to Get Started?</h2>
+            <p class="text-xl text-slate-300 mb-8">Join hundreds of Nepali creators already earning through MeroCoffee</p>
+            <a href="{% url 'accounts:signup' %}"
+               class="inline-block bg-gradient-to-r from-red-500 to-orange-600 text-white px-10 py-4 rounded-lg font-semibold hover:shadow-2xl hover:shadow-red-500/50 hover:-translate-y-1 transition-all duration-300">
+                Create Your Free Page Today
+            </a>
+        </div>
+    </section>
+{% endblock content %}

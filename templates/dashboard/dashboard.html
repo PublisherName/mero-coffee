@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% block title %}
+    Dashboard - MeroCoffee
+{% endblock title %}
+{% block content %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar -->
+            <aside class="lg:w-64">
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg border border-slate-700/50 p-6 sticky top-24">
+                    <nav class="space-y-2">
+                        <a href="{% url 'dashboard:dashboard' %}"
+                           class="block px-4 py-3 bg-gradient-to-r from-red-500 to-orange-600 text-white rounded-lg font-medium hover:shadow-lg transition-all duration-300">Overview</a>
+                        <a href="#/dashboard/supporters/"
+                           class="block px-4 py-3 text-slate-300 hover:bg-slate-700/50 rounded-lg transition-all duration-300">Supporters</a>
+                        <a href="#/dashboard/earnings/"
+                           class="block px-4 py-3 text-slate-300 hover:bg-slate-700/50 rounded-lg transition-all duration-300">Earnings</a>
+                        <a href="#/dashboard/page-settings/"
+                           class="block px-4 py-3 text-slate-300 hover:bg-slate-700/50 rounded-lg transition-all duration-300">Page Settings</a>
+                        <a href="#/dashboard/withdrawal/"
+                           class="block px-4 py-3 text-slate-300 hover:bg-slate-700/50 rounded-lg transition-all duration-300">Withdrawal</a>
+                    </nav>
+                </div>
+            </aside>
+            <!-- Main Content -->
+            <main class="flex-1">
+                <div class="mb-8">
+                    <h1 class="text-4xl font-bold text-white mb-2">Dashboard Overview</h1>
+                    <p class="text-slate-400">
+                        Welcome back, <span class="font-semibold text-red-500">{{ user.username }}</span>!
+                    </p>
+                </div>
+                <!-- Stats Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/50 hover:border-red-500/50 transition-all duration-300">
+                        <p class="text-sm text-slate-400 mb-2">Total Earnings</p>
+                        <p class="text-4xl font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">Rs. 12,450</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/50 hover:border-orange-500/50 transition-all duration-300">
+                        <p class="text-sm text-slate-400 mb-2">This Month</p>
+                        <p class="text-4xl font-bold text-orange-500">Rs. 3,200</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/50 hover:border-green-500/50 transition-all duration-300">
+                        <p class="text-sm text-slate-400 mb-2">Total Supporters</p>
+                        <p class="text-4xl font-bold text-green-500">47</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300">
+                        <p class="text-sm text-slate-400 mb-2">Avg. Support</p>
+                        <p class="text-4xl font-bold text-blue-500">Rs. 265</p>
+                    </div>
+                </div>
+                <!-- Quick Actions -->
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg border border-slate-700/50 p-8 mb-8">
+                    <h2 class="text-2xl font-bold text-white mb-6">Quick Actions</h2>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#/{{ user.username }}/"
+                           class="px-6 py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-all duration-300 font-medium">View My Page</a>
+                        <button class="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg hover:shadow-lg hover:shadow-green-500/50 transition-all duration-300 font-medium">
+                            Share Page
+                        </button>
+                        <a href="#/dashboard/withdrawal/"
+                           class="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-600 text-white rounded-lg hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 font-medium">Request Withdrawal</a>
+                    </div>
+                </div>
+                <!-- Recent Supporters -->
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg border border-slate-700/50 p-8 overflow-hidden">
+                    <h2 class="text-2xl font-bold text-white mb-6">Recent Supporters</h2>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead class="bg-slate-900/50 border-b border-slate-700/50">
+                                <tr>
+                                    <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Name</th>
+                                    <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Amount</th>
+                                    <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Message</th>
+                                    <th class="px-6 py-4 text-left text-sm font-semibold text-slate-300">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-700/50">
+                                <tr class="hover:bg-slate-700/30 transition-colors duration-300">
+                                    <td class="px-6 py-4 font-semibold text-white">Bibek Ghimire</td>
+                                    <td class="px-6 py-4 font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">Rs. 500</td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">Great content! Keep it up! 🔥</td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">2 hours ago</td>
+                                </tr>
+                                <tr class="hover:bg-slate-700/30 transition-colors duration-300">
+                                    <td class="px-6 py-4 font-semibold text-white">Sneha Poudel</td>
+                                    <td class="px-6 py-4 font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">Rs. 200</td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">Love your work!</td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">5 hours ago</td>
+                                </tr>
+                                <tr class="hover:bg-slate-700/30 transition-colors duration-300">
+                                    <td class="px-6 py-4 font-semibold text-white">Rajesh Thapa</td>
+                                    <td class="px-6 py-4 font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">Rs. 100</td>
+                                    <td class="px-6 py-4 text-sm text-slate-400">-</td>
+                                    <td class="px-6 py-4 text-sm text-slate-500">1 day ago</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+{% endblock content %}

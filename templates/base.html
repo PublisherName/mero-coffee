@@ -1,0 +1,41 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description"
+              content="MeroCoffee - The easiest way for Nepali creators to receive support from their fans using eSewa and Khalti." />
+        <meta name="keywords"
+              content="Nepali creators, support, coffee, eSewa, Khalti, creator economy, Nepal" />
+        <title>
+            {% block title %}
+                MeroCoffee - Support Nepali Creators
+            {% endblock title %}
+        </title>
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                theme: {
+                    extend: {
+                        colors: {
+                            primary: '#DC143C',
+                            secondary: '#003893',
+                            accent: '#F4A460',
+                        }
+                    }
+                }
+            }
+        </script>
+        {% block extra_css %}
+        {% endblock extra_css %}
+    </head>
+    <body class="bg-slate-900 text-slate-100">
+        {% include "includes/navbar.html" %}
+        {% block content %}
+        {% endblock content %}
+        {% include "includes/footer.html" %}
+        {% block extra_js %}
+        {% endblock extra_js %}
+    </body>
+</html>
