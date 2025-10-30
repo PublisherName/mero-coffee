@@ -28,16 +28,31 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition
-
-INSTALLED_APPS = [
+# Admin Interface
+ADMIN_APPS = [
+    "jazzmin",
     "django.contrib.admin",
+]
+
+# Django Core Apps
+DJANGO_CORE_APPS = [
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
 ]
+
+# Third-Party Apps
+THIRD_PARTY_APPS = []
+
+# Project Apps
+PROJECT_APPS = [
+    "apps.accounts",
+]
+
+# Combining all app groups
+INSTALLED_APPS = ADMIN_APPS + DJANGO_CORE_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
@@ -114,7 +129,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = "static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
+
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "public"
+
+# Media files (Images)
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
