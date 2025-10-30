@@ -1,0 +1,30 @@
+[project]
+name = "coffee"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "django>=5.2.7",
+    "pre-commit>=4.3.0",
+    "ruff>=0.14.2",
+]
+
+[tool.ruff]
+line-length = 99
+force-exclude = true
+extend-exclude = ["migrations"]
+
+[tool.ruff.lint]
+preview=true
+extend-select = ["C", "E", "F", "I001", "PLR6301", "Q", "SIM", "T", "W"]
+
+[tool.ruff.format]
+indent-style = "space"
+docstring-code-format = true
+docstring-code-line-length = 20
+
+[tool.ruff.lint.flake8-quotes]
+inline-quotes = "double"
+multiline-quotes = "double"
+docstring-quotes = "double"
