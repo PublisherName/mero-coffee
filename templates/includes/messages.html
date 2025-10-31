@@ -1,0 +1,172 @@
+{% if messages %}
+    <div class="mb-6">
+        {% for message in messages %}
+            {% if "error" in message.tags %}
+                {% with bg_color="bg-red-700/90" text_color="text-red-100" icon_path="M12 8v4m0 4h.01" %}
+                    <div class="flex items-center {{ bg_color }} {{ text_color }} rounded-md p-4 mb-3 shadow-md animate-fadeIn"
+                         role="alert"
+                         aria-live="assertive"
+                         aria-atomic="true">
+                        <!-- Icon -->
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             viewBox="0 0 24 24"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            ircle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fillll="none" />
+                            <path d="{{ icon_path }}" />
+                        </svg>
+                        <!-- Message Text -->
+                        <p class="text-sm font-semibold">{{ message }}</p>
+                        <!-- Close Button -->
+                        <button type="button"
+                                aria-label="Dismiss message"
+                                class="ml-auto {{ text_color }} hover:text-white focus:outline-none"
+                                onclick="this.parentElement.style.display='none';">
+                            <svg class="w-5 h-5"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 viewBox="0 0 24 24"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
+                {% endwith %}
+            {% elif "success" in message.tags %}
+                {% with bg_color="bg-green-700/90" text_color="text-green-100" icon_path="M5 13l4 4L19 7" %}
+                    <div class="flex items-center {{ bg_color }} {{ text_color }} rounded-md p-4 mb-3 shadow-md animate-fadeIn"
+                         role="alert"
+                         aria-live="assertive"
+                         aria-atomic="true">
+                        <!-- Icon -->
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             viewBox="0 0 24 24"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            ircle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fillll="none" />
+                            <path d="{{ icon_path }}" />
+                        </svg>
+                        <!-- Message Text -->
+                        <p class="text-sm font-semibold">{{ message }}</p>
+                        <!-- Close Button -->
+                        <button type="button"
+                                aria-label="Dismiss message"
+                                class="ml-auto {{ text_color }} hover:text-white focus:outline-none"
+                                onclick="this.parentElement.style.display='none';">
+                            <svg class="w-5 h-5"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 viewBox="0 0 24 24"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
+                {% endwith %}
+            {% elif "warning" in message.tags %}
+                {% with bg_color="bg-yellow-600/90" text_color="text-yellow-100" icon_path="M12 9v2m0 4h.01" %}
+                    <div class="flex items-center {{ bg_color }} {{ text_color }} rounded-md p-4 mb-3 shadow-md animate-fadeIn"
+                         role="alert"
+                         aria-live="assertive"
+                         aria-atomic="true">
+                        <!-- Icon -->
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             viewBox="0 0 24 24"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            ircle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fillll="none" />
+                            <path d="{{ icon_path }}" />
+                        </svg>
+                        <!-- Message Text -->
+                        <p class="text-sm font-semibold">{{ message }}</p>
+                        <!-- Close Button -->
+                        <button type="button"
+                                aria-label="Dismiss message"
+                                class="ml-auto {{ text_color }} hover:text-white focus:outline-none"
+                                onclick="this.parentElement.style.display='none';">
+                            <svg class="w-5 h-5"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 viewBox="0 0 24 24"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
+                {% endwith %}
+            {% else %}
+                {% with bg_color="bg-blue-700/90" text_color="text-blue-100" icon_path="M13 16h-1v-4h-1m1-4h.01" %}
+                    <div class="flex items-center {{ bg_color }} {{ text_color }} rounded-md p-4 mb-3 shadow-md animate-fadeIn"
+                         role="alert"
+                         aria-live="assertive"
+                         aria-atomic="true">
+                        <!-- Icon -->
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             viewBox="0 0 24 24"
+                             stroke-linecap="round"
+                             stroke-linejoin="round"
+                             aria-hidden="true">
+                            ircle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fillll="none" />
+                            <path d="{{ icon_path }}" />
+                        </svg>
+                        <!-- Message Text -->
+                        <p class="text-sm font-semibold">{{ message }}</p>
+                        <!-- Close Button -->
+                        <button type="button"
+                                aria-label="Dismiss message"
+                                class="ml-auto {{ text_color }} hover:text-white focus:outline-none"
+                                onclick="this.parentElement.style.display='none';">
+                            <svg class="w-5 h-5"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 viewBox="0 0 24 24"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round"
+                                 aria-hidden="true">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
+                {% endwith %}
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endif %}
+<style>
+  @keyframes fadeIn {
+    from {opacity: 0; transform: translateY(-10%);}
+    to {opacity: 1; transform: translateY(0);}
+  }
+  .animate-fadeIn {
+    animation: fadeIn 0.35s ease forwards;
+  }
+</style>

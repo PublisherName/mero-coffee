@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}
+    Email Confirmation Sent - MeroCoffee
+{% endblock title %}
+{% block content %}
+    <div class="min-h-screen flex items-center justify-center bg-gradient-to-b from-slate-900 to-slate-800 px-4 sm:px-6 lg:px-8 py-20">
+        <div class="max-w-xl w-full bg-gradient-to-br from-slate-800 to-slate-900 p-12 rounded-xl shadow-2xl border border-slate-700/50 text-center">
+            {% include "includes/messages.html" %}
+            <h1 class="text-5xl font-extrabold text-white mb-6">📧 Check Your Email</h1>
+            <p class="text-lg text-slate-300 mb-8">
+                A confirmation email has been sent to your inbox to verify your email address.
+                Please click the link in that email to activate your account.
+            </p>
+            <p class="text-slate-400 mb-8">
+                Didn't receive the email? Check your spam folder or you can request to
+                <a href="{% url 'accounts:resend_confirmation' user.id %}"
+                   class="text-red-500 font-semibold hover:text-orange-500 transition-colors">resend the confirmation email</a>.
+            </p>
+            <a href="{% url 'accounts:login' %}"
+               class="inline-block bg-gradient-to-r from-red-500 to-orange-600 text-white px-10 py-3 rounded-lg font-semibold hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300">
+                Go to Login
+            </a>
+        </div>
+    </div>
+{% endblock content %}
