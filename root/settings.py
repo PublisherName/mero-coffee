@@ -15,7 +15,7 @@ SITE_BASE_URL = env.str("SITE_BASE_URL", default="http://127.0.0.1:8000/")
 
 SECRET_KEY = env.str("DJANGO_SECRET_KEY", default=get_random_secret_key())
 
-DEBUG = env("DEBUG", default=False)
+DEBUG = env.bool("DEBUG", default=False)
 
 # Hosts that are allowed to communicate
 DJANGO_ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[], subcast=str)
@@ -58,6 +58,7 @@ INSTALLED_APPS = ADMIN_APPS + DJANGO_CORE_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -112,6 +113,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Custom User Model
 AUTH_USER_MODEL = "accounts.User"
 
+LOGIN_URL = "/login/"
+
+
 # Internationalization
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
@@ -124,6 +128,10 @@ STATICFILES_DIRS = [
 ]
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "public"
+
+if not DEBUG:
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
 
 # Media files (Images)
 MEDIA_URL = "/media/"

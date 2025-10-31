@@ -47,7 +47,7 @@ def logout_view(request):
 
 def email_confirmation_sent_view(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    return render(request, "accounts/email_confirmation_sent.html", {"user": user})
+    return render(request, "accounts/email_confirmation_sent.html", {"user_id": user.id})
 
 
 def signup_view(request):
