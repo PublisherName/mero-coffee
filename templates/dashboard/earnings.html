@@ -1,0 +1,104 @@
+{% extends "dashboard/base.html" %}
+{% block title %}
+    Earnings - MeroCoffee
+{% endblock title %}
+{% block main_content %}
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-4xl font-bold text-white mb-6">Earnings Dashboard</h1>
+        <p class="text-slate-400 mb-12">Overview of your financial performance and detailed transactions.</p>
+        <!-- Earnings Summary -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/50 hover:border-red-500/50 transition-all duration-300">
+                <h2 class="text-xl font-semibold text-slate-300 mb-2">Total Lifetime Earnings</h2>
+                <p class="text-3xl font-extrabold text-red-500">Rs. {{ total_earnings|default:"0" }}</p>
+                <p class="mt-1 text-sm text-slate-400">All-time earnings from your supporters.</p>
+            </div>
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/50 hover:border-orange-500/50 transition-all duration-300">
+                <h2 class="text-xl font-semibold text-slate-300 mb-2">Earnings This Month</h2>
+                <p class="text-3xl font-extrabold text-orange-500">Rs. {{ monthly_earnings|default:"0" }}</p>
+                <p class="mt-1 text-sm text-slate-400">Your earnings generated in the current month.</p>
+            </div>
+            <div class="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700/50 hover:border-blue-500/50 transition-all duration-300">
+                <h2 class="text-xl font-semibold text-slate-300 mb-2">Pending Payout</h2>
+                <p class="text-3xl font-extrabold text-blue-500">Rs. {{ pending_payout|default:"0" }}</p>
+                <p class="mt-1 text-sm text-slate-400">Amount waiting for withdrawal or payout processing.</p>
+            </div>
+        </div>
+        <!-- Earnings Chart -->
+        <div class="mb-12 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg border border-slate-700/50 p-6">
+            <h2 class="text-2xl font-bold text-white mb-4">Monthly Earnings Chart</h2>
+            <canvas id="earningsChart" class="rounded-lg bg-slate-900 p-4"></canvas>
+        </div>
+        <!-- Detailed Earnings Table -->
+        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg border border-slate-700/50 p-6 overflow-x-auto">
+            <h2 class="text-2xl font-bold text-white mb-6">Earnings History</h2>
+            {% if earnings_list %}
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-slate-900/50 border-b border-slate-700/50">
+                        <tr>
+                            <th class="px-4 py-3 text-sm font-semibold text-slate-300">Date</th>
+                            <th class="px-4 py-3 text-sm font-semibold text-slate-300">Supporter</th>
+                            <th class="px-4 py-3 text-sm font-semibold text-slate-300">Amount</th>
+                            <th class="px-4 py-3 text-sm font-semibold text-slate-300">Message</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-700/50">
+                        {% for earning in earnings_list %}
+                            <tr class="hover:bg-slate-700/30 transition-colors duration-300">
+                                <td class="px-4 py-3 text-slate-400 text-sm">{{ earning.date|date:"M d, Y" }}</td>
+                                <td class="px-4 py-3 font-semibold text-white">{{ earning.supporter_name }}</td>
+                                <td class="px-4 py-3 font-bold text-green-500">Rs. {{ earning.amount }}</td>
+                                <td class="px-4 py-3 text-slate-400">{{ earning.message|default:"—" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="text-center text-slate-400 py-6">No earnings recorded yet.</p>
+            {% endif %}
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+    const ctx = document.getElementById('earningsChart').getContext('2d');
+
+    const earningsChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['July', 'August', 'September', 'October', 'November'], // Dummy months
+            datasets: [{
+                label: 'Earnings (Rs.)',
+                data: [1200, 1900, 1500, 2200, 3000], // Dummy earnings data
+                backgroundColor: 'rgba(239, 68, 68, 0.3)', // red-500 with opacity
+                borderColor: 'rgba(239, 68, 68, 1)', // red-500
+                borderWidth: 3,
+                fill: true,
+                tension: 0.3,
+                pointRadius: 5,
+                pointBackgroundColor: 'rgba(239, 68, 68, 1)',
+                pointHoverRadius: 7,
+                pointHoverBackgroundColor: 'rgba(255, 69, 58, 1)'
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#f87171' // text-red-400
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            }
+        }
+    });
+    </script>
+{% endblock main_content %}

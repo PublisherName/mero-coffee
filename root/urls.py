@@ -8,9 +8,9 @@ urlpatterns = (
         path("admin/", admin.site.urls),
         path("", include("apps.core.urls", namespace="core")),
         path("", include("apps.accounts.urls", namespace="accounts")),
-        path("", include("apps.dashboard.urls", namespace="dashboard")),
         path("", include("apps.creators.urls", namespace="creators")),
         path("", include("apps.payments.urls", namespace="payments")),
+        path("dashboard/", include("apps.dashboard.urls", namespace="dashboard")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

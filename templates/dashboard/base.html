@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}
+    Dashboard - MeroCoffee
+{% endblock title %}
+{% block content %}
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="flex flex-col lg:flex-row gap-8">
+            <!-- Sidebar -->
+            <aside class="lg:w-64">
+                <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg border border-slate-700/50 p-6 sticky top-24">
+                    <nav class="space-y-2">
+                        <a href="{% url 'dashboard:dashboard' %}"
+                           class="block px-4 py-3 rounded-lg font-medium transition-all duration-300 {% if request.resolver_match.url_name == 'dashboard' %}bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg{% else %}text-slate-300 hover:bg-slate-700/50{% endif %}">
+                            Overview
+                        </a>
+                        <a href="{% url 'dashboard:supporters' %}"
+                           class="block px-4 py-3 rounded-lg font-medium transition-all duration-300 {% if request.resolver_match.url_name == 'supporters' %}bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg{% else %}text-slate-300 hover:bg-slate-700/50{% endif %}">
+                            Supporters
+                        </a>
+                        <a href="{% url 'dashboard:earnings' %}"
+                           class="block px-4 py-3 rounded-lg font-medium transition-all duration-300 {% if request.resolver_match.url_name == 'earnings' %}bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg{% else %}text-slate-300 hover:bg-slate-700/50{% endif %}">
+                            Earnings
+                        </a>
+                        <a href="{% url 'dashboard:page_settings' %}"
+                           class="block px-4 py-3 rounded-lg font-medium transition-all duration-300 {% if request.resolver_match.url_name == 'page_settings' %}bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg{% else %}text-slate-300 hover:bg-slate-700/50{% endif %}">
+                            Page Settings
+                        </a>
+                        <a href="{% url 'dashboard:withdrawal' %}"
+                           class="block px-4 py-3 rounded-lg font-medium transition-all duration-300 {% if request.resolver_match.url_name == 'withdrawal' %}bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg{% else %}text-slate-300 hover:bg-slate-700/50{% endif %}">
+                            Withdrawal
+                        </a>
+                    </nav>
+                </div>
+            </aside>
+            <!-- Main Content -->
+            <main class="flex-1">
+                {% block main_content %}
+                    <!-- Page-specific content will go here -->
+                {% endblock main_content %}
+            </main>
+        </div>
+    </div>
+{% endblock content %}
