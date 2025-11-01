@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import LoginForm, SignUpForm
@@ -40,6 +41,7 @@ def login_view(request):
     return render(request, "accounts/login.html", {"form": form})
 
 
+@login_required
 def logout_view(request):
     logout(request)
     return redirect("core:homepage")
@@ -67,11 +69,6 @@ def signup_view(request):
         form = SignUpForm()
 
     return render(request, "accounts/signup.html", {"form": form})
-
-
-def password_reset(request):
-    # TODO: Add password reset template
-    return render(request, "accounts/singup.html")
 
 
 def resend_confirmation_view(request, user_id):
