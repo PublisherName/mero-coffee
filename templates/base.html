@@ -8,6 +8,9 @@
               content="MeroCoffee - The easiest way for Nepali creators to receive support from their fans using eSewa and Khalti." />
         <meta name="keywords"
               content="Nepali creators, support, coffee, eSewa, Khalti, creator economy, Nepal" />
+        <link rel="shortcut icon"
+              href="{% static 'media/favicon.ico' %}"
+              type="image/x-icon">
         <title>
             {% block title %}
                 MeroCoffee - Support Nepali Creators
@@ -15,17 +18,17 @@
         </title>
         <script src="https://cdn.tailwindcss.com"></script>
         <script>
-            tailwind.config = {
-                theme: {
-                    extend: {
-                        colors: {
-                            primary: '#DC143C',
-                            secondary: '#003893',
-                            accent: '#F4A460',
-                        }
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#DC143C',
+                        secondary: '#003893',
+                        accent: '#F4A460',
                     }
                 }
             }
+        }
         </script>
         {% block extra_css %}
         {% endblock extra_css %}
