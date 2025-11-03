@@ -90,8 +90,3 @@ def supporters(request):
         "supporters": recent_supporters,
     }
     return render(request, "dashboard/supporters.html", context)
-
-
-@login_required
-def page_settings(request):
-    return render(request, "dashboard/page_settings.html", {})

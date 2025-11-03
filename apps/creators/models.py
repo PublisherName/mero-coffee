@@ -9,7 +9,6 @@ class CreatorProfile(models.Model):
     display_name = models.CharField(max_length=150, blank=True)
     bio = models.TextField(blank=True)
     avatar_url = models.URLField(blank=True)
-    page_url = models.SlugField(unique=True)
     coffee_price = models.PositiveIntegerField(default=100)
     is_active = models.BooleanField(default=True)
 

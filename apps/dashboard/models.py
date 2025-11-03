@@ -1,6 +1,7 @@
 from django.db import models
 
 
+# TODO: Move this to apps.creators.models when needed
 class CreatorPost(models.Model):
     VISIBILITY_CHOICES = [
         ("public", "Public"),

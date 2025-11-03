@@ -1,5 +1,8 @@
-from django.shortcuts import get_object_or_404, render
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect, render
 
+from .forms import CreatorProfileForm
 from .models import CreatorProfile
 
 
@@ -24,3 +27,20 @@ def profile(request, username):
 
 def creators_list(request):
     return render(request, "creators/creators_list.html")
+
+
+@login_required
+def profile_settings(request):
+    profile, _created = CreatorProfile.objects.get_or_create(user=request.user)
+    if request.method == "POST":
+        form = CreatorProfileForm(request.POST, instance=profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile have been saved.")
+            return redirect("dashboard:profile_settings")
+        else:
+            messages.error(request, "Please correct the errors below.")
+    else:
+        form = CreatorProfileForm(instance=profile)
+
+    return render(request, "dashboard/profile_settings.html", {"form": form, "settings": profile})
