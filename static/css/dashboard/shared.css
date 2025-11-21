@@ -1,0 +1,322 @@
+/* Shared Dashboard Styles for Profile Settings, Supporters, and Withdrawal */
+
+/* Profile Settings Styles */
+.profile-settings-container {
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    border: 1px solid rgb(51 65 85 / 0.5);
+    padding: 2rem;
+}
+
+.profile-settings-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.profile-settings-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-field-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(203 213 225);
+    margin-bottom: 0.25rem;
+}
+
+.form-error-text {
+    color: rgb(239 68 68);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.form-submit-btn {
+    padding: 0.75rem 1.5rem;
+    background: linear-gradient(to right, rgb(239 68 68), rgb(234 88 12));
+    color: white;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.form-submit-btn:hover {
+    box-shadow: 0 10px 15px -3px rgb(239 68 68 / 0.5);
+}
+
+/* Supporters Page Styles */
+.supporters-header {
+    margin-bottom: 2rem;
+}
+
+.supporters-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.supporters-subtitle {
+    color: rgb(148 163 184);
+    margin-bottom: 1.5rem;
+}
+
+.supporters-table-card {
+    overflow-x: auto;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    border: 1px solid rgb(51 65 85 / 0.5);
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    padding: 1.5rem;
+}
+
+.supporters-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.supporters-table-head {
+    background-color: rgb(15 23 42 / 0.5);
+    border-bottom: 1px solid rgb(51 65 85 / 0.5);
+}
+
+.supporters-table-header-cell {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(203 213 225);
+}
+
+.supporters-table-body {
+    border-top: 1px solid rgb(51 65 85 / 0.5);
+}
+
+.supporters-table-row {
+    transition: colors 0.3s;
+}
+
+.supporters-table-row:hover {
+    background-color: rgb(51 65 85 / 0.3);
+}
+
+.supporters-table-row:not(:last-child) {
+    border-bottom: 1px solid rgb(51 65 85 / 0.5);
+}
+
+.supporters-table-cell {
+    padding: 0.75rem 1rem;
+}
+
+.supporter-name-cell {
+    font-weight: 600;
+    color: white;
+}
+
+.supporter-amount-cell {
+    font-weight: 700;
+    color: rgb(34 197 94);
+}
+
+.supporter-message-cell {
+    color: rgb(148 163 184);
+}
+
+.supporter-date-cell {
+    color: rgb(148 163 184);
+    font-size: 0.875rem;
+}
+
+.supporters-empty-state {
+    text-align: center;
+    color: rgb(148 163 184);
+}
+
+/* Withdrawal Page Styles */
+.withdrawal-form-card {
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    border: 1px solid rgb(51 65 85 / 0.5);
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.withdrawal-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.withdrawal-subtitle {
+    color: rgb(148 163 184);
+    margin-bottom: 2rem;
+}
+
+.withdrawal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.withdrawal-input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: rgb(15 23 42 / 0.5);
+    border: 1px solid rgb(51 65 85);
+    border-radius: 0.5rem;
+    color: white;
+    transition: all 0.3s;
+}
+
+.withdrawal-input::placeholder {
+    color: rgb(100 116 139);
+}
+
+.withdrawal-input:focus {
+    outline: none;
+    border-color: rgb(239 68 68);
+    box-shadow: 0 0 0 2px rgb(239 68 68 / 0.5);
+}
+
+.withdrawal-balance-hint {
+    color: rgb(148 163 184);
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+}
+
+.withdrawal-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background-color: rgb(15 23 42 / 0.5);
+    border: 1px solid rgb(51 65 85);
+    border-radius: 0.5rem;
+    color: white;
+    transition: all 0.3s;
+}
+
+.withdrawal-select:focus {
+    outline: none;
+    border-color: rgb(239 68 68);
+    box-shadow: 0 0 0 2px rgb(239 68 68 / 0.5);
+}
+
+.withdrawal-history-card {
+    max-width: 48rem;
+    margin-left: auto;
+    margin-right: auto;
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    border: 1px solid rgb(51 65 85 / 0.5);
+    padding: 2rem;
+    overflow-x: auto;
+}
+
+.withdrawal-history-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.withdrawal-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.withdrawal-table-head {
+    background-color: rgb(15 23 42 / 0.5);
+    border-bottom: 1px solid rgb(51 65 85 / 0.5);
+}
+
+.withdrawal-table-header-cell {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(203 213 225);
+}
+
+.withdrawal-table-body {
+    border-top: 1px solid rgb(51 65 85 / 0.5);
+}
+
+.withdrawal-table-row {
+    transition: colors 0.3s;
+}
+
+.withdrawal-table-row:hover {
+    background-color: rgb(51 65 85 / 0.3);
+}
+
+.withdrawal-table-row:not(:last-child) {
+    border-bottom: 1px solid rgb(51 65 85 / 0.5);
+}
+
+.withdrawal-table-cell {
+    padding: 0.75rem 1rem;
+}
+
+.withdrawal-date-cell {
+    color: rgb(148 163 184);
+    font-size: 0.875rem;
+}
+
+.withdrawal-amount-cell {
+    font-weight: 700;
+    color: rgb(34 197 94);
+}
+
+.withdrawal-method-cell {
+    color: rgb(148 163 184);
+    text-transform: capitalize;
+}
+
+.withdrawal-status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+
+.withdrawal-status-pending {
+    background-color: rgb(234 179 8);
+    color: white;
+}
+
+.withdrawal-status-completed {
+    background-color: rgb(22 163 74);
+    color: white;
+}
+
+.withdrawal-status-rejected {
+    background-color: rgb(220 38 38);
+    color: white;
+}
+
+.withdrawal-status-default {
+    background-color: rgb(71 85 105);
+    color: white;
+    text-transform: capitalize;
+}
+
+.withdrawal-empty-state {
+    text-align: center;
+    color: rgb(148 163 184);
+}

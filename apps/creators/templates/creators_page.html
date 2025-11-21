@@ -1,33 +1,31 @@
 {% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/creators/creators_page.css' %}">
+{% endblock extra_css %}
 {% block title %}
     {{ creator.display_name }} - MeroCoffee
 {% endblock title %}
-{% load static %}
 {% block content %}
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="creator-page-container">
         <!-- Creator Header -->
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-2xl border border-slate-700/50 p-8 mb-8 text-center">
-            <div class="w-32 h-32 bg-gradient-to-r from-red-500 to-orange-600 rounded-full mx-auto mb-6 flex items-center justify-center text-white text-5xl font-bold shadow-lg shadow-red-500/50">
-                {{ creator.display_name|slice:":1" }}
-            </div>
-            <h1 class="text-4xl font-bold text-white mb-3">{{ creator.display_name }}</h1>
-            <p class="text-slate-400 mb-6 text-lg max-w-2xl mx-auto">{{ creator.bio }}</p>
-            <div class="flex justify-center gap-6 text-sm text-slate-300">
-                <span class="px-4 py-2 bg-slate-900/50 rounded-lg border border-slate-700/50">🎉 {{ supporter_count }}
-                supporters</span>
-                <span class="px-4 py-2 bg-slate-900/50 rounded-lg border border-slate-700/50">
-                    💰 Rs. {{ monthly_income|default:"0" }} / month
-                </span>
+        <div class="creator-header">
+            <div class="creator-avatar-large">{{ creator.display_name|slice:":1" }}</div>
+            <h1 class="creator-name">{{ creator.display_name }}</h1>
+            <p class="creator-bio">{{ creator.bio }}</p>
+            <div class="creator-stats">
+                <span class="creator-stat-badge">🎉 {{ supporter_count }} supporters</span>
+                <span class="creator-stat-badge">💰 Rs. {{ monthly_income|default:"0" }} / month</span>
             </div>
         </div>
         <!-- Support Section -->
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-2xl border border-slate-700/50 p-8 mb-8">
-            <h2 class="text-3xl font-bold text-center mb-8 text-white">Buy {{ creator.display_name }} a Coffee ☕</h2>
+        <div class="support-section">
+            <h2 class="support-title">Buy {{ creator.display_name }} a Coffee ☕</h2>
             <!-- Form Errors -->
             {% if form.errors %}
-                <div class="mb-6 p-4 bg-red-500/10 border border-red-500/50 rounded-lg">
-                    <p class="text-red-400 font-semibold mb-2">Please correct the following errors:</p>
-                    <ul class="list-disc list-inside text-red-300 text-sm">
+                <div class="form-errors">
+                    <p class="form-errors-title">Please correct the following errors:</p>
+                    <ul class="form-errors-list">
                         {% for field in form %}
                             {% for error in field.errors %}<li>{{ field.label }}: {{ error }}</li>{% endfor %}
                         {% endfor %}
@@ -41,72 +39,77 @@
                   novalidate>
                 {% csrf_token %}
                 <!-- Amount Selection -->
-                <div class="mb-8">
-                    <label class="block text-sm font-semibold text-slate-300 mb-4">Select Amount</label>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                <div class="amount-section">
+                    <label class="label-base">Select Amount</label>
+                    <div class="amount-grid">
                         <button type="button"
-                                class="amount-btn border-2 border-slate-700 hover:border-red-500 py-4 rounded-lg font-bold text-white hover:bg-slate-700/50 transition-all duration-300"
-                                data-amount="{{ amount_multiples.1x }}">1x (Rs. {{ amount_multiples.1x }})</button>
+                                class="amount-btn"
+                                data-amount="{{ amount_multiples.1x }}">
+                            1x (Rs. {{
+                            amount_multiples.1x }})
+                        </button>
                         <button type="button"
-                                class="amount-btn border-2 border-slate-700 hover:border-orange-500 py-4 rounded-lg font-bold text-white hover:bg-slate-700/50 transition-all duration-300"
-                                data-amount="{{ amount_multiples.2x }}">2x (Rs. {{ amount_multiples.2x }})</button>
+                                class="amount-btn"
+                                data-amount="{{ amount_multiples.2x }}">
+                            2x (Rs. {{
+                            amount_multiples.2x }})
+                        </button>
                         <button type="button"
-                                class="amount-btn border-2 border-slate-700 hover:border-red-500 py-4 rounded-lg font-bold text-white hover:bg-slate-700/50 transition-all duration-300"
-                                data-amount="{{ amount_multiples.3x }}">3x (Rs. {{ amount_multiples.3x }})</button>
+                                class="amount-btn"
+                                data-amount="{{ amount_multiples.3x }}">
+                            3x (Rs. {{
+                            amount_multiples.3x }})
+                        </button>
                         <button type="button"
-                                class="amount-btn border-2 border-slate-700 hover:border-red-500 py-4 rounded-lg font-bold text-white hover:bg-slate-700/50 transition-all duration-300"
-                                data-amount="{{ amount_multiples.5x }}">5x (Rs. {{ amount_multiples.5x }})</button>
+                                class="amount-btn"
+                                data-amount="{{ amount_multiples.5x }}">
+                            5x (Rs. {{
+                            amount_multiples.5x }})
+                        </button>
                     </div>
                     {{ form.amount }}
-                    <p class="text-xs text-slate-500 mt-2">Minimum amount: Rs. {{ creator.coffee_price }}</p>
-                    <p id="amount-error" class="text-red-400 text-sm mt-1 hidden"></p>
+                    <p class="amount-hint">Minimum amount: Rs. {{ creator.coffee_price }}</p>
+                    <p id="amount-error" class="error-message hidden"></p>
                 </div>
                 <!-- Supporter Name -->
-                <div class="mb-6">
-                    <label for="{{ form.supporter_name.id_for_label }}"
-                           class="block text-sm font-semibold text-slate-300 mb-2">Your Name</label>
+                <div class="form-field">
+                    <label for="{{ form.supporter_name.id_for_label }}" class="label-base">Your Name</label>
                     {{ form.supporter_name }}
-                    <p id="name-error" class="text-red-400 text-sm mt-1 hidden"></p>
+                    <p id="name-error" class="error-message hidden"></p>
                 </div>
                 <!-- Anonymous Checkbox -->
-                <div class="mb-8 flex items-center gap-2">
+                <div class="anonymous-checkbox">
                     {{ form.is_anonymous }}
-                    <label for="{{ form.is_anonymous.id_for_label }}"
-                           class="text-sm text-slate-300 cursor-pointer">
-                        Remain
-                        anonymous
-                    </label>
+                    <label for="{{ form.is_anonymous.id_for_label }}" class="anonymous-label">Remain anonymous</label>
                 </div>
                 <!-- Message -->
-                <div class="mb-8">
-                    <label for="{{ form.message.id_for_label }}"
-                           class="block text-sm font-semibold text-slate-300 mb-2">Message (Optional)</label>
+                <div class="form-field-large">
+                    <label for="{{ form.message.id_for_label }}" class="label-base">Message (Optional)</label>
                     {{ form.message }}
-                    <p class="text-xs text-slate-500 mt-1">
+                    <p class="char-counter">
                         <span id="char-count">0</span>/500 characters
                     </p>
                 </div>
                 <!-- Payment Methods -->
-                <div class="mb-8">
-                    <label class="block text-sm font-semibold text-slate-300 mb-4">Choose Payment Method *</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="payment-methods-section">
+                    <label class="label-base">Choose Payment Method *</label>
+                    <div class="payment-methods-grid">
                         {% for gateway in payment_gateways %}
-                            <label class="payment-provider-label group relative cursor-pointer">
+                            <label class="payment-provider-label">
                                 <input type="radio"
                                        name="{{ form.payment_provider.name }}"
                                        value="{{ gateway.slug }}"
-                                       class="hidden payment-provider-input">
-                                <div class="border-2 border-slate-700 rounded-xl p-5 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
+                                       class="payment-provider-input">
+                                <div class="payment-provider-card"
                                      style="--brand-color: {{ gateway.brand_color }}"
                                      onmouseover="this.style.borderColor='{{ gateway.brand_color }}'; this.style.boxShadow='0 10px 15px -3px {{ gateway.brand_color }}33';"
                                      onmouseout="this.style.borderColor=''; this.style.boxShadow='';">
-                                    <div class="flex items-center gap-4">
+                                    <div class="payment-provider-content">
                                         <!-- Icon -->
-                                        <div class="w-14 h-14 rounded-lg flex items-center justify-center border"
+                                        <div class="payment-provider-icon"
                                              style="background: linear-gradient(135deg, var(--brand-color)33, var(--brand-color)1a);
                                                     border-color: var(--brand-color)4d">
-                                            <svg class="w-7 h-7"
-                                                 style="color: var(--brand-color)"
+                                            <svg style="color: var(--brand-color)"
                                                  fill="none"
                                                  stroke="currentColor"
                                                  viewBox="0 0 24 24">
@@ -115,16 +118,13 @@
                                             </svg>
                                         </div>
                                         <!-- Text -->
-                                        <div class="flex-1">
-                                            <div class="font-bold text-white text-lg mb-0.5">{{ gateway.name }}</div>
-                                            <div class="text-xs text-slate-400">Digital Payment</div>
+                                        <div class="payment-provider-text">
+                                            <div class="payment-provider-name">{{ gateway.name }}</div>
+                                            <div class="payment-provider-type">Digital Payment</div>
                                         </div>
                                         <!-- Check Circle -->
-                                        <div class="payment-check-icon hidden w-6 h-6 rounded-full bg-green-500 flex items-center justify-center">
-                                            <svg class="w-4 h-4 text-white"
-                                                 fill="none"
-                                                 stroke="currentColor"
-                                                 viewBox="0 0 24 24">
+                                        <div class="payment-check-icon">
+                                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
                                             </svg>
                                         </div>
@@ -133,35 +133,33 @@
                             </label>
                         {% endfor %}
                     </div>
-                    <p id="payment-error" class="text-red-400 text-sm mt-1 hidden"></p>
+                    <p id="payment-error" class="error-message hidden"></p>
                 </div>
                 <!-- Submit Button -->
-                <button type="submit"
-                        id="submitBtn"
-                        class="w-full block text-center bg-gradient-to-r from-red-500 to-orange-600 text-white py-4 rounded-lg font-bold text-lg hover:shadow-2xl hover:shadow-red-500/50 hover:-translate-y-1 transition-all duration-300">
+                <button type="submit" id="submitBtn" class="support-submit-btn">
                     Support Rs. <span id="submit-amount">{{ creator.coffee_price }}</span>
                 </button>
             </form>
         </div>
         <!-- Recent Supporters -->
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-2xl border border-slate-700/50 p-8">
-            <h3 class="text-2xl font-bold text-white mb-6">Recent Supporters 💝</h3>
-            <div class="space-y-4">
-                <div class="border-b border-slate-700/50 pb-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <p class="font-bold text-white">Bibek Ghimire</p>
-                        <span class="text-red-500 font-bold">Rs. 500</span>
+        <div class="recent-supporters">
+            <h3 class="recent-supporters-title">Recent Supporters 💝</h3>
+            <div class="supporters-list">
+                <div class="supporter-item">
+                    <div class="supporter-header">
+                        <p class="supporter-name">Bibek Ghimire</p>
+                        <span class="supporter-amount">Rs. 500</span>
                     </div>
-                    <p class="text-slate-400 text-sm mb-1">Great content! Keep it up! 🔥</p>
-                    <p class="text-xs text-slate-500">2 hours ago</p>
+                    <p class="supporter-message">Great content! Keep it up! 🔥</p>
+                    <p class="supporter-time">2 hours ago</p>
                 </div>
-                <div class="border-b border-slate-700/50 pb-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <p class="font-bold text-white">Sneha Poudel</p>
-                        <span class="text-red-500 font-bold">Rs. 200</span>
+                <div class="supporter-item">
+                    <div class="supporter-header">
+                        <p class="supporter-name">Sneha Poudel</p>
+                        <span class="supporter-amount">Rs. 200</span>
                     </div>
-                    <p class="text-slate-400 text-sm mb-1">Love your work!</p>
-                    <p class="text-xs text-slate-500">5 hours ago</p>
+                    <p class="supporter-message">Love your work!</p>
+                    <p class="supporter-time">5 hours ago</p>
                 </div>
             </div>
         </div>

@@ -1,0 +1,186 @@
+/* Earnings Dashboard Page Styles */
+
+.earnings-container {
+    max-width: 64rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.earnings-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.earnings-subtitle {
+    color: rgb(148 163 184);
+    margin-bottom: 3rem;
+}
+
+/* Earnings Summary Cards */
+.earnings-summary-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+    .earnings-summary-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.earnings-summary-card {
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    border: 1px solid rgb(51 65 85 / 0.5);
+    transition: all 0.3s;
+}
+
+.earnings-summary-card-red:hover {
+    border-color: rgb(239 68 68 / 0.5);
+}
+
+.earnings-summary-card-orange:hover {
+    border-color: rgb(249 115 22 / 0.5);
+}
+
+.earnings-summary-card-blue:hover {
+    border-color: rgb(59 130 246 / 0.5);
+}
+
+.earnings-summary-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: rgb(203 213 225);
+    margin-bottom: 0.5rem;
+}
+
+.earnings-summary-value {
+    font-size: 1.875rem;
+    font-weight: 800;
+}
+
+.earnings-summary-value-red {
+    color: rgb(239 68 68);
+}
+
+.earnings-summary-value-orange {
+    color: rgb(249 115 22);
+}
+
+.earnings-summary-value-blue {
+    color: rgb(59 130 246);
+}
+
+.earnings-summary-description {
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: rgb(148 163 184);
+}
+
+/* Earnings Chart */
+.earnings-chart-card {
+    margin-bottom: 3rem;
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    border: 1px solid rgb(51 65 85 / 0.5);
+    padding: 1.5rem;
+}
+
+.earnings-chart-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.earnings-chart-canvas {
+    border-radius: 0.5rem;
+    background-color: rgb(15 23 42);
+    padding: 1rem;
+}
+
+/* Earnings History Table */
+.earnings-history-card {
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    border: 1px solid rgb(51 65 85 / 0.5);
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+
+.earnings-history-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.earnings-table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+}
+
+.earnings-table-head {
+    background-color: rgb(15 23 42 / 0.5);
+    border-bottom: 1px solid rgb(51 65 85 / 0.5);
+}
+
+.earnings-table-header-cell {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgb(203 213 225);
+}
+
+.earnings-table-body {
+    border-top: 1px solid rgb(51 65 85 / 0.5);
+}
+
+.earnings-table-row {
+    transition: colors 0.3s;
+}
+
+.earnings-table-row:hover {
+    background-color: rgb(51 65 85 / 0.3);
+}
+
+.earnings-table-row:not(:last-child) {
+    border-bottom: 1px solid rgb(51 65 85 / 0.5);
+}
+
+.earnings-table-cell {
+    padding: 0.75rem 1rem;
+}
+
+.earnings-date {
+    color: rgb(148 163 184);
+    font-size: 0.875rem;
+}
+
+.earnings-supporter-name {
+    font-weight: 600;
+    color: white;
+}
+
+.earnings-amount {
+    font-weight: 700;
+    color: rgb(34 197 94);
+}
+
+.earnings-message {
+    color: rgb(148 163 184);
+}
+
+.earnings-empty {
+    text-align: center;
+    color: rgb(148 163 184);
+    padding: 1.5rem 0;
+}

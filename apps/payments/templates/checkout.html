@@ -1,107 +1,106 @@
 {% extends "base.html" %}
 {% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/payments/checkout.css' %}">
+{% endblock extra_css %}
 {% block title %}
     Checkout - {{ transaction.creator.display_name }}
 {% endblock title %}
 {% block content %}
-    <div class="max-w-2xl mx-auto px-4 py-12">
+    <div class="checkout-container">
         <!-- Progress Steps -->
-        <div class="flex justify-center mb-12">
-            <div class="flex items-center gap-4">
-                <div class="flex items-center gap-2 text-slate-400">
-                    <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-sm font-bold">
-                        1
-                    </div>
+        <div class="checkout-progress">
+            <div class="checkout-progress-wrapper">
+                <div class="checkout-progress-step">
+                    <div class="progress-step-inactive">1</div>
                     <span>Details</span>
                 </div>
-                <div class="w-12 h-0.5 bg-slate-700"></div>
-                <div class="flex items-center gap-2 text-white">
-                    <div class="w-8 h-8 rounded-full bg-gradient-to-r from-red-500 to-orange-600 flex items-center justify-center text-sm font-bold shadow-lg shadow-red-500/20">
-                        2
-                    </div>
+                <div class="progress-divider"></div>
+                <div class="checkout-progress-step-active">
+                    <div class="progress-step-active">2</div>
                     <span class="font-bold">Checkout</span>
                 </div>
-                <div class="w-12 h-0.5 bg-slate-700"></div>
-                <div class="flex items-center gap-2 text-slate-400">
-                    <div class="w-8 h-8 rounded-full bg-slate-800 border border-slate-600 flex items-center justify-center text-sm font-bold">
-                        3
-                    </div>
+                <div class="progress-divider"></div>
+                <div class="checkout-progress-step">
+                    <div class="progress-step-inactive">3</div>
                     <span>Done</span>
                 </div>
             </div>
         </div>
-        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl shadow-2xl border border-slate-700/50 overflow-hidden">
+        <div class="checkout-card">
             <!-- Header -->
-            <div class="bg-slate-900/50 p-8 border-b border-slate-700/50 text-center">
-                <div class="w-20 h-20 bg-gradient-to-r from-red-500 to-orange-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-3xl font-bold shadow-lg shadow-red-500/20">
-                    {{ transaction.creator.display_name|slice:":1" }}
-                </div>
-                <h2 class="text-2xl font-bold text-white mb-1">Support {{ transaction.creator.display_name }}</h2>
-                <p class="text-slate-400">Complete your contribution</p>
+            <div class="checkout-header">
+                <div class="checkout-avatar">{{ transaction.creator.display_name|slice:":1" }}</div>
+                <h2 class="checkout-title">Support {{ transaction.creator.display_name }}</h2>
+                <p class="checkout-subtitle">Complete your contribution</p>
             </div>
-            <div class="p-8">
+            <div class="checkout-content">
                 <!-- Transaction Details Card -->
-                <div class="bg-slate-900/30 rounded-xl border border-slate-700/50 p-6 mb-8">
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-slate-400">Amount</span>
-                        <span class="text-3xl font-bold text-white">Rs. {{ transaction.amount }}</span>
+                <div class="transaction-details">
+                    <div class="transaction-row">
+                        <span class="transaction-label">Amount</span>
+                        <span class="transaction-amount">Rs. {{ transaction.amount }}</span>
                     </div>
-                    <div class="flex justify-between items-center mb-6">
-                        <span class="text-slate-400">Payment Method</span>
-                        <div class="flex items-center gap-3 bg-slate-800/50 px-4 py-2 rounded-lg border border-slate-700"
+                    <div class="transaction-row">
+                        <span class="transaction-label">Payment Method</span>
+                        <div class="payment-method-badge"
                              style="--brand-color: {{ gateway.brand_color }}">
                             {% if gateway.icon %}
                                 <img src="{{ gateway.icon.url }}"
                                      alt="{{ gateway.name }}"
-                                     class="rounded object-cover"
+                                     class="payment-method-icon"
                                      width="24"
                                      height="24">
                             {% else %}
                                 <span class="text-xl" style="color: var(--brand-color);">●</span>
                             {% endif %}
-                            <span class="font-bold text-white">{{ gateway.name }}</span>
+                            <span class="payment-method-name">{{ gateway.name }}</span>
                         </div>
                     </div>
-                    <div class="flex justify-between items-center">
-                        <span class="text-slate-400">Supporter</span>
-                        <span class="font-medium text-white">{{ transaction.supporter_name }}</span>
+                    <div class="transaction-row">
+                        <span class="transaction-label">Supporter</span>
+                        <span class="transaction-value">{{ transaction.supporter_name }}</span>
                     </div>
                 </div>
                 {% if transaction.message %}
-                    <div class="mb-8">
-                        <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">Your Message</label>
-                        <div class="bg-slate-800/30 rounded-xl p-5 border border-slate-700/30 italic text-slate-300 relative">
-                            <span class="absolute top-2 left-2 text-4xl text-slate-700/50 font-serif">"</span>
-                            <p class="relative z-10 px-4">{{ transaction.message }}</p>
-                            <span class="absolute bottom-[-10px] right-4 text-4xl text-slate-700/50 font-serif">"</span>
+                    <div class="message-section">
+                        <label class="message-label">Your Message</label>
+                        <div class="message-box">
+                            <span class="message-quote-open">"</span>
+                            <p class="message-text">{{ transaction.message }}</p>
+                            <span class="message-quote-close">"</span>
                         </div>
                     </div>
                 {% endif %}
                 <!-- Action Buttons -->
-                <div class="space-y-4">
-                    <button class="w-full group relative overflow-hidden text-white py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 hover:-translate-y-1"
+                <div class="checkout-actions">
+                    <button class="btn-payment"
                             style="background: linear-gradient(to right, var(--brand-color), var(--brand-color)dd);
                                    box-shadow: 0 10px 15px -3px var(--brand-color)4d">
-                        <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                        </div>
-                        <span class="relative flex items-center justify-center gap-2">
+                        <div class="btn-payment-overlay"></div>
+                        <span class="btn-payment-content">
                             Pay with {{ gateway.name }}
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="btn-payment-icon"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                             </svg>
                         </span>
                     </button>
-                    <div class="text-center">
+                    <div class="checkout-cancel">
                         <a href="{% url 'creators:profile' transaction.creator.user.username %}"
-                           class="text-sm text-slate-400 hover:text-white transition-colors">
-                            Cancel and return to profile
-                        </a>
+                           class="link-subtle">Cancel
+                        and return to profile</a>
                     </div>
                 </div>
             </div>
             <!-- Security Footer -->
-            <div class="bg-slate-900/80 p-4 border-t border-slate-700/50 flex justify-center items-center gap-2 text-xs text-slate-500">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="security-footer">
+                <svg class="security-icon"
+                     fill="none"
+                     stroke="currentColor"
+                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
                     </path>
                 </svg>

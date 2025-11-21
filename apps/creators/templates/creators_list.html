@@ -1,26 +1,26 @@
 {% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/creators/creators_list.css' %}">
+{% endblock extra_css %}
 {% block title %}
     Browse Creators - MeroCoffee
 {% endblock title %}
 {% block content %}
     <!-- Hero Section -->
-    <section class="relative bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 text-white py-16 overflow-hidden">
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute top-20 right-0 w-96 h-96 bg-red-500/20 rounded-full blur-3xl opacity-30"></div>
-            <div class="absolute bottom-0 left-0 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl opacity-30"></div>
+    <section class="creators-hero">
+        <div class="creators-hero-bg">
+            <div class="creators-hero-blob-1"></div>
+            <div class="creators-hero-blob-2"></div>
         </div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <h1 class="text-5xl md:text-6xl font-bold mb-4 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
-                Browse Creators
-            </h1>
-            <p class="text-xl text-slate-300 mb-8">Discover and support your favorite Nepali creators</p>
+        <div class="creators-hero-container">
+            <h1 class="creators-hero-title">Browse Creators</h1>
+            <p class="creators-hero-subtitle">Discover and support your favorite Nepali creators</p>
             <!-- Search and Filters -->
-            <div class="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border border-slate-700/50 rounded-lg p-6 backdrop-blur-sm">
-                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <input type="text"
-                           placeholder="Search creators..."
-                           class="px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50">
-                    <select class="px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50">
+            <div class="search-filters-card">
+                <div class="search-filters-grid">
+                    <input type="text" placeholder="Search creators..." class="search-input">
+                    <select class="filter-select">
                         <option>All Categories</option>
                         <option>Digital Artist</option>
                         <option>Music Creator</option>
@@ -28,79 +28,65 @@
                         <option>Writer</option>
                         <option>Gamer</option>
                     </select>
-                    <select class="px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg text-white focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/50">
+                    <select class="filter-select">
                         <option>Sort By</option>
                         <option>Most Supporters</option>
                         <option>Recently Added</option>
                         <option>Trending</option>
                     </select>
-                    <button class="px-6 py-3 bg-gradient-to-r from-red-500 to-orange-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300">
-                        Search
-                    </button>
+                    <button class="search-btn">Search</button>
                 </div>
             </div>
         </div>
     </section>
     <!-- Creators Grid -->
-    <section class="py-20 bg-slate-900">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <section class="creators-grid-section">
+        <div class="creators-grid-container">
+            <div class="creators-grid">
                 {% for creator in creators %}
-                    <a href="{% url 'creators:detail' creator.page_url %}" class="group">
-                        <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border border-slate-700/50 overflow-hidden hover:border-red-500/50 hover:shadow-2xl hover:shadow-red-500/20 transition-all duration-300">
+                    <a href="{% url 'creators:detail' creator.page_url %}"
+                       class="creator-card-link">
+                        <div class="creator-card">
                             <!-- Creator Header Background -->
-                            <div class="h-24 bg-gradient-to-r from-red-500/20 to-orange-500/20 group-hover:from-red-500/30 group-hover:to-orange-500/30 transition-all duration-300">
-                            </div>
+                            <div class="creator-card-header"></div>
                             <!-- Creator Info -->
-                            <div class="p-6 text-center relative">
+                            <div class="creator-card-body">
                                 <!-- Avatar -->
-                                <div class="w-20 h-20 rounded-full mx-auto -mt-12 mb-4 flex items-center justify-center text-white text-2xl font-bold shadow-lg border-4 border-slate-900 group-hover:scale-110 transition-transform duration-300"
+                                <div class="creator-card-avatar"
                                      style="background: linear-gradient(135deg, {{ creator.avatar_color }} 0%, {{ creator.avatar_color }}dd 100%)">
                                     {{ creator.display_name|slice:":1" }}
                                 </div>
-                                <h3 class="text-lg font-bold text-white mb-1 group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-red-500 group-hover:to-orange-500 group-hover:bg-clip-text transition-all duration-300">
-                                    {{ creator.display_name }}
-                                </h3>
-                                <p class="text-sm text-slate-400 mb-4">{{ creator.bio|truncatewords:10 }}</p>
+                                <h3 class="creator-card-name">{{ creator.display_name }}</h3>
+                                <p class="creator-card-bio">{{ creator.bio|truncatewords:10 }}</p>
                                 <!-- Stats -->
-                                <div class="space-y-2 mb-4 pb-4 border-b border-slate-700/50">
-                                    <div class="flex justify-between text-sm text-slate-300">
+                                <div class="creator-card-stats">
+                                    <div class="creator-card-stat-row">
                                         <span>Supporters:</span>
-                                        <span class="font-semibold">{{ creator.supporters }}</span>
+                                        <span class="creator-card-stat-value">{{ creator.supporters }}</span>
                                     </div>
-                                    <div class="flex justify-between text-sm text-slate-300">
+                                    <div class="creator-card-stat-row">
                                         <span>Monthly:</span>
-                                        <span class="font-bold bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text text-transparent">Rs. {{ creator.monthly }}</span>
+                                        <span class="creator-card-monthly-value">Rs. {{ creator.monthly }}</span>
                                     </div>
                                 </div>
                                 <!-- Button -->
-                                <button class="w-full bg-gradient-to-r from-red-500 to-orange-600 text-white py-2 rounded-lg font-semibold hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 group-hover:-translate-y-1">
-                                    Support Now
-                                </button>
+                                <button class="creator-card-btn">Support Now</button>
                             </div>
                         </div>
                     </a>
                 {% empty %}
-                    <div class="col-span-full text-center py-12">
-                        <p class="text-2xl text-slate-400">No creators found</p>
+                    <div class="creators-empty">
+                        <p class="creators-empty-text">No creators found</p>
                     </div>
                 {% endfor %}
             </div>
             <!-- Pagination -->
-            <div class="flex justify-center gap-2 mt-12">
-                <button class="px-4 py-2 bg-slate-800 border border-slate-700/50 text-slate-300 rounded-lg hover:border-red-500/50 transition-all duration-300">
-                    Previous
-                </button>
-                <button class="px-4 py-2 bg-gradient-to-r from-red-500 to-orange-600 text-white rounded-lg">1</button>
-                <button class="px-4 py-2 bg-slate-800 border border-slate-700/50 text-slate-300 rounded-lg hover:border-red-500/50 transition-all duration-300">
-                    2
-                </button>
-                <button class="px-4 py-2 bg-slate-800 border border-slate-700/50 text-slate-300 rounded-lg hover:border-red-500/50 transition-all duration-300">
-                    3
-                </button>
-                <button class="px-4 py-2 bg-slate-800 border border-slate-700/50 text-slate-300 rounded-lg hover:border-red-500/50 transition-all duration-300">
-                    Next
-                </button>
+            <div class="pagination">
+                <button class="pagination-btn">Previous</button>
+                <button class="pagination-btn-active">1</button>
+                <button class="pagination-btn">2</button>
+                <button class="pagination-btn">3</button>
+                <button class="pagination-btn">Next</button>
             </div>
         </div>
     </section>

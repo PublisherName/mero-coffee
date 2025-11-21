@@ -18,11 +18,14 @@ Welcome to **MeroCoffee**, a fullstack web application built with Django and Tai
 
 ## Tech Stack
 
-- Django (Python) — Backend web framework
-- Django Templates + Tailwind CSS — Frontend UI and responsive styling
-- Chart.js — Interactive earnings chart on dashboard
-- PostgreSQL or SQLite — Database (adjustable)
-- JavaScript — UI behaviors (menu toggles, dropdowns)
+- **Django (Python)** — Backend web framework
+- **Django Templates + Tailwind CSS** — Frontend UI and responsive styling
+  - Tailwind CDN for utility classes
+  - Custom CSS files for semantic component styles
+  - Separated CSS architecture for maintainability
+- **Chart.js** — Interactive earnings chart on dashboard
+- **PostgreSQL or SQLite** — Database (adjustable)
+- **JavaScript** — UI behaviors (menu toggles, dropdowns)
 
 ---
 

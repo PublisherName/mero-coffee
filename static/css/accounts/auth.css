@@ -1,0 +1,305 @@
+/* Authentication Pages Shared Styles */
+
+/* Page Container */
+.auth-page-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    background: linear-gradient(to bottom, rgb(15 23 42), rgb(30 41 59));
+}
+
+/* Card Containers */
+.auth-card {
+    max-width: 28rem;
+    width: 100%;
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    padding: 2rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+.auth-card-wide {
+    max-width: 36rem;
+    width: 100%;
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    padding: 2.5rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(51, 65, 85, 0.5);
+}
+
+.auth-card-centered {
+    max-width: 28rem;
+    width: 100%;
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    padding: 3rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(51, 65, 85, 0.5);
+    text-align: center;
+}
+
+.auth-card-centered-wide {
+    max-width: 36rem;
+    width: 100%;
+    background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
+    padding: 3rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    border: 1px solid rgba(51, 65, 85, 0.5);
+    text-align: center;
+}
+
+/* Icon Container */
+.auth-icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.auth-icon-container-large {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 2rem;
+}
+
+/* Typography */
+.auth-title {
+    font-size: 1.875rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 0.5rem;
+    color: white;
+}
+
+.auth-title-large {
+    font-size: 1.875rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.auth-title-xlarge {
+    font-size: 3rem;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.auth-subtitle {
+    text-align: center;
+    color: rgb(148 163 184);
+    margin-bottom: 2rem;
+}
+
+.auth-subtitle-large {
+    text-align: center;
+    color: rgb(148 163 184);
+    margin-bottom: 2.5rem;
+}
+
+.auth-description {
+    font-size: 1.125rem;
+    color: rgb(203 213 225);
+    margin-bottom: 2rem;
+}
+
+.auth-text-secondary {
+    color: rgb(148 163 184);
+    margin-bottom: 2rem;
+}
+
+.auth-text-small {
+    text-align: center;
+    font-size: 0.875rem;
+    color: rgb(148 163 184);
+    margin-top: 1.5rem;
+}
+
+.auth-text-small-large {
+    text-align: center;
+    font-size: 0.875rem;
+    color: rgb(148 163 184);
+    margin-top: 2.5rem;
+}
+
+/* Forms */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.auth-form-large {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.auth-form-medium {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Form Grid */
+.auth-form-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem 2rem;
+}
+
+@media (min-width: 640px) {
+    .auth-form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+.auth-form-grid-full {
+    grid-column: span 1;
+}
+
+@media (min-width: 640px) {
+    .auth-form-grid-full {
+        grid-column: span 2;
+    }
+}
+
+/* Form Labels */
+.auth-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(203 213 225);
+    margin-bottom: 0.5rem;
+}
+
+/* Error Messages */
+.auth-error {
+    color: rgb(239 68 68);
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+}
+
+/* Checkbox Container */
+.auth-checkbox-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.auth-checkbox-label {
+    display: flex;
+    align-items: center;
+}
+
+.auth-checkbox {
+    width: 1rem;
+    height: 1rem;
+    background-color: rgb(15 23 42);
+    border: 1px solid rgb(51 65 85);
+    border-radius: 0.25rem;
+    cursor: pointer;
+}
+
+.auth-checkbox:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: rgb(239 68 68);
+}
+
+.auth-checkbox-text {
+    margin-left: 0.5rem;
+    font-size: 0.875rem;
+    color: rgb(148 163 184);
+}
+
+/* Links */
+.auth-link {
+    font-size: 0.875rem;
+    color: rgb(239 68 68);
+    transition: color 0.3s;
+}
+
+.auth-link:hover {
+    color: rgb(249 115 22);
+}
+
+.auth-link-bold {
+    color: rgb(239 68 68);
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.auth-link-bold:hover {
+    color: rgb(249 115 22);
+}
+
+.auth-link-inline {
+    color: rgb(239 68 68);
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.auth-link-inline:hover {
+    color: rgb(249 115 22);
+}
+
+/* Buttons */
+.auth-btn-primary {
+    width: 100%;
+    background: linear-gradient(to right, rgb(239 68 68), rgb(234 88 12));
+    color: white;
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    font-size: 1rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3);
+}
+
+.auth-btn-primary:hover {
+    box-shadow: 0 25px 50px -12px rgba(239, 68, 68, 0.5);
+    transform: translateY(-0.25rem);
+}
+
+.auth-btn-link {
+    display: inline-block;
+    background: linear-gradient(to right, rgb(239 68 68), rgb(234 88 12));
+    color: white;
+    padding: 0.75rem 2.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s;
+    box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3);
+}
+
+.auth-btn-link:hover {
+    box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.5);
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10%);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fadeIn {
+    animation: fadeIn 0.35s ease forwards;
+}
