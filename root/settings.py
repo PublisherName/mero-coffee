@@ -3,6 +3,8 @@ from pathlib import Path
 from django.core.management.utils import get_random_secret_key
 from environs import Env
 
+from root.validators import validate_production_settings
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,9 +15,9 @@ env.read_env()
 # Environment-based settings
 SITE_BASE_URL = env.str("SITE_BASE_URL", default="http://127.0.0.1:8000/")
 
-SECRET_KEY = env.str("DJANGO_SECRET_KEY", default=get_random_secret_key())
-
 DEBUG = env.bool("DEBUG", default=False)
+
+SECRET_KEY = env.str("DJANGO_SECRET_KEY", default=get_random_secret_key())
 
 # Hosts that are allowed to communicate
 DJANGO_ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[], subcast=str)
@@ -88,10 +90,12 @@ WSGI_APPLICATION = "root.wsgi.application"
 
 # Database settings
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    "default": env.dj_db_url(
+        "DATABSE_URL",
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600 if not DEBUG else 0,
+        conn_health_checks=True,
+    )
 }
 
 # Password validation
@@ -114,6 +118,24 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = "accounts.User"
 
 LOGIN_URL = "/login/"
+
+# Security Settings for Production
+if not DEBUG:
+    # HTTPS/SSL Settings
+    SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=True)
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
+    # Security Headers
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_BROWSER_XSS_FILTER = True
+    X_FRAME_OPTIONS = "DENY"
+
+    # Proxy Headers
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 
 # Internationalization
@@ -225,3 +247,6 @@ LOGGING = {
         },
     },
 }
+
+# Validate Production Settings
+validate_production_settings(DEBUG, SECRET_KEY, ALLOWED_HOSTS, TOKEN_SALT)
