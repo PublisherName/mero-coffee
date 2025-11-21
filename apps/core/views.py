@@ -89,7 +89,7 @@ def homepage(request):
 
     return render(
         request,
-        "core/homepage.html",
+        "homepage.html",
         {
             "features": features,
             "how_it_works": how_it_works,
@@ -100,8 +100,8 @@ def homepage(request):
 
 
 def how_it_works(request):
-    return render(request, "core/how_it_works.html", {})
+    return render(request, "how_it_works.html", {})
 
 
 def pricing(request):
-    return render(request, "core/pricing.html", {})
+    return render(request, "pricing.html", {})

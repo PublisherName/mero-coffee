@@ -49,11 +49,11 @@ def profile(request, username):
             "5x": creator.coffee_price * 5,
         },
     }
-    return render(request, "creators/creators_page.html", context)
+    return render(request, "creators_page.html", context)
 
 
 def creators_list(request):
-    return render(request, "creators/creators_list.html")
+    return render(request, "creators_list.html")
 
 
 @login_required
@@ -69,5 +69,4 @@ def profile_settings(request):
             messages.error(request, "Please correct the errors below.")
     else:
         form = CreatorProfileForm(instance=profile)
-
-    return render(request, "dashboard/profile_settings.html", {"form": form, "settings": profile})
+    return render(request, "profile_settings.html", {"form": form, "settings": profile})

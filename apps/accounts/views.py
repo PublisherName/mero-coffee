@@ -38,7 +38,7 @@ def login_view(request):
     else:
         form = LoginForm()
 
-    return render(request, "accounts/login.html", {"form": form})
+    return render(request, "login.html", {"form": form})
 
 
 @login_required
@@ -49,7 +49,7 @@ def logout_view(request):
 
 def email_confirmation_sent_view(request, user_id):
     user = get_object_or_404(User, id=user_id)
-    return render(request, "accounts/email_confirmation_sent.html", {"user_id": user.id})
+    return render(request, "email_confirmation_sent.html", {"user_id": user.id})
 
 
 def signup_view(request):
@@ -68,7 +68,7 @@ def signup_view(request):
     else:
         form = SignUpForm()
 
-    return render(request, "accounts/signup.html", {"form": form})
+    return render(request, "signup.html", {"form": form})
 
 
 def resend_confirmation_view(request, user_id):

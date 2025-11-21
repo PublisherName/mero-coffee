@@ -6,7 +6,7 @@ from django.shortcuts import render
 
 @login_required
 def dashboard(request):
-    return render(request, "dashboard/overview.html", {})
+    return render(request, "overview.html", {})
 
 
 @login_required
@@ -26,7 +26,7 @@ def earnings(request):
         ],
     }
 
-    return render(request, "dashboard/earnings.html", context)
+    return render(request, "earnings.html", context)
 
 
 @login_required
@@ -59,7 +59,7 @@ def withdrawal(request):
         "available_balance": available_balance,
         "withdrawals": withdrawals,
     }
-    return render(request, "dashboard/withdrawal.html", context)
+    return render(request, "withdrawal.html", context)
 
 
 @login_required
@@ -89,4 +89,4 @@ def supporters(request):
     context = {
         "supporters": recent_supporters,
     }
-    return render(request, "dashboard/supporters.html", context)
+    return render(request, "supporters.html", context)
