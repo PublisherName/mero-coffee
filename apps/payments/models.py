@@ -17,7 +17,6 @@ class SupportTransaction(models.Model):
         "creators.CreatorProfile", on_delete=models.CASCADE, related_name="support_transactions"
     )
     supporter_name = models.CharField(max_length=255)
-    supporter_email = models.EmailField(blank=True)
     amount = models.PositiveIntegerField()
     message = models.TextField(blank=True)
     payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)

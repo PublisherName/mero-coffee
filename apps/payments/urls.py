@@ -5,6 +5,6 @@ from apps.payments.views import checkout, success
 app_name = "payments"
 
 urlpatterns = [
-    path("checkout/", checkout, name="checkout"),
+    path("checkout/<str:transaction_id>/", checkout, name="checkout"),
     path("success/", success, name="success"),
 ]

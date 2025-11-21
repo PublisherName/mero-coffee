@@ -1,6 +1,10 @@
+import uuid
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+
+from apps.payments.models import SupportTransaction
 
 from .forms import BuyCoffeeForm, CreatorProfileForm
 from .models import CreatorProfile
@@ -17,9 +21,16 @@ def profile(request, username):
     if request.method == "POST":
         form = BuyCoffeeForm(request.POST, coffee_price=creator.coffee_price)
         if form.is_valid():
-            # TODO: Create SupportTransaction and redirect to payment gateway
-            messages.success(request, "Processing payment...")
-            return redirect("payments:checkout")
+            transaction = SupportTransaction.objects.create(
+                creator=creator,
+                supporter_name=form.cleaned_data["supporter_name"],
+                amount=form.cleaned_data["amount"],
+                payment_method=form.cleaned_data["payment_provider"],
+                message=form.cleaned_data["message"],
+                transaction_id=str(uuid.uuid4()),
+                payment_status="pending",
+            )
+            return redirect("payments:checkout", transaction_id=transaction.transaction_id)
         else:
             messages.error(request, "Please correct the errors in the form.")
     else:
