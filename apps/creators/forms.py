@@ -55,3 +55,110 @@ class CreatorProfileForm(forms.ModelForm):
                 }
             ),
         }
+
+
+class BuyCoffeeForm(forms.Form):
+    """Form for buying coffee for a creator"""
+
+    PAYMENT_PROVIDERS = [
+        ("esewa", "eSewa"),
+        ("khalti", "Khalti"),
+    ]
+
+    amount = forms.IntegerField(
+        min_value=1,
+        widget=forms.NumberInput(
+            attrs={
+                "class": (
+                    "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
+                    "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
+                    "focus:ring-2 focus:ring-red-500/50 transition-all duration-300"
+                ),
+                "id": "custom_amount",
+                "placeholder": "Enter custom amount",
+                "min": "1",
+            }
+        ),
+    )
+
+    supporter_name = forms.CharField(
+        max_length=255,
+        required=False,
+        widget=forms.TextInput(
+            attrs={
+                "class": (
+                    "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
+                    "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
+                    "focus:ring-2 focus:ring-red-500/50 transition-all duration-300"
+                ),
+                "id": "supporter_name",
+                "placeholder": "Your name",
+            }
+        ),
+    )
+
+    is_anonymous = forms.BooleanField(
+        required=False,
+        widget=forms.CheckboxInput(
+            attrs={
+                "class": "w-4 h-4 text-red-600 bg-slate-900"
+                "border-slate-700 rounded focus:ring-red-500",
+                "id": "is_anonymous",
+            }
+        ),
+    )
+
+    message = forms.CharField(
+        max_length=500,
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                "rows": 3,
+                "class": (
+                    "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
+                    "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
+                    "focus:ring-2 focus:ring-red-500/50 transition-all duration-300 resize-none"
+                ),
+                "id": "message",
+                "placeholder": "Say something nice... (optional)",
+                "maxlength": "500",
+            }
+        ),
+    )
+
+    payment_provider = forms.ChoiceField(
+        choices=PAYMENT_PROVIDERS,
+        widget=forms.RadioSelect(
+            attrs={
+                "class": "payment-provider-radio",
+            }
+        ),
+    )
+
+    def __init__(self, *args, coffee_price=100, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.coffee_price = coffee_price
+        self.fields["amount"].widget.attrs["min"] = str(coffee_price)
+        self.fields["amount"].widget.attrs["placeholder"] = f"Min: Rs. {coffee_price}"
+
+    def clean_amount(self):
+        amount = self.cleaned_data.get("amount")
+        if amount and amount < self.coffee_price:
+            raise forms.ValidationError(
+                f"Amount must be at least Rs. {self.coffee_price} (creator's coffee price)"
+            )
+        return amount
+
+    def clean(self):
+        cleaned_data = super().clean()
+        is_anonymous = cleaned_data.get("is_anonymous")
+        supporter_name = cleaned_data.get("supporter_name")
+
+        if is_anonymous:
+            cleaned_data["supporter_name"] = "Anonymous Supporter"
+        elif not supporter_name:
+            self.add_error(
+                "supporter_name", "Name is required unless you choose to remain anonymous"
+            )
+
+        return cleaned_data
