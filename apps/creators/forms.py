@@ -1,6 +1,7 @@
 from django import forms
 
 from apps.creators.models import CreatorProfile
+from apps.payments.models import PaymentGateway
 
 
 class CreatorProfileForm(forms.ModelForm):
@@ -59,11 +60,6 @@ class CreatorProfileForm(forms.ModelForm):
 
 class BuyCoffeeForm(forms.Form):
     """Form for buying coffee for a creator"""
-
-    PAYMENT_PROVIDERS = [
-        ("esewa", "eSewa"),
-        ("khalti", "Khalti"),
-    ]
 
     amount = forms.IntegerField(
         min_value=1,
@@ -127,7 +123,7 @@ class BuyCoffeeForm(forms.Form):
     )
 
     payment_provider = forms.ChoiceField(
-        choices=PAYMENT_PROVIDERS,
+        choices=[],
         widget=forms.RadioSelect(
             attrs={
                 "class": "payment-provider-radio",
@@ -140,6 +136,12 @@ class BuyCoffeeForm(forms.Form):
         self.coffee_price = coffee_price
         self.fields["amount"].widget.attrs["min"] = str(coffee_price)
         self.fields["amount"].widget.attrs["placeholder"] = f"Min: Rs. {coffee_price}"
+
+        # Populate payment providers dynamically
+        gateways = PaymentGateway.objects.filter(is_active=True)
+        self.fields["payment_provider"].choices = [
+            (gateway.slug, gateway.name) for gateway in gateways
+        ]
 
     def clean_amount(self):
         amount = self.cleaned_data.get("amount")

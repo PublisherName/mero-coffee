@@ -1,6 +1,29 @@
 from django.db import models
 
 
+class PaymentGateway(models.Model):
+    name = models.CharField(max_length=50)
+    slug = models.SlugField(unique=True)
+    description = models.TextField(blank=True)
+    brand_color = models.CharField(max_length=7, default="#000000")
+    icon = models.ImageField(upload_to="payment_icons/", blank=True, null=True)
+
+    merchant_id = models.CharField(max_length=255, blank=True)
+    secret_key = models.CharField(max_length=255, blank=True)
+    signature = models.CharField(max_length=255, blank=True)
+
+    base_url = models.URLField(blank=True)
+    sandbox_url = models.URLField(blank=True)
+    success_url = models.URLField(blank=True)
+    failure_url = models.URLField(blank=True)
+
+    is_sandbox = models.BooleanField(default=True)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.name
+
+
 class SupportTransaction(models.Model):
     PAYMENT_METHODS = [
         ("esewa", "eSewa"),
@@ -64,7 +87,7 @@ class Withdrawal(models.Model):
     processed_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f"{self.creator} withdrawal Rs.{self.amount} ({self.status})"
+        return f"{self.creator} withdrawal of {self.amount}"
 
 
 class Membership(models.Model):

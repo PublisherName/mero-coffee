@@ -48,14 +48,16 @@
                     </div>
                     <div class="flex justify-between items-center mb-6">
                         <span class="text-slate-400">Payment Method</span>
-                        <div class="flex items-center gap-3 bg-slate-800/50 px-4 py-2 rounded-lg border border-slate-700">
-                            {% if transaction.payment_method == 'esewa' %}
-                                <span class="text-xl">💚</span>
-                                <span class="font-bold text-white">eSewa</span>
+                        <div class="flex items-center gap-3 bg-slate-800/50 px-4 py-2 rounded-lg border border-slate-700"
+                             style="--brand-color: {{ gateway.brand_color }}">
+                            {% if gateway.icon %}
+                                <img src="{{ gateway.icon.url }}"
+                                     alt="{{ gateway.name }}"
+                                     class="w-6 h-6 rounded object-cover">
                             {% else %}
-                                <span class="text-xl">💜</span>
-                                <span class="font-bold text-white">Khalti</span>
+                                <span class="text-xl" style="color: var(--brand-color);">●</span>
                             {% endif %}
+                            <span class="font-bold text-white">{{ gateway.name }}</span>
                         </div>
                     </div>
                     <div class="flex justify-between items-center">
@@ -75,11 +77,13 @@
                 {% endif %}
                 <!-- Action Buttons -->
                 <div class="space-y-4">
-                    <button class="w-full group relative overflow-hidden bg-gradient-to-r {% if transaction.payment_method == 'esewa' %}from-green-500 to-green-600 hover:shadow-green-500/30{% else %}from-purple-500 to-purple-600 hover:shadow-purple-500/30{% endif %} text-white py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 hover:-translate-y-1">
+                    <button class="w-full group relative overflow-hidden text-white py-4 rounded-xl font-bold text-lg shadow-lg transition-all duration-300 hover:-translate-y-1"
+                            style="background: linear-gradient(to right, var(--brand-color), var(--brand-color)dd);
+                                   box-shadow: 0 10px 15px -3px var(--brand-color)4d">
                         <div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
                         </div>
                         <span class="relative flex items-center justify-center gap-2">
-                            Pay with {{ transaction.payment_method|title }}
+                            Pay with {{ gateway.name }}
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                             </svg>

@@ -2,11 +2,19 @@ from django.contrib import admin
 
 from apps.payments.models import (
     Membership,
+    PaymentGateway,
     PaymentLog,
     Subscription,
     SupportTransaction,
     Withdrawal,
 )
+
+
+@admin.register(PaymentGateway)
+class PaymentGatewayAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug", "is_active", "is_sandbox")
+    list_filter = ("is_active", "is_sandbox")
+    prepopulated_fields = {"slug": ("name",)}
 
 
 @admin.register(SupportTransaction)

@@ -89,7 +89,8 @@ document.addEventListener('DOMContentLoaded', function () {
             }
 
             // Apply selected styling
-            if (value === 'esewa') {
+            //TODO: Update this to support dynamic payment models
+            if (value === 'eSewa') {
                 innerDiv.classList.remove('border-slate-700');
                 innerDiv.classList.add('border-green-500', 'shadow-green-500/50');
             } else {

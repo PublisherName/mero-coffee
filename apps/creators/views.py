@@ -4,7 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
-from apps.payments.models import SupportTransaction
+from apps.payments.models import PaymentGateway, SupportTransaction
 
 from .forms import BuyCoffeeForm, CreatorProfileForm
 from .models import CreatorProfile
@@ -41,6 +41,7 @@ def profile(request, username):
         "form": form,
         "supporter_count": supporter_count,
         "monthly_income": monthly_income,
+        "payment_gateways": PaymentGateway.objects.filter(is_active=True),
         "amount_multiples": {
             "1x": creator.coffee_price,
             "2x": creator.coffee_price * 2,
