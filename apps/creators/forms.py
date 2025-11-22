@@ -116,7 +116,7 @@ class BuyCoffeeForm(forms.Form):
                     "focus:ring-2 focus:ring-red-500/50 transition-all duration-300 resize-none"
                 ),
                 "id": "message",
-                "placeholder": "Say something nice... (optional)",
+                "placeholder": "Write a supportive message...",
                 "maxlength": "500",
             }
         ),
@@ -135,7 +135,7 @@ class BuyCoffeeForm(forms.Form):
         super().__init__(*args, **kwargs)
         self.coffee_price = coffee_price
         self.fields["amount"].widget.attrs["min"] = str(coffee_price)
-        self.fields["amount"].widget.attrs["placeholder"] = f"Min: Rs. {coffee_price}"
+        self.fields["amount"].widget.attrs["placeholder"] = str(coffee_price)
 
         # Populate payment providers dynamically
         gateways = PaymentGateway.objects.filter(is_active=True)

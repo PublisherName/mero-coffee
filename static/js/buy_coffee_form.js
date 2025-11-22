@@ -71,34 +71,35 @@ document.addEventListener('DOMContentLoaded', function () {
     // Payment provider selection
     paymentLabels.forEach((label, index) => {
         label.addEventListener('click', function () {
-            // Remove all check icons and reset borders
-            document.querySelectorAll('.payment-check-icon').forEach(icon => icon.classList.add('hidden'));
-            document.querySelectorAll('.payment-provider-label > div').forEach(div => {
-                div.classList.remove('border-green-500', 'border-purple-500', 'shadow-green-500/50', 'shadow-purple-500/50');
-                div.classList.add('border-slate-700');
+            clearError('payment-error');
+
+            // Get the payment card and its brand color
+            const paymentCard = this.querySelector('.payment-provider-card');
+            const brandColor = getComputedStyle(paymentCard).getPropertyValue('--brand-color').trim();
+
+            // Apply selected styling with brand color
+            if (brandColor) {
+                paymentCard.style.boxShadow = `0 10px 15px -3px ${brandColor}33`;
+            }
+        });
+    });
+
+    // Remove shadow when payment is deselected (on other payment click)
+    paymentInputs.forEach(input => {
+        input.addEventListener('change', function () {
+            // Remove shadow from all cards
+            document.querySelectorAll('.payment-provider-card').forEach(card => {
+                card.style.boxShadow = '';
             });
 
-            // Get the inner div and check icon for this label
-            const innerDiv = this.querySelector('div');
-            const checkIcon = this.querySelector('.payment-check-icon');
-            const value = paymentInputs[index].value;
-
-            // Show check icon
-            if (checkIcon) {
-                checkIcon.classList.remove('hidden');
+            // Add shadow to selected card
+            if (this.checked) {
+                const paymentCard = this.nextElementSibling;
+                const brandColor = getComputedStyle(paymentCard).getPropertyValue('--brand-color').trim();
+                if (brandColor) {
+                    paymentCard.style.boxShadow = `0 10px 15px -3px ${brandColor}33`;
+                }
             }
-
-            // Apply selected styling
-            //TODO: Update this to support dynamic payment models
-            if (value === 'eSewa') {
-                innerDiv.classList.remove('border-slate-700');
-                innerDiv.classList.add('border-green-500', 'shadow-green-500/50');
-            } else {
-                innerDiv.classList.remove('border-slate-700');
-                innerDiv.classList.add('border-purple-500', 'shadow-purple-500/50');
-            }
-
-            clearError('payment-error');
         });
     });
 
