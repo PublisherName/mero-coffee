@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/payments/failed.css' %}">
+{% endblock extra_css %}
+{% block title %}
+    Payment Failed - MeroCoffee
+{% endblock title %}
+{% block content %}
+    <div class="failed-container">
+        <div class="failed-card">
+            <div class="failed-emoji">😔</div>
+            <h1 class="failed-title">Payment Failed</h1>
+            <p class="failed-message">
+                {% if error %}
+                    {{ error }}
+                {% else %}
+                    Unfortunately, your payment could not be processed. Please try again.
+                {% endif %}
+            </p>
+            {% if transaction %}
+                <div class="transaction-details-card">
+                    <h2 class="transaction-details-title">Transaction Details</h2>
+                    <div class="transaction-details-list">
+                        <div class="transaction-detail-row">
+                            <span class="transaction-detail-label">Transaction ID:</span>
+                            <span class="transaction-id">{{ transaction.transaction_id }}</span>
+                        </div>
+                        <div class="transaction-detail-row">
+                            <span class="transaction-detail-label">Amount:</span>
+                            <span class="transaction-amount-value">Rs. {{ transaction.amount }}</span>
+                        </div>
+                        <div class="transaction-detail-row">
+                            <span class="transaction-detail-label">Creator:</span>
+                            <span class="transaction-detail-value">{{ transaction.creator.display_name }}</span>
+                        </div>
+                        <div class="transaction-detail-row">
+                            <span class="transaction-detail-label">Status:</span>
+                            <span class="transaction-detail-value">{{ transaction.payment_status|title }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="failed-actions">
+                {% if transaction %}
+                    <a href="{% url 'payments:checkout' transaction.transaction_id %}" class="btn-retry-payment">Try Again</a>
+                {% endif %}
+                <a href="{% url 'creators:creators_list' %}" class="btn-browse-creators">Browse Creators</a>
+            </div>
+            <div class="help-section">
+                <p class="help-text">If you continue to experience issues, please contact our support team.</p>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

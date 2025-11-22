@@ -73,17 +73,23 @@
                 {% endif %}
                 <!-- Action Buttons -->
                 <div class="checkout-actions">
-                    <button class="btn-payment"
-                            style="background: linear-gradient(to right, {{ gateway.brand_color }}, {{ gateway.brand_color }}dd);
-                                   box-shadow: 0 10px 15px -3px {{ gateway.brand_color }}4d">
-                        <div class="btn-payment-overlay"></div>
-                        <span class="btn-payment-content">
-                            Pay with {{ gateway.name }}
-                            <svg class="btn-payment-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-                            </svg>
-                        </span>
-                    </button>
+                    <form action="{{ payment_context.payment_url }}" method="{{ payment_context.method|default:'POST' }}">
+                        {% for key, value in payment_context.payment_params.items %}
+                            <input type="hidden" name="{{ key }}" value="{{ value }}">
+                        {% endfor %}
+                        <button type="submit"
+                                class="btn-payment"
+                                style="background: linear-gradient(to right, {{ gateway.brand_color }}, {{ gateway.brand_color }}dd);
+                                       box-shadow: 0 10px 15px -3px {{ gateway.brand_color }}4d">
+                            <div class="btn-payment-overlay"></div>
+                            <span class="btn-payment-content">
+                                Pay with {{ gateway.name }}
+                                <svg class="btn-payment-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                </svg>
+                            </span>
+                        </button>
+                    </form>
                     <div class="checkout-cancel">
                         <a href="{% url 'creators:profile' transaction.creator.user.username %}" class="link-subtle">Cancel
                         and return to profile</a>
