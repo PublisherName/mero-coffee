@@ -52,7 +52,10 @@
                             5x (Rs. {{ amount_multiples.5x }})
                         </button>
                     </div>
-                    {{ form.amount }}
+                    <div class="input-group">
+                        <span class="input-prefix">Rs.</span>
+                        {{ form.amount }}
+                    </div>
                     <p class="amount-hint">Minimum amount: Rs. {{ creator.coffee_price }}</p>
                     <p id="amount-error" class="error-message hidden"></p>
                 </div>
@@ -69,7 +72,7 @@
                 </div>
                 <!-- Message -->
                 <div class="form-field-large">
-                    <label for="{{ form.message.id_for_label }}" class="label-base">Message (Optional)</label>
+                    <label for="{{ form.message.id_for_label }}" class="label-base">Message</label>
                     {{ form.message }}
                     <p class="char-counter">
                         <span id="char-count">0</span>/500 characters
@@ -77,7 +80,7 @@
                 </div>
                 <!-- Payment Methods -->
                 <div class="payment-methods-section">
-                    <label class="label-base">Choose Payment Method *</label>
+                    <label class="label-base">Choose Payment Method</label>
                     <div class="payment-methods-grid">
                         {% for gateway in payment_gateways %}
                             <label class="payment-provider-label">
@@ -92,8 +95,8 @@
                                     <div class="payment-provider-content">
                                         <!-- Icon -->
                                         <div class="payment-provider-icon"
-                                             style="background: linear-gradient(135deg, var(--brand-color)33, var(--brand-color)1a);
-                                                    border-color: var(--brand-color)4d">
+                                             style="background: linear-gradient(135deg, {{ gateway.brand_color }}33, {{ gateway.brand_color }}1a);
+                                                    border-color: {{ gateway.brand_color }}4d">
                                             <svg style="color: var(--brand-color)" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z">
                                                 </path>

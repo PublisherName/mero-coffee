@@ -287,6 +287,10 @@
     justify-content: center;
 }
 
+.payment-provider-input:checked~.payment-provider-card {
+    border-color: var(--brand-color);
+}
+
 .payment-provider-input:checked~.payment-provider-card .payment-check-icon {
     display: flex;
 }
@@ -382,4 +386,23 @@
 
 .error-message.hidden {
     display: none;
+}
+
+/* Input Group for Amount */
+.input-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-prefix {
+    position: absolute;
+    left: 1rem;
+    color: rgb(148 163 184);
+    font-weight: 500;
+    pointer-events: none;
+}
+
+.input-group input {
+    padding-left: 2.5rem !important;
 }

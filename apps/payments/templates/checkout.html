@@ -27,7 +27,7 @@
                 </div>
             </div>
         </div>
-        <div class="checkout-card">
+        <div class="checkout-card" style="--brand-color: {{ gateway.brand_color }}">
             <!-- Header -->
             <div class="checkout-header">
                 <div class="checkout-avatar">{{ transaction.creator.display_name|slice:":1" }}</div>
@@ -43,8 +43,7 @@
                     </div>
                     <div class="transaction-row">
                         <span class="transaction-label">Payment Method</span>
-                        <div class="payment-method-badge"
-                             style="--brand-color: {{ gateway.brand_color }}">
+                        <div class="payment-method-badge">
                             {% if gateway.icon %}
                                 <img src="{{ gateway.icon.url }}"
                                      alt="{{ gateway.name }}"
@@ -75,32 +74,25 @@
                 <!-- Action Buttons -->
                 <div class="checkout-actions">
                     <button class="btn-payment"
-                            style="background: linear-gradient(to right, var(--brand-color), var(--brand-color)dd);
-                                   box-shadow: 0 10px 15px -3px var(--brand-color)4d">
+                            style="background: linear-gradient(to right, {{ gateway.brand_color }}, {{ gateway.brand_color }}dd);
+                                   box-shadow: 0 10px 15px -3px {{ gateway.brand_color }}4d">
                         <div class="btn-payment-overlay"></div>
                         <span class="btn-payment-content">
                             Pay with {{ gateway.name }}
-                            <svg class="btn-payment-icon"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 viewBox="0 0 24 24">
+                            <svg class="btn-payment-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
                             </svg>
                         </span>
                     </button>
                     <div class="checkout-cancel">
-                        <a href="{% url 'creators:profile' transaction.creator.user.username %}"
-                           class="link-subtle">Cancel
+                        <a href="{% url 'creators:profile' transaction.creator.user.username %}" class="link-subtle">Cancel
                         and return to profile</a>
                     </div>
                 </div>
             </div>
             <!-- Security Footer -->
             <div class="security-footer">
-                <svg class="security-icon"
-                     fill="none"
-                     stroke="currentColor"
-                     viewBox="0 0 24 24">
+                <svg class="security-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
                     </path>
                 </svg>
