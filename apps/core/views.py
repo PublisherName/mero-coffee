@@ -35,7 +35,7 @@ def homepage(request):
         {
             "step": 3,
             "title": "Receive Support",
-            "description": "Get paid instantly through eSewa or Khalti",
+            "description": "Start receiving support from your fans instantly via eSewa or Khalti",
         },
     ]
 
