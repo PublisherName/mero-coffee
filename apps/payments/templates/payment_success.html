@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load static %}
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/payments/success.css' %}">
+{% endblock extra_css %}
+{% block title %}
+    Payment Successful - MeroCoffee
+{% endblock title %}
+{% block content %}
+    <div class="success-container">
+        <div class="success-card">
+            <div class="success-emoji">🎉</div>
+            <h1 class="success-title">Thank You for Your Support!</h1>
+            <p class="success-message">
+                You've successfully supported {{ transaction.creator.display_name }} with <span class="success-amount">Rs.
+            {{ transaction.amount }}</span>
+        </p>
+        <div class="transaction-details-card">
+            <h2 class="transaction-details-title">Transaction Details</h2>
+            <div class="transaction-details-list">
+                <div class="transaction-detail-row">
+                    <span class="transaction-detail-label">Transaction ID:</span>
+                    <span class="transaction-id">{{ transaction.transaction_id }}</span>
+                </div>
+                <div class="transaction-detail-row">
+                    <span class="transaction-detail-label">Amount:</span>
+                    <span class="transaction-amount-value">Rs. {{ transaction.amount }}</span>
+                </div>
+                <div class="transaction-detail-row">
+                    <span class="transaction-detail-label">Date:</span>
+                    <span class="transaction-detail-value">{{ transaction.created_at|date:"M d, Y" }}</span>
+                </div>
+                <div class="transaction-detail-row">
+                    <span class="transaction-detail-label">Payment Method:</span>
+                    <span class="transaction-detail-value">{{ gateway.name }}</span>
+                </div>
+                <div class="transaction-detail-row">
+                    <span class="transaction-detail-label">Status:</span>
+                    <span class="transaction-detail-value">{{ transaction.payment_status|title }}</span>
+                </div>
+                {% if ref_id %}
+                    <div class="transaction-detail-row">
+                        <span class="transaction-detail-label">eSewa Ref ID:</span>
+                        <span class="transaction-id">{{ ref_id }}</span>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        {% if transaction.message %}
+            <div class="support-message-card">
+                <h3 class="support-message-title">Your Message</h3>
+                <p class="support-message-text">{{ transaction.message }}</p>
+            </div>
+        {% endif %}
+        <div class="success-actions">
+            <a href="{% url 'creators:creators_list' %}" class="btn-support-another">Support Another Creator</a>
+            <a href="{% url 'creators:profile' transaction.creator.user.username %}" class="btn-become-creator">View
+            Creator Profile</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}
