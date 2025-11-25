@@ -2,31 +2,52 @@ from pathlib import Path
 
 from django.core.management.utils import get_random_secret_key
 from environs import Env
-
-from root.validators import validate_production_settings
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+from marshmallow.validate import OneOf
 
 # Set up the environment variables with default types and values
 env = Env()
 env.read_env()
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+SERVER_ENVIRONMENT = env.str(
+    "SERVER_ENVIRONMENT",
+    validate=OneOf(
+        choices=["development", "testing", "staging", "production"],
+        error="SERVER_ENVIRONMENT can only be one of {choices}",
+    ),
+)
+
+# Is server secure server?
+IS_SERVER_SECURE = SERVER_ENVIRONMENT in ["staging", "production"]
+
+# Secret key for server
+if IS_SERVER_SECURE:
+    SECRET_KEY = env.str("DJANGO_SECRET_KEY", validate=lambda n: len(n) > 49)
+else:
+    SECRET_KEY = env.str(
+        "DJANGO_SECRET_KEY",
+        validate=lambda n: len(n) > 49,
+        default=get_random_secret_key(),
+    )
+
+# Debug
+if IS_SERVER_SECURE:
+    DEBUG = False
+else:
+    DEBUG = True
+
 # Environment-based settings
 SITE_BASE_URL = env.str("SITE_BASE_URL", default="http://127.0.0.1:8000/")
 
-DEBUG = env.bool("DEBUG", default=False)
-
-SECRET_KEY = env.str("DJANGO_SECRET_KEY", default=get_random_secret_key())
-
-# Hosts that are allowed to communicate
+# List of allowed hosts
 DJANGO_ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[], subcast=str)
-if DEBUG:
+if IS_SERVER_SECURE:
+    ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS
+else:
     LOCAL_ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
     ALLOWED_HOSTS = LOCAL_ALLOWED_HOSTS + DJANGO_ALLOWED_HOSTS
-else:
-    ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS
-
 
 # Admin Interface
 ADMIN_APPS = [
@@ -91,12 +112,11 @@ WSGI_APPLICATION = "root.wsgi.application"
 # Database settings
 DATABASES = {
     "default": env.dj_db_url(
-        "DATABSE_URL",
-        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-        conn_max_age=600 if not DEBUG else 0,
-        conn_health_checks=True,
+        "DATABASE_URL",
+        default="sqlite:///db.sqlite3",
     )
 }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -119,30 +139,15 @@ AUTH_USER_MODEL = "accounts.User"
 
 LOGIN_URL = "/login/"
 
-# Security Settings for Production
-if not DEBUG:
-    # HTTPS/SSL Settings
-    SECURE_SSL_REDIRECT = env.bool("SECURE_SSL_REDIRECT", default=True)
-    SESSION_COOKIE_SECURE = True
-    CSRF_COOKIE_SECURE = True
-    SECURE_HSTS_SECONDS = 31536000
-    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
-
-    # Security Headers
-    SECURE_CONTENT_TYPE_NOSNIFF = True
-    SECURE_BROWSER_XSS_FILTER = True
-    X_FRAME_OPTIONS = "DENY"
-
-    # Proxy Headers
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-
 # Internationalization
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
+
+if IS_SERVER_SECURE:
+    # Static files storage
+    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Static files (CSS, JavaScript, Images)
 STATICFILES_DIRS = [
@@ -150,10 +155,6 @@ STATICFILES_DIRS = [
 ]
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "public"
-
-if not DEBUG:
-    STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
 
 # Media files (Images)
 MEDIA_URL = "/media/"
@@ -163,7 +164,7 @@ MEDIA_ROOT = BASE_DIR / "media"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Email verification token settings
-TOKEN_SALT = env.str("TOKEN_SALT", default=get_random_secret_key())
+TOKEN_SALT = env.str("TOKEN_SALT", default=get_random_secret_key(), validate=lambda n: len(n) > 49)
 TOKEN_EXPIRATION_HOURS = env.int("TOKEN_EXPIRATION_HOURS", default=48)
 
 # Email settings
@@ -247,6 +248,3 @@ LOGGING = {
         },
     },
 }
-
-# Validate Production Settings
-validate_production_settings(DEBUG, SECRET_KEY, ALLOWED_HOSTS, TOKEN_SALT)

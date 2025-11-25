@@ -29,7 +29,7 @@ class Command(BaseCommand):
                 "is_active": True,
                 "is_sandbox": True,
                 "base_url": "https://khalti.com/api/v2/",
-                "sanbox_url": "https://dev.khalti.com/api/v2/",
+                "sandbox_url": "https://dev.khalti.com/api/v2/",
                 "description": "Pay with Khalti",
                 "brand_color": "#5c2d91",
             },

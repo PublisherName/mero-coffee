@@ -146,3 +146,15 @@ dmypy.json
 # StaticFiles #
 ################
 public/
+
+# Docker #
+##########
+.env.prod
+.env.dev
+.env.test
+docker-compose.override.yml
+docker-compose.yml
+external_services.yml
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt

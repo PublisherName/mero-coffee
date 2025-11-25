@@ -1,0 +1,19 @@
+services:
+  server:
+    container_name: "${PROJECT_NAME}-server"
+    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    networks:
+      - default
+      - external-services
+
+networks:
+  external-services:
+    external: true

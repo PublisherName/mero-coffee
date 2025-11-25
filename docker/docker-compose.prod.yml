@@ -1,0 +1,13 @@
+services:
+  server:
+    container_name: "${PROJECT_NAME}"
+    env_file: .env
+    image: ghcr.io/publishername/merocoffee:${PROJECT_VERSION}
+    ports:
+      - "8000:8000"
+    networks:
+      - default
+      - external-services
+networks:
+  external-services:
+    external: true

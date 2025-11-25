@@ -69,6 +69,118 @@ Welcome to **MeroCoffee**, a fullstack web application built with Django and Tai
 
 ---
 
+## Docker Setup
+
+MeroCoffee includes Docker support for development, testing, and production environments.
+
+### Prerequisites
+
+- Docker installed on your system
+- Docker Compose V2 (`docker compose` command)
+
+### Setup Steps
+
+1. **Create external services network:**
+   ```bash
+   docker network create external-services
+   ```
+
+2. **Create symlink for docker-compose file:**
+
+   For **development/testing**:
+   ```bash
+   ln -s docker/docker-compose.dev.yml docker-compose.yml
+   ```
+
+   For **staging/production**:
+   ```bash
+   ln -s docker/docker-compose.prod.yml docker-compose.yml
+   ```
+
+3. **Create `.env` file:**
+
+   Copy the appropriate example file and configure required environment variables:
+   ```bash
+   # For development
+   cp .env.dev.example .env
+
+   # For production
+   cp .env.prod.example .env
+   ```
+
+   Edit `.env` and set appropriate values as explained in the example file.
+
+4. **Setup external services (optional):**
+
+   If you need PostgreSQL or Redis, create a symlink and start the services:
+   ```bash
+   ln -s docker/external_services.yml external_services.yml
+   docker compose -f external_services.yml up -d
+   ```
+
+   To start only specific services:
+   ```bash
+   # Start only PostgreSQL
+   docker compose -f external_services.yml up -d db
+
+   # Start only Redis
+   docker compose -f external_services.yml up -d redis
+   ```
+
+5. **Create database (if using PostgreSQL):**
+
+   If you've configured a database other than SQLite3, create the database:
+   ```bash
+   docker exec db psql -U postgres -c 'CREATE DATABASE merocoffee;'
+   ```
+   Replace `merocoffee` with your actual database name from `.env`.
+
+6. **Start the server:**
+   ```bash
+   # Start all services (server + celery worker)
+   docker compose up -d
+
+   # Start server only
+   docker compose up -d server
+   ```
+
+   > **Note**: Celery worker is required for background tasks.
+
+7. **Create superuser (first time setup):**
+   ```bash
+   docker compose exec server sh
+   ./manage.py createsuperuser
+   exit
+   ```
+
+8. **Access the application:**
+   - Application: `http://localhost:8000`
+   - Admin panel: `http://localhost:8000/admin`
+
+### Useful Docker Commands
+
+```bash
+# View logs
+docker compose logs -f
+
+# Rebuild images after code changes
+docker compose build
+
+# View running containers
+docker compose ps
+
+# Stop all services
+docker compose down
+
+# Stop and remove volumes
+docker compose down -v
+
+# Execute commands in running container
+docker compose exec server ./manage.py migrate
+```
+
+---
+
 ## Usage
 
 - Visit the homepage to browse creators or learn how the platform works.
@@ -92,6 +204,6 @@ This project is licensed under the MIT License.
 
 ## Contact
 
-For questions or feedback, contact the maintainer at `event@subashghimire.info.np`
+For questions or feedback, contact the maintainer at `coffee@subashghimire.info.np`
 
 ---

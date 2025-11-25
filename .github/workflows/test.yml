@@ -1,0 +1,79 @@
+name: Tests
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+  workflow_run:
+    workflows: ["Lint"]
+    types:
+      - completed
+
+jobs:
+  test:
+    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+    name: Run Django Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: '0.9.5'
+          enable-cache: true
+
+      - name: Cache uv dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/uv
+            .venv
+          key: ${{ runner.os }}-uv-${{ hashFiles('uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Copy env example to env
+        run: cp .env.test.example .env
+
+      - name: Run migrations
+        run: uv run python manage.py migrate
+
+      - name: Seed payment gateways
+        run: uv run python manage.py seed_payment_gateways
+
+      - name: Run tests
+        run: uv run python manage.py test --verbosity=2
+
+  docker-test:
+    needs: test
+    name: Docker Compose Tests
+    runs-on: ubuntu-latest
+    env:
+      SERVER_ENVIRONMENT: "testing"
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Copy env example to env
+        run: cp .env.test.example .env
+
+      - name: Initial external services setup
+        run: |
+          docker network create external-services
+          ln -s docker/external_services.yml external_services.yml
+          docker compose -f external_services.yml up -d
+          ln -s docker/docker-compose.test.yml docker-compose.yml
+      - name: Run test
+        run: |
+          docker compose up --exit-code-from server

@@ -1,0 +1,12 @@
+services:
+  server:
+    container_name: "${PROJECT_NAME}-test"
+    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: testing
+    volumes:
+      - .:/code
+    networks:
+      - default
