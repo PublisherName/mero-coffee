@@ -1,6 +1,10 @@
 from django.urls import path
 
-from apps.core.views import homepage, how_it_works, pricing
+from apps.core.views import (
+    homepage,
+    how_it_works,
+    pricing,
+)
 
 app_name = "core"
 
