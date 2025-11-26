@@ -181,6 +181,31 @@ docker compose exec server ./manage.py migrate
 
 ---
 
+## Tailwind
+
+1. Install tailwind css dependency
+
+```bash
+uv run python manage.py tailwind install
+```
+2. Start development server ( django + Tailwind )
+
+```bash
+uv run python manage.py tailwind dev
+```
+
+3. Start only the tailwind watcher
+
+```bash
+uv run python manage.py tailwind start
+```
+
+4. Building for production
+
+```bash
+uv run python manage.py tailwind build
+```
+
 ## Usage
 
 - Visit the homepage to browse creators or learn how the platform works.

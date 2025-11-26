@@ -16,6 +16,11 @@ urlpatterns = (
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 )
 
+if settings.DEBUG:
+    urlpatterns += [
+        path("__reload__/", include("django_browser_reload.urls")),
+    ]
+
 handler400 = "django.views.defaults.bad_request"
 handler403 = "django.views.defaults.permission_denied"
 handler404 = "django.views.defaults.page_not_found"
