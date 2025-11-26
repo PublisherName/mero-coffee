@@ -9,8 +9,11 @@ ENV PYTHONUNBUFFERED=1 \
     VENV_PATH="/code/.venv"
 
 RUN apt-get update && apt-get install -y \
+    curl \
     gcc \
     postgresql-client && \
+    curl -fsSL https://deb.nodesource.com/setup_25.x | bash - && \
+    apt-get install -y nodejs && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # UV base

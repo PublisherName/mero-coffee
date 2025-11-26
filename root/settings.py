@@ -65,7 +65,7 @@ DJANGO_CORE_APPS = [
 ]
 
 # Third-Party Apps
-THIRD_PARTY_APPS = []
+THIRD_PARTY_APPS = ["tailwind", "theme"]
 
 # Project Apps
 PROJECT_APPS = [
@@ -79,6 +79,19 @@ PROJECT_APPS = [
 # Combining all app groups
 INSTALLED_APPS = ADMIN_APPS + DJANGO_CORE_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
+# Django-tailwind config
+TAILWIND_APP_NAME = "theme"
+
+NPM_BIN_PATH = env.str("NPM_BIN_PATH", default="/usr/local/bin/npm")
+
+if DEBUG:
+    INSTALLED_APPS += ["django_browser_reload"]
+    # Required for django-browser-reload to work
+    INTERNAL_IPS = [
+        "127.0.0.1",
+        "localhost",
+    ]
+
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -89,6 +102,12 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# Django-tailwind hotreload
+if DEBUG:
+    MIDDLEWARE += [
+        "django_browser_reload.middleware.BrowserReloadMiddleware",
+    ]
 
 ROOT_URLCONF = "root.urls"
 
