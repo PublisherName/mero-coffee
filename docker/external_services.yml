@@ -8,6 +8,15 @@ services:
     networks:
       - external-services
 
+  redis:
+    container_name: redis
+    image: redis:6.2-alpine
+    env_file: .env
+    command: redis-server
+    volumes:
+      - redis-data:/data
+    networks:
+      - external-services
 
 networks:
   external-services:
@@ -16,3 +25,5 @@ networks:
 volumes:
   postgis-data:
     name: postgis-data
+  redis-data:
+    name: redis-data

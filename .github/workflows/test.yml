@@ -15,6 +15,9 @@ jobs:
     if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
     name: Run Django Tests
     runs-on: ubuntu-latest
+    env:
+      NPM_BIN_PATH: /usr/local/bin/npm
+
     strategy:
       matrix:
         node-version: [25.x]

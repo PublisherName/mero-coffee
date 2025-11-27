@@ -65,7 +65,12 @@ DJANGO_CORE_APPS = [
 ]
 
 # Third-Party Apps
-THIRD_PARTY_APPS = ["tailwind", "theme"]
+THIRD_PARTY_APPS = [
+    "tailwind",
+    "theme",
+    "defender",
+]
+
 
 # Project Apps
 PROJECT_APPS = [
@@ -79,10 +84,14 @@ PROJECT_APPS = [
 # Combining all app groups
 INSTALLED_APPS = ADMIN_APPS + DJANGO_CORE_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
+# Defender config
+DEFENDER_REDIS_URL = env.str("DEFENDER_REDIS_URL", default="redis://localhost:6379/0")
+DEFENDER_LOCKOUT_TEMPLATE = "defender_lockout.html"
+
 # Django-tailwind config
 TAILWIND_APP_NAME = "theme"
 
-NPM_BIN_PATH = env.str("NPM_BIN_PATH", default="/usr/local/bin/npm")
+NPM_BIN_PATH = env.str("NPM_BIN_PATH", default="/usr/bin/npm")
 
 if DEBUG:
     INSTALLED_APPS += ["django_browser_reload"]
@@ -101,6 +110,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "defender.middleware.FailedLoginMiddleware",
 ]
 
 # Django-tailwind hotreload
