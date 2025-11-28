@@ -13,6 +13,9 @@ Welcome to **MeroCoffee**, a fullstack web application built with Django and Tai
 - **Responsive Navbar & Sidebar**: Active navigation links and user profile dropdown with logout via secure POST form
 - **Real-time UI Interaction**: Mobile menu toggling, dropdown menus, and interactive charts (via Chart.js)
 - **Customizable Coffee Price**
+- **Security Features**:
+  - **Django Defender**: Protects against brute-force login attempts with automatic account lockout
+  - **Admin Honeypot**: Fake admin login at `/admin/` to catch and log malicious login attempts (real admin at `/dashboardx/`)
 
 ---
 
@@ -24,6 +27,10 @@ Welcome to **MeroCoffee**, a fullstack web application built with Django and Tai
   - Custom CSS files for semantic component styles
   - Separated CSS architecture for maintainability
 - **Chart.js** — Interactive earnings chart on dashboard
+- **Django Admin Honeypot** — Fake admin login at `/admin/` to catch and log malicious login attempts (real admin at `/dashboardx/`)
+- **Django Defender** — Protects against brute-force login attempts with automatic account lockout
+- **Django Jazzmin** — Customizable admin interface with modern design
+
 - **PostgreSQL or SQLite** — Database (adjustable)
 - **JavaScript** — UI behaviors (menu toggles, dropdowns)
 
@@ -205,6 +212,21 @@ uv run python manage.py tailwind start
 ```bash
 uv run python manage.py tailwind build
 ```
+
+---
+
+## Security
+
+### Admin Honeypot
+
+MeroCoffee uses **django-admin-honeypot** to protect the admin panel from unauthorized access attempts:
+
+- **Fake Admin**: `/admin/` - This is a decoy login page that logs all login attempts
+- **Real Admin**: `/dashboardx/` - This is the actual Django admin panel
+
+All login attempts to `/admin/` are logged in the database and can be reviewed in the real admin panel at `/dashboardx/admin_honeypot/loginattempt/`. This helps identify potential security threats and malicious actors trying to access your admin panel.
+
+---
 
 ## Usage
 

@@ -69,8 +69,8 @@ THIRD_PARTY_APPS = [
     "tailwind",
     "theme",
     "defender",
+    "admin_honeypot",
 ]
-
 
 # Project Apps
 PROJECT_APPS = [
