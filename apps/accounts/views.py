@@ -1,7 +1,9 @@
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
+from django_ratelimit.decorators import ratelimit
 
 from .forms import LoginForm, SignUpForm
 from .utills import send_verification_email, verify_email_verification_token
@@ -71,6 +73,7 @@ def signup_view(request):
     return render(request, "signup.html", {"form": form})
 
 
+@ratelimit(key="ip", rate=settings.RATELIMIT_RATE, method="POST", block=True)
 def resend_confirmation_view(request, user_id):
     user = get_object_or_404(User, id=user_id)
 
@@ -83,6 +86,7 @@ def resend_confirmation_view(request, user_id):
     return redirect("accounts:email_confirmation_sent_view", user_id=user.id)
 
 
+@ratelimit(key="ip", rate=settings.RATELIMIT_RATE, method="GET", block=True)
 def verify_email_view(request):
     token = request.GET.get("token")
     if not token:

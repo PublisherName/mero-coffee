@@ -105,3 +105,7 @@ def how_it_works(request):
 
 def pricing(request):
     return render(request, "pricing.html", {})
+
+
+def ratelimit_lockout_view(request, exception=None):
+    return render(request, "ratelimit_lockout.html")

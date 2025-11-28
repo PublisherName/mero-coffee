@@ -70,6 +70,7 @@ THIRD_PARTY_APPS = [
     "theme",
     "defender",
     "admin_honeypot",
+    "django_ratelimit",
 ]
 
 # Project Apps
@@ -83,10 +84,6 @@ PROJECT_APPS = [
 
 # Combining all app groups
 INSTALLED_APPS = ADMIN_APPS + DJANGO_CORE_APPS + THIRD_PARTY_APPS + PROJECT_APPS
-
-# Defender config
-DEFENDER_REDIS_URL = env.str("DEFENDER_REDIS_URL", default="redis://localhost:6379/0")
-DEFENDER_LOCKOUT_TEMPLATE = "defender_lockout.html"
 
 # Django-tailwind config
 TAILWIND_APP_NAME = "theme"
@@ -111,6 +108,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "defender.middleware.FailedLoginMiddleware",
+    "django_ratelimit.middleware.RatelimitMiddleware",
 ]
 
 # Django-tailwind hotreload
@@ -145,6 +143,25 @@ DATABASES = {
         default="sqlite:///db.sqlite3",
     )
 }
+
+# Cache settings
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": env.str("CACHE_URL", default="redis://localhost:6379/0"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    },
+}
+
+# Defender config
+DEFENDER_REDIS_URL = CACHES["default"]["LOCATION"]
+DEFENDER_LOCKOUT_TEMPLATE = "defender_lockout.html"
+
+# Ratelimit config
+RATELIMIT_VIEW = "apps.core.views.ratelimit_lockout_view"
+RATELIMIT_RATE = env.str("RATELIMIT_RATE", default="3/30m")
 
 
 # Password validation
