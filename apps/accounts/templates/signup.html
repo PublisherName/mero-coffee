@@ -1,66 +1,75 @@
 {% extends "base.html" %}
 {% load static %}
 {% block title %}
-    Sign Up - MeroCoffee
+Sign Up - MeroCoffee
 {% endblock title %}
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
+<link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
 {% endblock extra_css %}
 {% block content %}
-    <div class="auth-page-container">
-        <div class="auth-card-wide">
-            <div class="auth-icon-container-large">
-                <span class="text-5xl">✨</span>
-            </div>
-            <h2 class="auth-title-large">Create Your Account</h2>
-            <p class="auth-subtitle-large">Join MeroCoffee and start earning today</p>
-            {% include "includes/messages.html" %}
-            <form method="post" novalidate class="auth-form-large">
-                {% csrf_token %}
-                <div class="auth-form-grid">
-                    <!-- First Name -->
-                    <div>
-                        <label class="auth-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
-                        {{ form.first_name }}
-                        {% if form.first_name.errors %}<p class="auth-error">{{ form.first_name.errors.0 }}</p>{% endif %}
-                    </div>
-                    <!-- Last Name -->
-                    <div>
-                        <label class="auth-label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
-                        {{ form.last_name }}
-                        {% if form.last_name.errors %}<p class="auth-error">{{ form.last_name.errors.0 }}</p>{% endif %}
-                    </div>
-                    <!-- Email (Full width) -->
-                    <div class="auth-form-grid-full">
-                        <label class="auth-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-                        {{ form.email }}
-                        {% if form.email.errors %}<p class="auth-error">{{ form.email.errors.0 }}</p>{% endif %}
-                    </div>
-                    <!-- Username (Full width) -->
-                    <div class="auth-form-grid-full">
-                        <label class="auth-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-                        {{ form.username }}
-                        {% if form.username.errors %}<p class="auth-error">{{ form.username.errors.0 }}</p>{% endif %}
-                    </div>
-                    <!-- Password -->
-                    <div>
-                        <label class="auth-label" for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
-                        {{ form.password1 }}
-                        {% if form.password1.errors %}<p class="auth-error">{{ form.password1.errors.0 }}</p>{% endif %}
-                    </div>
-                    <!-- Confirm Password -->
-                    <div>
-                        <label class="auth-label" for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
-                        {{ form.password2 }}
-                        {% if form.password2.errors %}<p class="auth-error">{{ form.password2.errors.0 }}</p>{% endif %}
-                    </div>
-                </div>
-                <button type="submit" class="auth-btn-primary">Sign Up</button>
-            </form>
-            <p class="auth-text-small-large">
-                Already have an account? <a href="{% url 'accounts:login' %}" class="auth-link-bold">Log in</a>
-            </p>
+<div class="auth-page-container">
+    <div class="auth-card-wide">
+        <div class="auth-icon-container-large">
+            <span class="text-5xl">✨</span>
         </div>
+        <h2 class="auth-title-large">Create Your Account</h2>
+        <p class="auth-subtitle-large">Join MeroCoffee and start earning today</p>
+        {% include "includes/messages.html" %}
+        <form method="post" novalidate class="auth-form-large">
+            {% csrf_token %}
+            <div class="auth-form-grid">
+                <!-- First Name -->
+                <div>
+                    <label class="auth-label" for="{{ form.first_name.id_for_label }}">
+                        {{ form.first_name.label }}
+                    </label>
+                    {{ form.first_name }}
+                    {% if form.first_name.errors %}<p class="auth-error">{{ form.first_name.errors.0 }}</p>{% endif %}
+                </div>
+                <!-- Last Name -->
+                <div>
+                    <label class="auth-label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+                    {{ form.last_name }}
+                    {% if form.last_name.errors %}<p class="auth-error">{{ form.last_name.errors.0 }}</p>{% endif %}
+                </div>
+                <!-- Email (Full width) -->
+                <div class="auth-form-grid-full">
+                    <label class="auth-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}<p class="auth-error">{{ form.email.errors.0 }}</p>{% endif %}
+                </div>
+                <!-- Username (Full width) -->
+                <div class="auth-form-grid-full">
+                    <label class="auth-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}<p class="auth-error">{{ form.username.errors.0 }}</p>{% endif %}
+                </div>
+                <!-- Password -->
+                <div>
+                    <label class="auth-label" for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
+                    {{ form.password1 }}
+                    {% if form.password1.errors %}<p class="auth-error">{{ form.password1.errors.0 }}</p>{% endif %}
+                </div>
+                <!-- Confirm Password -->
+                <div>
+                    <label class="auth-label" for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
+                    {{ form.password2 }}
+                    {% if form.password2.errors %}<p class="auth-error">{{ form.password2.errors.0 }}</p>{% endif %}
+                </div>
+            </div>
+            <button type="submit" class="auth-btn-primary">Sign Up</button>
+        </form>
+        <p class="auth-text-small-large">
+            Already have an account? <a href="{% url 'accounts:login' %}" class="auth-link-bold">Log in</a>
+        </p>
     </div>
-    <script src="{% static 'js/accounts/signup_validation.js' %}"></script>
+</div>
+<script src="{% static 'js/accounts/password_toggle.js' %}"></script>
+<script>
+    // Initialize password toggle for both password fields
+    document.addEventListener('DOMContentLoaded', function () {
+        initPasswordToggles(['id_password1', 'id_password2']);
+    });
+</script>
+<script src="{% static 'js/accounts/signup_validation.js' %}"></script>
 {% endblock content %}

@@ -10,7 +10,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Helper function to show error
     function showError(input, message) {
-        const container = input.parentElement;
+        let container = input.parentElement;
+        // If input is wrapped in password-field-wrapper, use the wrapper's parent
+        if (container.classList.contains('password-field-wrapper')) {
+            container = container.parentElement;
+        }
+
         let error = container.querySelector('.client-error');
         if (!error) {
             error = document.createElement('p');
@@ -24,7 +29,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Helper function to clear error
     function clearError(input) {
-        const container = input.parentElement;
+        let container = input.parentElement;
+        // If input is wrapped in password-field-wrapper, use the wrapper's parent
+        if (container.classList.contains('password-field-wrapper')) {
+            container = container.parentElement;
+        }
+
         const error = container.querySelector('.client-error');
         if (error) {
             error.style.display = 'none';

@@ -5,7 +5,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Helper function to show error
     function showError(input, message) {
-        const container = input.parentElement;
+        let container = input.parentElement;
+        if (container.classList.contains('password-field-wrapper')) {
+            container = container.parentElement;
+        }
+
         let error = container.querySelector('.client-error');
         if (!error) {
             error = document.createElement('p');
@@ -14,12 +18,17 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         error.textContent = message;
         error.style.display = 'block';
+
         input.classList.add('border-red-500');
     }
 
     // Helper function to clear error
     function clearError(input) {
-        const container = input.parentElement;
+        let container = input.parentElement;
+        if (container.classList.contains('password-field-wrapper')) {
+            container = container.parentElement;
+        }
+
         const error = container.querySelector('.client-error');
         if (error) {
             error.style.display = 'none';
