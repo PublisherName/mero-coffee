@@ -46,11 +46,17 @@ Welcome to **MeroCoffee**, a fullstack web application built with Django and Tai
 
 2. Create virtual environment and install dependency:
     ```
-    uv sync --frozen
+    uv sync --frozen --extra development
     ```
-3. Copy .env.example -> .env
+
+    Install uv if not installed:
     ```bash
-    cp .env.example .env
+    curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+
+3. Copy .env.dev.example -> .env
+    ```bash
+    cp .env.dev.example .env
     ```
 4. Run migrations:
     ```
@@ -62,18 +68,32 @@ Welcome to **MeroCoffee**, a fullstack web application built with Django and Tai
     uv run python manage.py seed_payment_gateways
     ```
 
-5. Create a superuser for admin access (optional):
+6. Install tailwind dependency
+   ```bash
+   uv run python manage.py tailwind install
+   ```
+
+7. Build tailwind css and assets
+   ```bash
+   uv run python manage.py tailwind build
+   ```
+
+8. Install redis-server if not installed
+      ```bash
+      sudo pacman -S redis
+      ```
+
+9. Create a superuser for admin access (optional):
     ```
     uv run python manage.py createsuperuser
     ```
 
-6. Start the development server:
+10. Start the development server:
     ```
-    uv run python manage.py runserver
+    uv run python manage.py tailwind dev
     ```
 
-7. Access the app at `http://127.0.0.1:8000`
-
+11. Access the app at `http://127.0.0.1:8000`
 ---
 
 ## Docker Setup
