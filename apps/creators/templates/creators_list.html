@@ -18,9 +18,13 @@
             <p class="creators-hero-subtitle">Discover and support your favorite Nepali creators</p>
             <!-- Search and Filters -->
             <div class="search-filters-card">
-                <div class="search-filters-grid">
-                    <input type="text" placeholder="Search creators..." class="search-input">
-                    <select class="filter-select">
+                <form method="get" action="{% url 'creators:creators_list' %}" class="search-filters-grid">
+                    <input type="text"
+                           name="q"
+                           placeholder="Search creators..."
+                           class="search-input"
+                           value="{{ search_query|default:'' }}">
+                    <select class="filter-select" disabled>
                         <option>All Categories</option>
                         <option>Digital Artist</option>
                         <option>Music Creator</option>
@@ -28,24 +32,41 @@
                         <option>Writer</option>
                         <option>Gamer</option>
                     </select>
-                    <select class="filter-select">
-                        <option>Sort By</option>
-                        <option>Most Supporters</option>
-                        <option>Recently Added</option>
-                        <option>Trending</option>
+                    <select name="sort" class="filter-select">
+                        <option value="">Sort By</option>
+                        <option value="supporters" {% if sort_by == "supporters" %}selected{% endif %}>Most Supporters</option>
+                        <option value="recent" {% if sort_by == "recent" %}selected{% endif %}>Recently Added</option>
+                        <option value="monthly" {% if sort_by == "monthly" %}selected{% endif %}>Highest Monthly</option>
                     </select>
-                    <button class="search-btn">Search</button>
-                </div>
+
+                    <button type="submit" class="search-btn">Search</button>
+                </form>
             </div>
         </div>
     </section>
     <!-- Creators Grid -->
     <section class="creators-grid-section">
         <div class="creators-grid-container">
+            {% if search_query %}
+                <div style="margin-bottom: 2rem;
+                            padding: 1rem;
+                            background: rgba(139, 92, 246, 0.1);
+                            border-radius: 0.75rem;
+                            border: 1px solid rgba(139, 92, 246, 0.2)">
+                    <p style="color: #e9d5ff; margin: 0;">
+                        Search results for "<strong>{{ search_query }}</strong>"
+                        - {{ creators|length }} creator{{ creators|length|pluralize }} found
+                        <a href="{% url 'creators:creators_list' %}"
+                           style="color: #a78bfa;
+                                  text-decoration: none;
+                                  margin-left: 1rem;
+                                  font-weight: 500">Clear search</a>
+                    </p>
+                </div>
+            {% endif %}
             <div class="creators-grid">
                 {% for creator in creators %}
-                    <a href="{% url 'creators:detail' creator.page_url %}"
-                       class="creator-card-link">
+                    <a href="{% url 'creators:profile' creator.user.username %}" class="creator-card-link">
                         <div class="creator-card">
                             <!-- Creator Header Background -->
                             <div class="creator-card-header"></div>

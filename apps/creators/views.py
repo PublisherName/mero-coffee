@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.payments.models import PaymentGateway, SupportTransaction
 
+from .filters import filter_creators, sort_creators
 from .forms import BuyCoffeeForm, CreatorProfileForm
 from .models import CreatorProfile
 
@@ -13,7 +14,7 @@ from .models import CreatorProfile
 def profile(request, username):
     creator = get_object_or_404(CreatorProfile, user__username=username)
 
-    supporter_count = creator.supporters.count() if hasattr(creator, "supporters") else 0
+    supporter_count = creator.supporters
 
     # TODO: Change this to actual income
     monthly_income = 10000
@@ -53,7 +54,21 @@ def profile(request, username):
 
 
 def creators_list(request):
-    return render(request, "creators_list.html")
+    creators = CreatorProfile.objects.filter(is_active=True, user__is_staff=False).select_related(
+        "user"
+    )
+    search_query = request.GET.get("q", "").strip()
+    sort_by = request.GET.get("sort", "").strip()
+
+    creators = filter_creators(search_query, creators)
+    creators = sort_creators(sort_by, creators)
+
+    context = {
+        "creators": creators,
+        "search_query": search_query,
+        "sort_by": sort_by,
+    }
+    return render(request, "creators_list.html", context)
 
 
 @login_required
