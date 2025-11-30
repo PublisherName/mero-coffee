@@ -6,17 +6,13 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.payments.models import PaymentGateway, SupportTransaction
 
-from .filters import filter_creators, sort_creators
 from .forms import BuyCoffeeForm, CreatorProfileForm
 from .models import CreatorProfile
 
 
 def profile(request, username):
-    creator = get_object_or_404(CreatorProfile, user__username=username)
-
+    creator = get_object_or_404(CreatorProfile.objects.by_username(username))
     supporter_count = creator.supporters
-
-    # TODO: Change this to actual income
     monthly_income = 10000
 
     if request.method == "POST":
@@ -32,8 +28,7 @@ def profile(request, username):
                 payment_status="pending",
             )
             return redirect("payments:checkout", transaction_id=transaction.transaction_id)
-        else:
-            messages.error(request, "Please correct the errors in the form.")
+        messages.error(request, "Please correct the errors in the form.")
     else:
         form = BuyCoffeeForm(coffee_price=creator.coffee_price)
 
@@ -54,14 +49,12 @@ def profile(request, username):
 
 
 def creators_list(request):
-    creators = CreatorProfile.objects.filter(is_active=True, user__is_staff=False).select_related(
-        "user"
-    )
+    creators = CreatorProfile.objects.active_creators().select_related("user")
     search_query = request.GET.get("q", "").strip()
     sort_by = request.GET.get("sort", "").strip()
 
-    creators = filter_creators(search_query, creators)
-    creators = sort_creators(sort_by, creators)
+    creators = creators.search(search_query)
+    creators = creators.apply_sort(sort_by)
 
     context = {
         "creators": creators,
@@ -80,8 +73,8 @@ def profile_settings(request):
             form.save()
             messages.success(request, "Your profile have been saved.")
             return redirect("dashboard:profile_settings")
-        else:
-            messages.error(request, "Please correct the errors below.")
+        messages.error(request, "Please correct the errors below.")
     else:
         form = CreatorProfileForm(instance=profile)
+
     return render(request, "profile_settings.html", {"form": form, "settings": profile})

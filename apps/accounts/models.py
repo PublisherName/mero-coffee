@@ -3,6 +3,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+# TODO: Update the permission and roles in user
 class User(AbstractUser):
     class Roles(models.TextChoices):
         CREATOR = "creator", _("Creator")

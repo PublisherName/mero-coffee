@@ -5,6 +5,8 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 
+from .managers import CreatorProfileManager
+
 
 class CreatorProfile(models.Model):
     user = models.OneToOneField(
@@ -15,6 +17,8 @@ class CreatorProfile(models.Model):
     avatar_url = models.URLField(blank=True)
     coffee_price = models.PositiveIntegerField(default=100)
     is_active = models.BooleanField(default=True)
+
+    objects = CreatorProfileManager()
 
     def __str__(self):
         return self.display_name or self.user.username
