@@ -142,9 +142,47 @@
     box-shadow: 0 10px 15px -3px rgb(239 68 68 / 0.5);
 }
 
+/* Component-specific styles */
+.filter-container {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100%;
+}
+
+/* Style the select element within the component */
+.filter-select-component {
+    width: 100%;
+    padding: 0.75rem 2.5rem 0.75rem 1rem !important;
+    background-color: rgb(15 23 42 / 0.5) !important;
+    border: 1px solid rgb(51 65 85) !important;
+    border-radius: 0.5rem !important;
+    color: white !important;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.filter-select-component:hover {
+    border-color: rgb(71 85 105) !important;
+    background-color: rgb(15 23 42 / 0.7) !important;
+}
+
+.filter-select-component:focus {
+    outline: none !important;
+    border-color: rgb(239 68 68) !important;
+    box-shadow: 0 0 0 2px rgb(239 68 68 / 0.5) !important;
+}
+
+/* Ensure disabled state is visible */
+.filter-select-component:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+
 /* Creators Grid Section */
 .creators-grid-section {
-    padding: 5rem 0;
+    padding: 2rem 0;
     background-color: rgb(15 23 42);
 }
 

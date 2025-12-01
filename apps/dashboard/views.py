@@ -33,6 +33,13 @@ def earnings(request):
 def withdrawal(request):
     available_balance = 5500
 
+    # Payment method choices for the select component
+    payment_method_choices = [
+        ("bank", "Bank Transfer"),
+        ("eSewa", "eSewa"),
+        ("khalti", "Khalti"),
+    ]
+
     # Dummy withdrawal history data
     withdrawals = [
         {
@@ -57,6 +64,7 @@ def withdrawal(request):
 
     context = {
         "available_balance": available_balance,
+        "payment_method_choices": payment_method_choices,
         "withdrawals": withdrawals,
     }
     return render(request, "withdrawal.html", context)

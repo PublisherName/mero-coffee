@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
+{% load viewcomponent_tags %}
+
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/creators/creators_list.css' %}">
 {% endblock extra_css %}
@@ -19,28 +21,18 @@
             <!-- Search and Filters -->
             <div class="search-filters-card">
                 <form method="get" action="{% url 'creators:creators_list' %}" class="search-filters-grid">
-                    <input type="text"
-                           name="q"
-                           placeholder="Search creators..."
-                           class="search-input"
-                           value="{{ search_query|default:'' }}">
-                    <select class="filter-select" disabled>
-                        <option>All Categories</option>
-                        <option>Digital Artist</option>
-                        <option>Music Creator</option>
-                        <option>Tech Educator</option>
-                        <option>Writer</option>
-                        <option>Gamer</option>
-                    </select>
-                    <select name="sort" class="filter-select">
-                        <option value="">Sort By</option>
-                        <option value="supporters" {% if sort_by == "supporters" %}selected{% endif %}>Most Supporters</option>
-                        <option value="recent" {% if sort_by == "recent" %}selected{% endif %}>Recently Added</option>
-                        <option value="monthly" {% if sort_by == "monthly" %}selected{% endif %}>Highest Monthly</option>
-                    </select>
 
-                    <button type="submit" class="search-btn">Search</button>
-                </form>
+                <input type="text" name="q" placeholder="Search creators..." class="search-input"
+                    value="{{ search_query|default:'' }}">
+
+                {% component "select_button" name="category" choices=category_choices placeholder="All Categories" disabled=True container_class="filter-container" select_class="filter-select-component" %}
+                {% endcomponent %}
+
+                {% component "select_button" name="sort" choices=sort_choices selected=sort_by placeholder="Sort By" container_class="filter-container" select_class="filter-select-component" %}
+                {% endcomponent %}
+
+                <button type="submit" class="search-btn">Search</button>
+            </form>
             </div>
         </div>
     </section>
