@@ -1,0 +1,31 @@
+/* Select Button Component Styles */
+
+/* Custom select styling - Remove native dropdown arrow */
+select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: none;
+    padding-right: 2.5rem;
+    /* Make room for custom arrow */
+}
+
+/* Ensure custom arrow rotates on focus */
+select:focus+div svg {
+    transform: rotate(180deg);
+    color: #ef4444;
+    /* red-500 */
+}
+
+/* Style select options */
+select option {
+    background-color: #1e293b;
+    /* slate-800 */
+    color: white;
+    padding: 0.75rem 1rem;
+}
+
+select option:hover,
+select option:checked {
+    background: linear-gradient(135deg, #dc2626 0%, #7f1d1d 100%);
+}

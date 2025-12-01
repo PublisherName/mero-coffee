@@ -56,10 +56,29 @@ def creators_list(request):
     creators = creators.search(search_query)
     creators = creators.apply_sort(sort_by)
 
+    # TODO: Add category choices from model
+    category_choices = [
+        ("all", "All Categories"),
+        ("digital_artist", "Digital Artist"),
+        ("music_creator", "Music Creator"),
+        ("tech_educator", "Tech Educator"),
+        ("writer", "Writer"),
+        ("gamer", "Gamer"),
+    ]
+
+    sort_choices = [
+        ("", "Default"),
+        ("supporters", "Most Supporters"),
+        ("recent", "Recently Added"),
+        ("monthly", "Highest Monthly"),
+    ]
+
     context = {
         "creators": creators,
         "search_query": search_query,
         "sort_by": sort_by,
+        "category_choices": category_choices,
+        "sort_choices": sort_choices,
     }
     return render(request, "creators_list.html", context)
 

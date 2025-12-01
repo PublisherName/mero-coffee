@@ -158,3 +158,4 @@ external_services.yml
 nginx/ssl/*.pem
 nginx/ssl/*.key
 nginx/ssl/*.crt
+dump.rdb

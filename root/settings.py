@@ -71,10 +71,12 @@ THIRD_PARTY_APPS = [
     "defender",
     "admin_honeypot",
     "django_ratelimit",
+    "django_viewcomponent",
 ]
 
 # Project Apps
 PROJECT_APPS = [
+    "components",
     "apps.core",
     "apps.accounts",
     "apps.creators",
@@ -122,7 +124,10 @@ ROOT_URLCONF = "root.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": ["templates"],
+        "DIRS": [
+            "templates",
+            "components",
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
