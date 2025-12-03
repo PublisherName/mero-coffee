@@ -1,0 +1,40 @@
+<div class="textarea-input-container {{ container_class }}">
+    {% if label %}
+    <label for="{{ field_id }}" class="textarea-input-label">
+        {{ label }}
+        {% if required %}
+        <span class="textarea-input-required">*</span>
+        {% endif %}
+    </label>
+    {% endif %}
+
+    <textarea 
+        id="{{ field_id }}" 
+        name="{{ name }}" 
+        class="{{ input_classes }} textarea-input-field"
+        placeholder="{{ placeholder }}"
+        rows="{{ rows }}"
+        {% if required %}required{% endif %}
+    >{{ value|default:'' }}</textarea>
+
+    {% if help_text %}
+    <p class="textarea-input-help">{{ help_text }}</p>
+    {% endif %}
+
+    {% if errors %}
+    <div class="textarea-input-errors">
+        {% for error in errors %}
+        <p class="textarea-input-error">
+            <svg class="textarea-input-error-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            {{ error }}
+        </p>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/components/textarea_input.css' %}">
+<script src="{% static 'js/components/textarea_input.js' %}"></script>

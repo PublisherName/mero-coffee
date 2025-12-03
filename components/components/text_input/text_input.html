@@ -1,0 +1,41 @@
+<div class="text-input-container {{ container_class }}">
+    {% if label %}
+    <label for="{{ field_id }}" class="text-input-label">
+        {{ label }}
+        {% if required %}
+        <span class="text-input-required">*</span>
+        {% endif %}
+    </label>
+    {% endif %}
+
+    <input 
+        type="{{ input_type }}" 
+        id="{{ field_id }}" 
+        name="{{ name }}" 
+        class="{{ input_classes }} text-input-field"
+        placeholder="{{ placeholder }}"
+        value="{{ value|default:'' }}"
+        {% if required %}required{% endif %}
+    >
+
+    {% if help_text %}
+    <p class="text-input-help">{{ help_text }}</p>
+    {% endif %}
+
+    {% if errors %}
+    <div class="text-input-errors">
+        {% for error in errors %}
+        <p class="text-input-error">
+            <svg class="text-input-error-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            {{ error }}
+        </p>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/components/text_input.css' %}">
+<script src="{% static 'js/components/text_input.js' %}"></script>

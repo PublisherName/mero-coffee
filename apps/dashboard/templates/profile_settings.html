@@ -1,5 +1,6 @@
 {% extends "dashboard_base.html" %}
 {% load static %}
+{% load viewcomponent_tags %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/dashboard/shared.css' %}">
 {% endblock extra_css %}
@@ -12,26 +13,10 @@
         {% include "includes/messages.html" %}
         <form method="post" novalidate class="profile-settings-form">
             {% csrf_token %}
-            <div>
-                <label for="display_name" class="form-field-label">Display Name</label>
-                {{ form.display_name }}
-                {% if form.display_name.errors %}<p class="form-error-text">{{ form.display_name.errors.0 }}</p>{% endif %}
-            </div>
-            <div>
-                <label for="bio" class="form-field-label">Bio</label>
-                {{ form.bio }}
-                {% if form.bio.errors %}<p class="form-error-text">{{ form.bio.errors.0 }}</p>{% endif %}
-            </div>
-            <div>
-                <label for="avatar_url" class="form-field-label">Avatar URL</label>
-                {{ form.avatar_url }}
-                {% if form.avatar_url.errors %}<p class="form-error-text">{{ form.avatar_url.errors.0 }}</p>{% endif %}
-            </div>
-            <div>
-                <label for="coffee_price" class="form-field-label">Coffee Price (Rs.)</label>
-                {{ form.coffee_price }}
-                {% if form.coffee_price.errors %}<p class="form-error-text">{{ form.coffee_price.errors.0 }}</p>{% endif %}
-            </div>
+            {% component "text_input" field=form.display_name %} {% endcomponent %}
+            {% component "textarea_input" field=form.bio rows=5 %} {% endcomponent %}
+            {% component "text_input" field=form.avatar_url %} {% endcomponent %}
+            {% component "text_input" field=form.coffee_price input_type="number" %} {% endcomponent %}
             <button type="submit" class="form-submit-btn">Save Changes</button>
         </form>
     </div>

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load viewcomponent_tags %}
 {% block title %}
     Sign Up - MeroCoffee
 {% endblock title %}
@@ -18,42 +19,16 @@
             <form method="post" novalidate class="auth-form-large">
                 {% csrf_token %}
                 <div class="auth-form-grid">
-                    <!-- First Name -->
-                    <div>
-                        <label class="auth-label" for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
-                        {{ form.first_name }}
-                        {% if form.first_name.errors %}<p class="auth-error">{{ form.first_name.errors.0 }}</p>{% endif %}
-                    </div>
-                    <!-- Last Name -->
-                    <div>
-                        <label class="auth-label" for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
-                        {{ form.last_name }}
-                        {% if form.last_name.errors %}<p class="auth-error">{{ form.last_name.errors.0 }}</p>{% endif %}
-                    </div>
-                    <!-- Email (Full width) -->
+                    {% component "text_input" field=form.first_name %} {% endcomponent %}
+                    {% component "text_input" field=form.last_name %} {% endcomponent %}
                     <div class="auth-form-grid-full">
-                        <label class="auth-label" for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
-                        {{ form.email }}
-                        {% if form.email.errors %}<p class="auth-error">{{ form.email.errors.0 }}</p>{% endif %}
+                        {% component "email_input" field=form.email %} {% endcomponent %}
                     </div>
-                    <!-- Username (Full width) -->
                     <div class="auth-form-grid-full">
-                        <label class="auth-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-                        {{ form.username }}
-                        {% if form.username.errors %}<p class="auth-error">{{ form.username.errors.0 }}</p>{% endif %}
+                        {% component "text_input" field=form.username %} {% endcomponent %}
                     </div>
-                    <!-- Password -->
-                    <div>
-                        <label class="auth-label" for="{{ form.password1.id_for_label }}">{{ form.password1.label }}</label>
-                        {{ form.password1 }}
-                        {% if form.password1.errors %}<p class="auth-error">{{ form.password1.errors.0 }}</p>{% endif %}
-                    </div>
-                    <!-- Confirm Password -->
-                    <div>
-                        <label class="auth-label" for="{{ form.password2.id_for_label }}">{{ form.password2.label }}</label>
-                        {{ form.password2 }}
-                        {% if form.password2.errors %}<p class="auth-error">{{ form.password2.errors.0 }}</p>{% endif %}
-                    </div>
+                    {% component "password_input" field=form.password1 %} {% endcomponent %}
+                    {% component "password_input" field=form.password2 %} {% endcomponent %}
                 </div>
                 <button type="submit" class="auth-btn-primary">Sign Up</button>
             </form>
@@ -62,5 +37,4 @@
             </p>
         </div>
     </div>
-    <script src="{% static 'js/accounts/signup_validation.js' %}"></script>
 {% endblock content %}

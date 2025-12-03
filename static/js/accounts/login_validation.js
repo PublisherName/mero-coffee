@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', function () {
     const form = document.querySelector('.auth-form');
     const usernameInput = document.getElementById('id_username');
-    const passwordInput = document.getElementById('id_password');
 
-    // Helper function to show error
     function showError(input, message) {
-        const container = input.parentElement;
+        const container = input.closest('.input-container');
+        if (!container) return;
+        
         let error = container.querySelector('.client-error');
         if (!error) {
             error = document.createElement('p');
@@ -13,21 +13,21 @@ document.addEventListener('DOMContentLoaded', function () {
             container.appendChild(error);
         }
         error.textContent = message;
-        error.style.display = 'block';
-        input.classList.add('border-red-500');
+        input.classList.remove('border-slate-700', 'focus:border-slate-600', 'focus:ring-slate-500/30');
+        input.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/50');
     }
 
-    // Helper function to clear error
     function clearError(input) {
-        const container = input.parentElement;
+        const container = input.closest('.input-container');
+        if (!container) return;
+        
         const error = container.querySelector('.client-error');
-        if (error) {
-            error.style.display = 'none';
-        }
-        input.classList.remove('border-red-500');
+        if (error) error.remove();
+        
+        input.classList.remove('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/50');
+        input.classList.add('border-slate-700', 'focus:border-slate-600', 'focus:ring-slate-500/30');
     }
 
-    // Validation functions
     function validateRequired(input, fieldName) {
         if (!input.value.trim()) {
             showError(input, `${fieldName} is required.`);
@@ -37,25 +37,19 @@ document.addEventListener('DOMContentLoaded', function () {
         return true;
     }
 
-    // Real-time validation
     if (usernameInput) {
-        usernameInput.addEventListener('input', () => validateRequired(usernameInput, 'Username'));
-    }
-    if (passwordInput) {
-        passwordInput.addEventListener('input', () => validateRequired(passwordInput, 'Password'));
+        usernameInput.addEventListener('input', () => {
+            if (usernameInput.value.trim()) {
+                clearError(usernameInput);
+            }
+        });
     }
 
-    // Form submission validation
     if (form) {
         form.addEventListener('submit', function (event) {
             let isValid = true;
-
             if (usernameInput && !validateRequired(usernameInput, 'Username')) isValid = false;
-            if (passwordInput && !validateRequired(passwordInput, 'Password')) isValid = false;
-
-            if (!isValid) {
-                event.preventDefault();
-            }
+            if (!isValid) event.preventDefault();
         });
     }
 });
