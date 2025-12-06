@@ -115,11 +115,18 @@
     margin-bottom: 2rem;
 }
 
+.auth-footer-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
 .auth-text-small {
     text-align: center;
     font-size: 0.875rem;
     color: rgb(148 163 184);
-    margin-top: 1.5rem;
+    margin: 0;
 }
 
 .auth-text-small-large {
@@ -139,7 +146,7 @@
 .auth-form-large {
     display: flex;
     flex-direction: column;
-    gap: 2rem;
+    gap: 1.25rem;
 }
 
 .auth-form-medium {

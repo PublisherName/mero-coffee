@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load viewcomponent_tags %}
 {% block title %}
     Login - MeroCoffee
 {% endblock title %}
@@ -18,30 +19,19 @@
                 {% include "includes/messages.html" %}
                 <form method="post" class="auth-form" novalidate>
                     {% csrf_token %}
-                    <div>
-                        <label class="auth-label" for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-                        {{ form.username }}
-                        {% if form.username.errors %}<p class="auth-error">{{ form.username.errors.0 }}</p>{% endif %}
-                    </div>
-                    <div>
-                        <label class="auth-label" for="{{ form.password.id_for_label }}">{{ form.password.label }}</label>
-                        {{ form.password }}
-                        {% if form.password.errors %}<p class="auth-error">{{ form.password.errors.0 }}</p>{% endif %}
-                    </div>
-                    <div class="auth-checkbox-container">
-                        <label class="auth-checkbox-label">
-                            <input type="checkbox" name="remember" class="auth-checkbox">
-                            <span class="auth-checkbox-text">Remember me</span>
-                        </label>
-                        <a href="{% url 'accounts:password_reset' %}" class="auth-link">Forgot password?</a>
-                    </div>
+                    {% component "text_input" field=form.username %} {% endcomponent %}
+                    {% component "password_input" field=form.password %} {% endcomponent %}
                     <button type="submit" class="auth-btn-primary">Login</button>
                 </form>
-                <p class="auth-text-small">
-                    Don't have an account? <a href="{% url 'accounts:signup' %}" class="auth-link-bold">Sign up</a>
-                </p>
+                <div class="auth-footer-links">
+                    <p class="auth-text-small">
+                        Don't have an account? <a href="{% url 'accounts:signup' %}" class="auth-link-bold">Sign up</a>
+                    </p>
+                    <p class="auth-text-small">
+                        <a href="{% url 'accounts:password_reset' %}" class="auth-link">Forgot password?</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-    <script src="{% static 'js/accounts/login_validation.js' %}"></script>
 {% endblock content %}

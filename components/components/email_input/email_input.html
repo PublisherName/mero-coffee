@@ -1,0 +1,41 @@
+<div class="email-input-container {{ container_class }}">
+    {% if label %}
+    <label for="{{ field_id }}" class="email-input-label">
+        {{ label }}
+        {% if required %}
+        <span class="email-input-required">*</span>
+        {% endif %}
+    </label>
+    {% endif %}
+
+    <input 
+        type="email" 
+        id="{{ field_id }}" 
+        name="{{ name }}" 
+        class="{{ input_classes }} email-input-field"
+        placeholder="{{ placeholder }}"
+        value="{{ value|default:'' }}"
+        {% if required %}required{% endif %}
+    >
+
+    {% if help_text %}
+    <p class="email-input-help">{{ help_text }}</p>
+    {% endif %}
+
+    {% if errors %}
+    <div class="email-input-errors">
+        {% for error in errors %}
+        <p class="email-input-error">
+            <svg class="email-input-error-icon" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
+            {{ error }}
+        </p>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/components/email_input.css' %}">
+<script src="{% static 'js/components/email_input.js' %}"></script>

@@ -12,12 +12,6 @@ class LoginForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "placeholder": "Username or Email",
-                "class": (
-                    "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 "
-                    "rounded-lg text-white placeholder-slate-500 focus:outline-none "
-                    "focus:border-red-500 focus:ring-2 focus:ring-red-500/50"
-                    "transition-all duration-300"
-                ),
             }
         ),
     )
@@ -26,12 +20,6 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(
             attrs={
                 "placeholder": "Password",
-                "class": (
-                    "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 "
-                    "rounded-lg text-white placeholder-slate-500 focus:outline-none "
-                    "focus:border-red-500 focus:ring-2 focus:ring-red-500/50"
-                    "transition-all duration-300"
-                ),
             }
         ),
     )
@@ -43,11 +31,6 @@ class SignUpForm(forms.ModelForm):
         widget=forms.PasswordInput(
             attrs={
                 "placeholder": "Password",
-                "class": (
-                    "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
-                    "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
-                    "focus:ring-2 focus:ring-red-500/50 transition-all duration-300"
-                ),
             }
         ),
         strip=False,
@@ -57,11 +40,6 @@ class SignUpForm(forms.ModelForm):
         widget=forms.PasswordInput(
             attrs={
                 "placeholder": "Confirm Password",
-                "class": (
-                    "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
-                    "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
-                    "focus:ring-2 focus:ring-red-500/50 transition-all duration-300"
-                ),
             }
         ),
         strip=False,
@@ -74,41 +52,21 @@ class SignUpForm(forms.ModelForm):
             "username": forms.TextInput(
                 attrs={
                     "placeholder": "Username",
-                    "class": (
-                        "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
-                        "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
-                        "focus:ring-2 focus:ring-red-500/50 transition-all duration-300"
-                    ),
                 }
             ),
             "email": forms.EmailInput(
                 attrs={
                     "placeholder": "Email",
-                    "class": (
-                        "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
-                        "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
-                        "focus:ring-2 focus:ring-red-500/50 transition-all duration-300"
-                    ),
                 }
             ),
             "first_name": forms.TextInput(
                 attrs={
                     "placeholder": "First Name",
-                    "class": (
-                        "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
-                        "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
-                        "focus:ring-2 focus:ring-red-500/50 transition-all duration-300"
-                    ),
-                }
+                },
             ),
             "last_name": forms.TextInput(
                 attrs={
                     "placeholder": "Last Name",
-                    "class": (
-                        "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
-                        "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
-                        "focus:ring-2 focus:ring-red-500/50 transition-all duration-300"
-                    ),
                 }
             ),
         }
@@ -125,6 +83,12 @@ class SignUpForm(forms.ModelForm):
         if User.objects.filter(email=email).exists():
             raise ValidationError("A user with that email already exists.")
         return email
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["first_name"].required = True
+        self.fields["last_name"].required = True
+        self.fields["username"].help_text = ""
 
     def save(self, commit=True):
         user = super().save(commit=False)

@@ -15,10 +15,7 @@ Withdrawal - MeroCoffee
         {% csrf_token %}
         {% include "includes/messages.html" %}
         <div>
-            <label for="amount" class="form-field-label">Withdrawal Amount (Rs.)</label>
-            <input type="number" name="amount" id="amount" min="1" max="{{ available_balance }}" required
-                class="withdrawal-input" />
-            <p class="withdrawal-balance-hint">Available balance: Rs. {{ available_balance|default:"0" }}</p>
+            {% component "text_input" name="amount" label="Withdrawal Amount (Rs.)" input_type="number" required=True placeholder="Enter amount" %} {% endcomponent %}
         </div>
         <div>
             {% component "select_button" name="payment_method" choices=payment_method_choices placeholder="Select method" required=True label="Payment Method" select_class="withdrawal-select" %}
