@@ -8,59 +8,55 @@ ENV PYTHONUNBUFFERED=1 \
     CODE_PATH="/code" \
     VENV_PATH="/code/.venv"
 
-RUN apt-get update && apt-get install -y \
-    curl \
-    gcc \
-    postgresql-client && \
-    curl -fsSL https://deb.nodesource.com/setup_25.x | bash - && \
-    apt-get install -y nodejs && \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# UV base
-FROM base AS uv-base
-
 COPY --from=ghcr.io/astral-sh/uv:0.9.5 /uv /uvx /bin/
 
 # Development stage
-FROM uv-base AS development
+FROM base AS development
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl gcc postgresql-client nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR $CODE_PATH
-
 COPY . $CODE_PATH
-
 ENTRYPOINT ["/code/docker/entrypoint.dev.sh"]
 
 # Testing stage
-FROM uv-base AS testing
+FROM base AS testing
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    curl gcc postgresql-client nodejs && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR $CODE_PATH
-
-# Copy source code
 COPY . $CODE_PATH
-
-# Use testing entrypoint
 ENTRYPOINT ["/code/docker/entrypoint.test.sh"]
 
-
 # Production build stage
-FROM uv-base AS production-build
+FROM base AS production-build
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc postgresql-client && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR $CODE_PATH
-
 COPY pyproject.toml uv.lock ./
-
-# Install all dependencies required for production
-RUN uv venv --seed
-RUN uv sync --frozen --no-dev --extra production --no-install-project
+RUN uv venv --seed && \
+    uv sync --frozen --no-dev --extra production --no-install-project && \
+    find $VENV_PATH -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true && \
+    find $VENV_PATH -type f -name "*.pyc" -delete && \
+    find $VENV_PATH -type f -name "*.pyo" -delete
 
 # Production stage
-FROM base AS production
+FROM python:3.13-slim AS production
 
-WORKDIR $CODE_PATH
+ENV PYTHONUNBUFFERED=1 PYTHONDONTWRITEBYTECODE=1 PATH="/code/.venv/bin:$PATH"
 
-COPY --from=production-build $VENV_PATH $VENV_PATH
-COPY . $CODE_PATH
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    postgresql-client && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENV PATH="$VENV_PATH/bin:$PATH"
-
+WORKDIR /code
+COPY --from=production-build /code/.venv /code/.venv
+COPY . /code
 ENTRYPOINT ["/code/docker/entrypoint.prod.sh"]

@@ -1,6 +1,4 @@
 #!/bin/sh
-./manage.py tailwind install
-./manage.py tailwind build
 ./manage.py collectstatic --no-input
 ./manage.py migrate --no-input
 ./manage.py seed_payment_gateways
