@@ -3,16 +3,16 @@ name: Tests
 on:
   push:
     branches: [develop]
-  pull_request:
-    branches: [develop]
   workflow_run:
     workflows: ["Lint"]
     types:
       - completed
+env:
+  IMAGE_ID: ghcr.io/${{ github.repository_owner }}/merocoffee
+  DOCKER_BUILDKIT: 1
 
 jobs:
-  test:
-    if: ${{ github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success' }}
+  test-django:
     name: Run Django Tests
     runs-on: ubuntu-latest
     env:
@@ -73,7 +73,7 @@ jobs:
         run: uv run python manage.py test --verbosity=2
 
   docker-test:
-    needs: test
+    needs: test-django
     name: Docker Compose Tests
     runs-on: ubuntu-latest
     env:
@@ -94,3 +94,34 @@ jobs:
       - name: Run test
         run: |
           docker compose up --exit-code-from server
+
+  push-image:
+    needs: docker-test
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy .env files
+        run: cp .env.prod.example .env
+
+      - name: Build image
+        run: |
+          docker build . --file Dockerfile --tag merocoffee --target production \
+            --progress=plain --build-arg BUILDKIT_INLINE_CACHE=1 \
+            --cache-from $(echo $IMAGE_ID | tr '[A-Z]' '[a-z]'):develop
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+          echo VERSION=$VERSION
+          docker tag merocoffee $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION
