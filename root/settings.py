@@ -72,6 +72,7 @@ THIRD_PARTY_APPS = [
     "admin_honeypot",
     "django_ratelimit",
     "django_viewcomponent",
+    "cities_light",
 ]
 
 # Project Apps
@@ -299,3 +300,5 @@ LOGGING = {
         },
     },
 }
+
+CITIES_LIGHT_INCLUDE_COUNTRIES = ["NP"]

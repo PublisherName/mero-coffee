@@ -5,12 +5,26 @@ from .models import KYC
 
 @admin.register(KYC)
 class KYCAdmin(admin.ModelAdmin):
-    list_display = ("user", "full_name", "status", "created_at")
-    list_filter = ("status", "created_at")
+    list_display = ("user", "full_name", "country", "region", "city", "status", "created_at")
+    list_filter = ("status", "country", "created_at")
     readonly_fields = ("created_at", "updated_at")
+    autocomplete_fields = ["country", "region", "subregion", "city"]
     fieldsets = (
         ("User Info", {"fields": ("user",)}),
-        ("Personal Details", {"fields": ("full_name", "phone", "address", "city", "country")}),
+        (
+            "Personal Details",
+            {
+                "fields": (
+                    "full_name",
+                    "phone",
+                    "country",
+                    "region",
+                    "subregion",
+                    "city",
+                    "address",
+                )
+            },
+        ),
         ("ID Verification", {"fields": ("id_type", "id_number")}),
         ("Status", {"fields": ("status", "rejection_reason")}),
         ("Timestamps", {"fields": ("created_at", "updated_at")}),

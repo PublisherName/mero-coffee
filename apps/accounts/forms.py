@@ -105,13 +105,49 @@ class SignUpForm(forms.ModelForm):
 class KYCForm(forms.ModelForm):
     class Meta:
         model = KYC
-        fields = ("full_name", "phone", "address", "city", "country", "id_type", "id_number")
+        fields = (
+            "full_name",
+            "phone",
+            "address",
+            "country",
+            "region",
+            "subregion",
+            "city",
+            "id_type",
+            "id_number",
+        )
         widgets = {
-            "full_name": forms.TextInput(attrs={"placeholder": "Full Name"}),
-            "phone": forms.TextInput(attrs={"placeholder": "Phone Number"}),
-            "address": forms.Textarea(attrs={"placeholder": "Address", "rows": 3}),
-            "city": forms.TextInput(attrs={"placeholder": "City"}),
-            "country": forms.TextInput(attrs={"placeholder": "Country"}),
-            "id_type": forms.TextInput(attrs={"placeholder": "ID Type (e.g., Passport, License)"}),
-            "id_number": forms.TextInput(attrs={"placeholder": "ID Number"}),
+            "full_name": forms.TextInput(
+                attrs={"placeholder": "Full Name"},
+            ),
+            "phone": forms.TextInput(
+                attrs={"placeholder": "Phone Number"},
+            ),
+            "address": forms.Textarea(
+                attrs={"placeholder": "Address", "rows": 3},
+            ),
+            "country": forms.Select(
+                attrs={"placeholder": "Select Country"},
+            ),
+            "region": forms.Select(
+                attrs={"placeholder": "Select Region"},
+            ),
+            "subregion": forms.Select(
+                attrs={"placeholder": "Select Sub Region"},
+            ),
+            "city": forms.Select(
+                attrs={"placeholder": "Select City"},
+            ),
+            "id_type": forms.TextInput(
+                attrs={"placeholder": "ID Type (e.g., Passport, License)"},
+            ),
+            "id_number": forms.TextInput(
+                attrs={"placeholder": "ID Number"},
+            ),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["region"].label_from_instance = lambda obj: obj.name
+        self.fields["subregion"].label_from_instance = lambda obj: obj.name
+        self.fields["city"].label_from_instance = lambda obj: obj.name

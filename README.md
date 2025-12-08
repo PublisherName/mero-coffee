@@ -63,9 +63,10 @@ Welcome to **MeroCoffee**, a fullstack web application built with Django and Tai
     uv run python manage.py migrate
     ```
 
-5. Seed default payment gateways (eSewa, Khalti):
+5. Seed default payment gateways and Location fixtures:
     ```bash
     uv run python manage.py seed_payment_gateways
+    uv run python manage.py loaddata fixtures/nepal_cities_light.json
     ```
 
 6. Install tailwind dependency

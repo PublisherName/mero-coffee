@@ -46,8 +46,34 @@ class KYC(models.Model):
     full_name = models.CharField(max_length=255, blank=True)
     phone = models.CharField(max_length=20, blank=True)
     address = models.TextField(blank=True)
-    city = models.CharField(max_length=100, blank=True)
-    country = models.CharField(max_length=100, blank=True)
+    city = models.ForeignKey(
+        "cities_light.City",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="city",
+    )
+    region = models.ForeignKey(
+        "cities_light.Region",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="region",
+    )
+    subregion = models.ForeignKey(
+        "cities_light.Subregion",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="subregion",
+    )
+    country = models.ForeignKey(
+        "cities_light.Country",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="country",
+    )
     id_type = models.CharField(max_length=50, blank=True)
     id_number = models.CharField(max_length=100, blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.NOT_FILED)

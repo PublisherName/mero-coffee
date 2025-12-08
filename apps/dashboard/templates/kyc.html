@@ -45,9 +45,11 @@
                 {% csrf_token %}
                 {% component "text_input" field=form.full_name required=True %} {% endcomponent %}
                 {% component "text_input" field=form.phone required=True %} {% endcomponent %}
+                {% component "select_button" field=form.country required=True %} {% endcomponent %}
+                {% component "select_button" field=form.region required=True %} {% endcomponent %}
+                {% component "select_button" field=form.subregion required=True %} {% endcomponent %}
+                {% component "select_button" field=form.city required=True %} {% endcomponent %}
                 {% component "text_input" field=form.address input_type="text" required=True %} {% endcomponent %}
-                {% component "text_input" field=form.city required=True %} {% endcomponent %}
-                {% component "text_input" field=form.country required=True %} {% endcomponent %}
                 {% component "text_input" field=form.id_type required=True %} {% endcomponent %}
                 {% component "text_input" field=form.id_number required=True %} {% endcomponent %}
 
@@ -78,16 +80,24 @@
                     <p class="kyc-readonly-value">{{ kyc.phone|default:"—" }}</p>
                 </div>
                 <div class="kyc-readonly-field">
-                    <label class="kyc-readonly-label">Address</label>
-                    <p class="kyc-readonly-value">{{ kyc.address|default:"—" }}</p>
+                    <label class="kyc-readonly-label">Country</label>
+                    <p class="kyc-readonly-value">{{ kyc.country.name|default:"—" }}</p>
+                </div>
+                <div class="kyc-readonly-field">
+                    <label class="kyc-readonly-label">Region</label>
+                    <p class="kyc-readonly-value">{{ kyc.region.name|default:"—" }}</p>
+                </div>
+                <div class="kyc-readonly-field">
+                    <label class="kyc-readonly-label">Sub Region</label>
+                    <p class="kyc-readonly-value">{{ kyc.subregion.name|default:"—" }}</p>
                 </div>
                 <div class="kyc-readonly-field">
                     <label class="kyc-readonly-label">City</label>
-                    <p class="kyc-readonly-value">{{ kyc.city|default:"—" }}</p>
+                    <p class="kyc-readonly-value">{{ kyc.city.name|default:"—" }}</p>
                 </div>
                 <div class="kyc-readonly-field">
-                    <label class="kyc-readonly-label">Country</label>
-                    <p class="kyc-readonly-value">{{ kyc.country|default:"—" }}</p>
+                    <label class="kyc-readonly-label">Address</label>
+                    <p class="kyc-readonly-value">{{ kyc.address|default:"—" }}</p>
                 </div>
                 <div class="kyc-readonly-field">
                     <label class="kyc-readonly-label">ID Type</label>
