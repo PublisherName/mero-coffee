@@ -15,7 +15,7 @@
                         </a>
                         <a href="{% url 'dashboard:profile_settings' %}"
                            class="block px-4 py-3 rounded-lg font-medium transition-all duration-300 {% if request.resolver_match.url_name == 'profile_settings' %}bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg{% else %}text-slate-300 hover:bg-slate-700/50{% endif %}">
-                            Profile Details
+                            Profile
                         </a>
                         <a href="{% url 'dashboard:supporters' %}"
                            class="block px-4 py-3 rounded-lg font-medium transition-all duration-300 {% if request.resolver_match.url_name == 'supporters' %}bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg{% else %}text-slate-300 hover:bg-slate-700/50{% endif %}">
@@ -28,6 +28,10 @@
                         <a href="{% url 'dashboard:withdrawal' %}"
                            class="block px-4 py-3 rounded-lg font-medium transition-all duration-300 {% if request.resolver_match.url_name == 'withdrawal' %}bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg{% else %}text-slate-300 hover:bg-slate-700/50{% endif %}">
                             Withdrawal
+                        </a>
+                        <a href="{% url 'dashboard:kyc' %}"
+                           class="block px-4 py-3 rounded-lg font-medium transition-all duration-300 {% if request.resolver_match.url_name == 'kyc' %}bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg{% else %}text-slate-300 hover:bg-slate-700/50{% endif %}">
+                            Verification
                         </a>
                     </nav>
                 </div>

@@ -7,7 +7,12 @@ from django.utils import timezone
 
 class CreatorProfileQuerySet(models.QuerySet):
     def active_creators(self):
-        return self.filter(user__is_active=True, user__is_staff=False)
+        return self.filter(
+            user__is_active=True,
+            user__is_staff=False,
+            user__verified=True,
+            user__kyc__status="approved",
+        )
 
     def by_username(self, username):
         return self.active_creators().filter(user__username=username).select_related("user")

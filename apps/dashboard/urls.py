@@ -1,7 +1,7 @@
 from django.urls import path
 
 from apps.creators.views import profile_settings
-from apps.dashboard.views import dashboard, earnings, supporters, withdrawal
+from apps.dashboard.views import dashboard, earnings, kyc, supporters, withdrawal
 
 app_name = "dashboard"
 
@@ -11,4 +11,5 @@ urlpatterns = [
     path("earnings/", earnings, name="earnings"),
     path("withdrawal/", withdrawal, name="withdrawal"),
     path("supporters/", supporters, name="supporters"),
+    path("kyc/", kyc, name="kyc"),
 ]

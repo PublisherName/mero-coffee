@@ -33,8 +33,11 @@ def login_view(request):
                     user = None
 
             if user is not None:
-                login(request, user)
-                return redirect("dashboard:dashboard")
+                if not user.verified:
+                    messages.error(request, "Please verify your email before logging in.")
+                else:
+                    login(request, user)
+                    return redirect("dashboard:dashboard")
             else:
                 messages.error(request, "Invalid username or password.")
     else:
@@ -108,6 +111,7 @@ def verify_email_view(request):
         messages.info(request, "Your email is already verified. Please , login.")
     else:
         user.is_active = True
+        user.verified = True
         user.save()
         messages.success(request, "Your email has been verified successfully! You can now log in.")
 

@@ -2,6 +2,8 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
+from .models import KYC
+
 User = get_user_model()
 
 
@@ -98,3 +100,18 @@ class SignUpForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class KYCForm(forms.ModelForm):
+    class Meta:
+        model = KYC
+        fields = ("full_name", "phone", "address", "city", "country", "id_type", "id_number")
+        widgets = {
+            "full_name": forms.TextInput(attrs={"placeholder": "Full Name"}),
+            "phone": forms.TextInput(attrs={"placeholder": "Phone Number"}),
+            "address": forms.Textarea(attrs={"placeholder": "Address", "rows": 3}),
+            "city": forms.TextInput(attrs={"placeholder": "City"}),
+            "country": forms.TextInput(attrs={"placeholder": "Country"}),
+            "id_type": forms.TextInput(attrs={"placeholder": "ID Type (e.g., Passport, License)"}),
+            "id_number": forms.TextInput(attrs={"placeholder": "ID Number"}),
+        }

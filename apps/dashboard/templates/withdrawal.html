@@ -2,64 +2,70 @@
 {% load static %}
 {% load viewcomponent_tags %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/dashboard/shared.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard/shared.css' %}">
 {% endblock extra_css %}
 {% block title %}
-Withdrawal - MeroCoffee
+    Withdrawal - MeroCoffee
 {% endblock title %}
 {% block main_content %}
-<div class="withdrawal-form-card">
-    <h1 class="withdrawal-title">Request Withdrawal</h1>
-    <p class="withdrawal-subtitle">Enter the amount you want to withdraw from your available earnings.</p>
-    <form method="post" novalidate class="withdrawal-form">
-        {% csrf_token %}
-        {% include "includes/messages.html" %}
-        <div>
-            {% component "text_input" name="amount" label="Withdrawal Amount (Rs.)" input_type="number" required=True placeholder="Enter amount" %} {% endcomponent %}
-        </div>
-        <div>
-            {% component "select_button" name="payment_method" choices=payment_method_choices placeholder="Select method" required=True label="Payment Method" select_class="withdrawal-select" %}
-            {% endcomponent %}
-        </div>
-        <button type="submit" class="form-submit-btn">Request Withdrawal</button>
-    </form>
-</div>
-<!-- Previous Withdrawals Table -->
-<div class="withdrawal-history-card">
-    <h2 class="withdrawal-history-title">Previous Withdrawals</h2>
-    {% if withdrawals %}
-    <table class="withdrawal-table">
-        <thead class="withdrawal-table-head">
-            <tr>
-                <th class="withdrawal-table-header-cell">Date</th>
-                <th class="withdrawal-table-header-cell">Amount</th>
-                <th class="withdrawal-table-header-cell">Payment Method</th>
-                <th class="withdrawal-table-header-cell">Status</th>
-            </tr>
-        </thead>
-        <tbody class="withdrawal-table-body">
-            {% for withdrawal in withdrawals %}
-            <tr class="withdrawal-table-row">
-                <td class="withdrawal-table-cell withdrawal-date-cell">{{ withdrawal.date|date:"M d, Y" }}</td>
-                <td class="withdrawal-table-cell withdrawal-amount-cell">Rs. {{ withdrawal.amount }}</td>
-                <td class="withdrawal-table-cell withdrawal-method-cell">{{ withdrawal.payment_method }}</td>
-                <td class="withdrawal-table-cell">
-                    {% if withdrawal.status == 'pending' %}
-                    <span class="withdrawal-status-badge withdrawal-status-pending">Pending</span>
-                    {% elif withdrawal.status == 'completed' %}
-                    <span class="withdrawal-status-badge withdrawal-status-completed">Completed</span>
-                    {% elif withdrawal.status == 'rejected' %}
-                    <span class="withdrawal-status-badge withdrawal-status-rejected">Rejected</span>
-                    {% else %}
-                    <span class="withdrawal-status-badge withdrawal-status-default">{{ withdrawal.status }}</span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p class="withdrawal-empty-state">No previous withdrawals.</p>
-    {% endif %}
-</div>
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Withdrawal</h1>
+        <p class="dashboard-subtitle">Request a withdrawal from your available earnings</p>
+    </div>
+    {% include "includes/kyc_status_alert.html" %}
+    <!-- Withdrawal Form -->
+    <div class="withdrawal-form-card">
+        <h2 class="withdrawal-form-title">Request Withdrawal</h2>
+        <p class="withdrawal-subtitle">Enter the amount you want to withdraw from your available earnings.</p>
+        <form method="post" novalidate class="withdrawal-form">
+            {% csrf_token %}
+            {% include "includes/messages.html" %}
+            <div>
+                {% component "text_input" name="amount" label="Withdrawal Amount (Rs.)" input_type="number" required=True placeholder="Enter amount" %} {% endcomponent %}
+                <p class="withdrawal-balance-hint">Maximum: Rs. {{ available_balance|default:"0" }}</p>
+            </div>
+            <div>
+                {% component "select_button" name="payment_method" choices=payment_method_choices placeholder="Select method" required=True label="Payment Method" select_class="withdrawal-select" %} {% endcomponent %}
+            </div>
+            <button type="submit" class="form-submit-btn">Request Withdrawal</button>
+        </form>
+    </div>
+    <!-- Previous Withdrawals Table -->
+    <div class="withdrawal-history-card">
+        <h2 class="withdrawal-history-title">Previous Withdrawals</h2>
+        {% if withdrawals %}
+            <table class="withdrawal-table">
+                <thead class="withdrawal-table-head">
+                    <tr>
+                        <th class="withdrawal-table-header-cell">Date</th>
+                        <th class="withdrawal-table-header-cell">Amount</th>
+                        <th class="withdrawal-table-header-cell">Payment Method</th>
+                        <th class="withdrawal-table-header-cell">Status</th>
+                    </tr>
+                </thead>
+                <tbody class="withdrawal-table-body">
+                    {% for withdrawal in withdrawals %}
+                        <tr class="withdrawal-table-row">
+                            <td class="withdrawal-table-cell withdrawal-date-cell">{{ withdrawal.date|date:"M d, Y" }}</td>
+                            <td class="withdrawal-table-cell withdrawal-amount-cell">Rs. {{ withdrawal.amount }}</td>
+                            <td class="withdrawal-table-cell withdrawal-method-cell">{{ withdrawal.payment_method }}</td>
+                            <td class="withdrawal-table-cell">
+                                {% if withdrawal.status == 'pending' %}
+                                    <span class="withdrawal-status-badge withdrawal-status-pending">Pending</span>
+                                {% elif withdrawal.status == 'completed' %}
+                                    <span class="withdrawal-status-badge withdrawal-status-completed">Completed</span>
+                                {% elif withdrawal.status == 'rejected' %}
+                                    <span class="withdrawal-status-badge withdrawal-status-rejected">Rejected</span>
+                                {% else %}
+                                    <span class="withdrawal-status-badge withdrawal-status-default">{{ withdrawal.status }}</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="withdrawal-empty-state">No previous withdrawals.</p>
+        {% endif %}
+    </div>
 {% endblock main_content %}

@@ -2,15 +2,17 @@
 {% load static %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/dashboard/earnings.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard/shared.css' %}">
 {% endblock extra_css %}
 {% block title %}
     Earnings - MeroCoffee
 {% endblock title %}
 {% block main_content %}
+
     <div class="earnings-container">
         <h1 class="earnings-title">Earnings Dashboard</h1>
         <p class="earnings-subtitle">Overview of your financial performance and detailed transactions.</p>
-        <!-- Earnings Summary -->
+        {% include "includes/kyc_status_alert.html" %}
         <div class="earnings-summary-grid">
             <div class="earnings-summary-card earnings-summary-card-red">
                 <h2 class="earnings-summary-title">Total Lifetime Earnings</h2>

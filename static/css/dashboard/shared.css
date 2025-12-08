@@ -1,8 +1,86 @@
 /* Shared Dashboard Styles for Profile Settings, Supporters, and Withdrawal */
 
+/* KYC Status Alert Styles - Shared across all dashboard pages */
+.kyc-status-alert {
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid;
+    transition: all 0.3s;
+}
+
+.kyc-status-info {
+    background: linear-gradient(to bottom right, rgb(219 234 254 / 0.1), rgb(147 197 253 / 0.1));
+    border-color: rgb(147 197 253 / 0.5);
+}
+
+.kyc-status-pending {
+    background: linear-gradient(to bottom right, rgb(254 243 199 / 0.1), rgb(253 211 77 / 0.1));
+    border-color: rgb(253 211 77 / 0.5);
+}
+
+.kyc-status-rejected {
+    background: linear-gradient(to bottom right, rgb(254 226 226 / 0.1), rgb(252 165 165 / 0.1));
+    border-color: rgb(252 165 165 / 0.5);
+}
+
+.kyc-status-approved {
+    background: linear-gradient(to bottom right, rgb(220 252 231 / 0.1), rgb(134 239 172 / 0.1));
+    border-color: rgb(134 239 172 / 0.5);
+}
+
+.kyc-status-text {
+    margin: 0;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.kyc-status-info .kyc-status-text {
+    color: rgb(96 165 250);
+}
+
+.kyc-status-pending .kyc-status-text {
+    color: rgb(250 204 21);
+}
+
+.kyc-status-rejected .kyc-status-text {
+    color: rgb(239 68 68);
+}
+
+.kyc-status-approved .kyc-status-text {
+    color: rgb(34 197 94);
+}
+
+.kyc-status-label {
+    font-weight: 700;
+}
+
+.kyc-status-link {
+    color: inherit;
+    text-decoration: underline;
+    transition: all 0.3s;
+    font-weight: 600;
+}
+
+.kyc-status-link:hover {
+    opacity: 0.8;
+    text-decoration: none;
+}
+
+.kyc-rejection-reason {
+    color: rgb(248 113 113);
+    margin: 0.75rem 0 0 0;
+    font-size: 0.875rem;
+    padding-left: 1.5rem;
+}
+
+
 /* Profile Settings Styles */
 .profile-settings-container {
-    max-width: 48rem;
+    /* max-width: 48rem; */
     margin-left: auto;
     margin-right: auto;
     background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
@@ -19,10 +97,24 @@
     margin-bottom: 1.5rem;
 }
 
+.profile-settings-section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.profile-settings-section-subtitle {
+    color: rgb(148 163 184);
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+
 .profile-settings-form {
     display: flex;
     flex-direction: column;
     gap: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
 }
 
 .form-field-label {
@@ -54,6 +146,46 @@
 
 .form-submit-btn:hover {
     box-shadow: 0 10px 15px -3px rgb(239 68 68 / 0.5);
+}
+
+/* Profile Settings Info Card */
+.profile-settings-info {
+    background-color: rgb(15 23 42 / 0.5);
+    border: 1px solid rgb(51 65 85 / 0.5);
+    border-radius: 0.5rem;
+    padding: 1.5rem;
+    margin-top: 2rem;
+}
+
+.profile-settings-info-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 1rem;
+}
+
+.profile-settings-info-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.profile-settings-info-list li {
+    color: rgb(203 213 225);
+    font-size: 0.875rem;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.profile-settings-info-list li::before {
+    content: "→";
+    position: absolute;
+    left: 0;
+    color: rgb(239 68 68);
+    font-weight: 700;
 }
 
 /* Supporters Page Styles */
@@ -145,8 +277,66 @@
 }
 
 /* Withdrawal Page Styles */
+.dashboard-header {
+    margin-bottom: 2rem;
+}
+
+.dashboard-title {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 0.5rem;
+}
+
+.dashboard-subtitle {
+    color: rgb(148 163 184);
+}
+
+/* Withdrawal Balance Card */
+.withdrawal-balance-card {
+    background: linear-gradient(to right, rgb(239 68 68), rgb(234 88 12));
+    border-radius: 0.75rem;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 10px 15px -3px rgb(239 68 68 / 0.3);
+    transition: all 0.3s;
+}
+
+.withdrawal-balance-card:hover {
+    box-shadow: 0 20px 25px -5px rgb(239 68 68 / 0.4);
+    transform: translateY(-2px);
+}
+
+.withdrawal-balance-content {
+    text-align: center;
+}
+
+.withdrawal-balance-label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.withdrawal-balance-amount {
+    font-size: 3rem;
+    font-weight: 700;
+    color: white;
+    margin: 0.5rem 0;
+    text-shadow: 0 2px 4px rgb(0 0 0 / 0.1);
+}
+
+.withdrawal-balance-hint {
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.875rem;
+    margin-top: 0.5rem;
+}
+
+/* Withdrawal Form Card */
 .withdrawal-form-card {
-    max-width: 48rem;
+    /* max-width: 48rem; */
     margin-left: auto;
     margin-right: auto;
     background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
@@ -157,11 +347,11 @@
     margin-bottom: 2rem;
 }
 
-.withdrawal-title {
-    font-size: 1.875rem;
+.withdrawal-form-title {
+    font-size: 1.5rem;
     font-weight: 700;
     color: white;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
 }
 
 .withdrawal-subtitle {
@@ -218,7 +408,7 @@
 }
 
 .withdrawal-history-card {
-    max-width: 48rem;
+    /* max-width: 48rem; */
     margin-left: auto;
     margin-right: auto;
     background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));

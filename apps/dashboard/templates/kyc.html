@@ -1,0 +1,112 @@
+{% extends "dashboard_base.html" %}
+{% load viewcomponent_tags %}
+{% load static %}
+
+{% block title %}
+    KYC Verification - MeroCoffee
+{% endblock title %}
+
+{% block extra_css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard/kyc.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard/shared.css' %}">
+{% endblock extra_css %}
+
+{% block main_content %}
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">KYC Verification</h1>
+        <p class="dashboard-subtitle">Complete your Know Your Customer verification to unlock all features</p>
+    </div>
+
+    {% include "includes/kyc_status_alert.html" %}
+    {% include "includes/messages.html" %}
+
+    <div class="kyc-form-card">
+        <!-- Verification Status Badge -->
+        {% if kyc.status == 'approved' %}
+            <div class="kyc-verified-badge">
+                <div class="kyc-verified-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         viewBox="0 0 24 24"
+                         fill="currentColor"
+                         class="kyc-verified-checkmark">
+                        <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="kyc-verified-content">
+                    <h3 class="kyc-verified-title">✓ KYC Verified</h3>
+                    <p class="kyc-verified-subtitle">Your identity has been successfully verified</p>
+                    {% if kyc.updated_at %}<p class="kyc-verified-date">Verified on {{ kyc.updated_at|date:"F d, Y" }}</p>{% endif %}
+                </div>
+            </div>
+        {% endif %}
+
+        {% if kyc.status == 'not_filed' or kyc.status == 'rejected' %}
+            <form method="post" class="kyc-form" novalidate>
+                {% csrf_token %}
+                {% component "text_input" field=form.full_name required=True %} {% endcomponent %}
+                {% component "text_input" field=form.phone required=True %} {% endcomponent %}
+                {% component "text_input" field=form.address input_type="text" required=True %} {% endcomponent %}
+                {% component "text_input" field=form.city required=True %} {% endcomponent %}
+                {% component "text_input" field=form.country required=True %} {% endcomponent %}
+                {% component "text_input" field=form.id_type required=True %} {% endcomponent %}
+                {% component "text_input" field=form.id_number required=True %} {% endcomponent %}
+
+                <div class="kyc-form-full-width">
+                    <button type="submit" class="kyc-submit-btn">
+                        {% if kyc.status == 'rejected' %}
+                            Resubmit KYC Verification
+                        {% else %}
+                            Submit KYC Verification
+                        {% endif %}
+                    </button>
+                    <p class="kyc-info-text">
+                        <strong>Note:</strong> All information must be accurate and match your official identification
+                        documents.
+                        Your submission will be reviewed by our team within 24-48 hours.
+                    </p>
+                </div>
+            </form>
+        {% else %}
+            <!-- Readonly view for pending/approved status -->
+            <div class="kyc-form">
+                <div class="kyc-readonly-field">
+                    <label class="kyc-readonly-label">Full Name</label>
+                    <p class="kyc-readonly-value">{{ kyc.full_name|default:"—" }}</p>
+                </div>
+                <div class="kyc-readonly-field">
+                    <label class="kyc-readonly-label">Phone</label>
+                    <p class="kyc-readonly-value">{{ kyc.phone|default:"—" }}</p>
+                </div>
+                <div class="kyc-readonly-field">
+                    <label class="kyc-readonly-label">Address</label>
+                    <p class="kyc-readonly-value">{{ kyc.address|default:"—" }}</p>
+                </div>
+                <div class="kyc-readonly-field">
+                    <label class="kyc-readonly-label">City</label>
+                    <p class="kyc-readonly-value">{{ kyc.city|default:"—" }}</p>
+                </div>
+                <div class="kyc-readonly-field">
+                    <label class="kyc-readonly-label">Country</label>
+                    <p class="kyc-readonly-value">{{ kyc.country|default:"—" }}</p>
+                </div>
+                <div class="kyc-readonly-field">
+                    <label class="kyc-readonly-label">ID Type</label>
+                    <p class="kyc-readonly-value">{{ kyc.id_type|default:"—" }}</p>
+                </div>
+                <div class="kyc-readonly-field">
+                    <label class="kyc-readonly-label">ID Number</label>
+                    <p class="kyc-readonly-value">{{ kyc.id_number|default:"—" }}</p>
+                </div>
+
+                <div class="kyc-form-full-width">
+                    {% if kyc.status == 'pending' %}
+                        <p class="kyc-info-text">
+                            <strong>Info:</strong> Your KYC information is currently under review and cannot be edited.
+                            Please wait for admin approval.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock main_content %}

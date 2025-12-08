@@ -1,12 +1,31 @@
 from datetime import datetime, timedelta
 
+from django.contrib import messages
+from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import render
+from django.shortcuts import redirect, render
+
+from apps.accounts.forms import KYCForm
+from apps.accounts.models import KYC
+
+User = get_user_model()
+
+
+def get_kyc_context(user):
+    """Helper function to get KYC status for dashboard views."""
+    if user.role == User.Roles.CREATOR:
+        kyc, _ = KYC.objects.get_or_create(user=user)
+        return {
+            "kyc_status": kyc.status,
+            "kyc": kyc,
+        }
+    return {}
 
 
 @login_required
 def dashboard(request):
-    return render(request, "overview.html", {})
+    context = get_kyc_context(request.user)
+    return render(request, "overview.html", context)
 
 
 @login_required
@@ -25,6 +44,7 @@ def earnings(request):
             },
         ],
     }
+    context.update(get_kyc_context(request.user))
 
     return render(request, "earnings.html", context)
 
@@ -67,6 +87,8 @@ def withdrawal(request):
         "payment_method_choices": payment_method_choices,
         "withdrawals": withdrawals,
     }
+    context.update(get_kyc_context(request.user))
+
     return render(request, "withdrawal.html", context)
 
 
@@ -97,4 +119,37 @@ def supporters(request):
     context = {
         "supporters": recent_supporters,
     }
+    context.update(get_kyc_context(request.user))
+
     return render(request, "supporters.html", context)
+
+
+@login_required
+def kyc(request):
+    if request.user.role != request.user.Roles.CREATOR:
+        messages.error(request, "Only creators need to submit KYC.")
+        return redirect("dashboard:dashboard")
+
+    kyc, _ = KYC.objects.get_or_create(user=request.user)
+
+    if request.method == "POST":
+        if kyc.status not in [KYC.Status.NOT_FILED, KYC.Status.REJECTED]:
+            messages.error(request, "Your KYC is already submitted and cannot be modified.")
+            return redirect("dashboard:kyc")
+
+        form = KYCForm(request.POST, instance=kyc)
+        if form.is_valid():
+            kyc = form.save(commit=False)
+            kyc.status = KYC.Status.PENDING
+            kyc.save()
+            messages.success(request, "KYC submitted successfully. Awaiting admin approval.")
+            return redirect("dashboard:kyc")
+    else:
+        form = KYCForm(instance=kyc)
+
+    context = {
+        "form": form,
+        "kyc": kyc,
+        "kyc_status": kyc.status if kyc.id else None,
+    }
+    return render(request, "kyc.html", context)

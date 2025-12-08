@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.dashboard.views import get_kyc_context
 from apps.payments.models import PaymentGateway, SupportTransaction
 
 from .forms import BuyCoffeeForm, CreatorProfileForm
@@ -96,4 +97,7 @@ def profile_settings(request):
     else:
         form = CreatorProfileForm(instance=profile)
 
-    return render(request, "profile_settings.html", {"form": form, "settings": profile})
+    context = {"form": form, "settings": profile}
+    context.update(get_kyc_context(request.user))
+
+    return render(request, "profile_settings.html", context)

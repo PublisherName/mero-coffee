@@ -2,6 +2,7 @@
 {% load static %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/dashboard/overview.css' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard/shared.css' %}">
 {% endblock extra_css %}
 {% block title %}
     Dashboard Overview - MeroCoffee
@@ -13,6 +14,9 @@
             Welcome back, <span class="dashboard-username">{{ user.username }}</span>!
         </p>
     </div>
+    {% include "includes/kyc_status_alert.html" %}
+    {% include "includes/messages.html" %}
+
     <!-- Stats Cards -->
     <div class="stats-grid">
         <div class="stat-card stat-card-red">
@@ -36,11 +40,9 @@
     <div class="quick-actions-card">
         <h2 class="quick-actions-title">Quick Actions</h2>
         <div class="quick-actions-buttons">
-            <a href="{% url 'creators:profile' user.username %}"
-               class="quick-action-view">View My Page</a>
+            <a href="{% url 'creators:profile' user.username %}" class="quick-action-view">View My Page</a>
             <button class="quick-action-share">Share Page</button>
-            <a href="{% url 'dashboard:withdrawal' %}"
-               class="quick-action-withdrawal">Request Withdrawal</a>
+            <a href="{% url 'dashboard:withdrawal' %}" class="quick-action-withdrawal">Request Withdrawal</a>
         </div>
     </div>
     <!-- Recent Supporters -->

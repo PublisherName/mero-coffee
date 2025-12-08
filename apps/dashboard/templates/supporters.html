@@ -7,9 +7,11 @@
     Supporters - MeroCoffee
 {% endblock title %}
 {% block main_content %}
+
     <div class="supporters-header">
         <h1 class="supporters-title">Supporters</h1>
         <p class="supporters-subtitle">See who has supported you recently.</p>
+        {% include "includes/kyc_status_alert.html" %}
         {% if supporters %}
             <div class="supporters-table-card">
                 <table class="supporters-table">

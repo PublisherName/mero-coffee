@@ -1,0 +1,27 @@
+{% if kyc_status == 'not_filed' %}
+    <div class="kyc-status-alert kyc-status-info">
+        <p class="kyc-status-text">
+            <span class="kyc-status-label">ℹ️ Action Required:</span> Please complete your KYC verification.
+            <a href="{% url 'dashboard:kyc' %}" class="kyc-status-link">Start KYC →</a>
+        </p>
+    </div>
+{% elif kyc_status == 'pending' %}
+    <div class="kyc-status-alert kyc-status-pending">
+        <p class="kyc-status-text">
+            <span class="kyc-status-label">⏳ KYC Pending:</span> Your KYC verification is awaiting admin approval.
+            <a href="{% url 'dashboard:kyc' %}" class="kyc-status-link">View Status →</a>
+        </p>
+    </div>
+{% elif kyc_status == 'rejected' %}
+    <div class="kyc-status-alert kyc-status-rejected">
+        <p class="kyc-status-text">
+            <span class="kyc-status-label">❌ KYC Rejected:</span> Please resubmit your KYC details.
+            <a href="{% url 'dashboard:kyc' %}" class="kyc-status-link">Resubmit →</a>
+        </p>
+        {% if kyc and kyc.rejection_reason %}
+            <p class="kyc-rejection-reason">
+                <strong>Reason:</strong> {{ kyc.rejection_reason }}
+            </p>
+        {% endif %}
+    </div>
+{% endif %}

@@ -8,9 +8,17 @@
     Page Settings - MeroCoffee
 {% endblock title %}
 {% block main_content %}
+    <div class="dashboard-header">
+        <h1 class="dashboard-title">Profile Details</h1>
+        <p class="dashboard-subtitle">Manage your creator profile and public information</p>
+    </div>
+
+    {% include "includes/kyc_status_alert.html" %}
+
     <div class="profile-settings-container">
-        <h1 class="profile-settings-title">Profile Details</h1>
+
         {% include "includes/messages.html" %}
+
         <form method="post" novalidate class="profile-settings-form">
             {% csrf_token %}
             {% component "text_input" field=form.display_name %} {% endcomponent %}
@@ -19,5 +27,15 @@
             {% component "text_input" field=form.coffee_price input_type="number" %} {% endcomponent %}
             <button type="submit" class="form-submit-btn">Save Changes</button>
         </form>
+
+        <div class="profile-settings-info">
+            <h3 class="profile-settings-info-title">💡 Profile Tips</h3>
+            <ul class="profile-settings-info-list">
+                <li>Use a clear, professional display name that represents your brand</li>
+                <li>Write a compelling bio that explains what you create and why supporters should back you</li>
+                <li>Set a reasonable coffee price - you can always adjust it later</li>
+                <li>Use a high-quality avatar image URL for better recognition</li>
+            </ul>
+        </div>
     </div>
 {% endblock main_content %}
