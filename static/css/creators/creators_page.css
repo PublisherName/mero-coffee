@@ -175,11 +175,11 @@
 }
 
 /* Form Fields */
-.form-field {
+.creator-page-container .form-field {
     margin-bottom: 1.5rem;
 }
 
-.form-field-large {
+.creator-page-container .form-field-large {
     margin-bottom: 2rem;
 }
 

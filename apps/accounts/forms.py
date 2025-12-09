@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ValidationError
+from pydantic import ValidationError as PydanticValidationError
 
 from .models import KYC
+from .schemas import KYCSchema, LoginSchema, SignUpSchema
 
 User = get_user_model()
 
@@ -14,6 +15,7 @@ class LoginForm(forms.Form):
         widget=forms.TextInput(
             attrs={
                 "placeholder": "Username or Email",
+                "minlength": 1,
             }
         ),
     )
@@ -22,9 +24,20 @@ class LoginForm(forms.Form):
         widget=forms.PasswordInput(
             attrs={
                 "placeholder": "Password",
+                "minlength": 1,
             }
         ),
     )
+
+    def clean(self):
+        cleaned_data = super().clean()
+        try:
+            LoginSchema(**cleaned_data)
+        except PydanticValidationError as e:
+            for error in e.errors():
+                field = error["loc"][0]
+                self.add_error(field, error["msg"])
+        return cleaned_data
 
 
 class SignUpForm(forms.ModelForm):
@@ -33,6 +46,7 @@ class SignUpForm(forms.ModelForm):
         widget=forms.PasswordInput(
             attrs={
                 "placeholder": "Password",
+                "minlength": 8,
             }
         ),
         strip=False,
@@ -42,6 +56,7 @@ class SignUpForm(forms.ModelForm):
         widget=forms.PasswordInput(
             attrs={
                 "placeholder": "Confirm Password",
+                "minlength": 8,
             }
         ),
         strip=False,
@@ -54,7 +69,9 @@ class SignUpForm(forms.ModelForm):
             "username": forms.TextInput(
                 attrs={
                     "placeholder": "Username",
-                }
+                    "minlength": 3,
+                    "maxlength": 150,
+                },
             ),
             "email": forms.EmailInput(
                 attrs={
@@ -64,11 +81,15 @@ class SignUpForm(forms.ModelForm):
             "first_name": forms.TextInput(
                 attrs={
                     "placeholder": "First Name",
+                    "minlength": 1,
+                    "maxlength": 150,
                 },
             ),
             "last_name": forms.TextInput(
                 attrs={
                     "placeholder": "Last Name",
+                    "minlength": 1,
+                    "maxlength": 150,
                 }
             ),
         }
@@ -77,14 +98,18 @@ class SignUpForm(forms.ModelForm):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
-            raise ValidationError("The two password fields didn’t match.")
+            raise forms.ValidationError("Passwords don't match")
         return password2
 
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        if User.objects.filter(email=email).exists():
-            raise ValidationError("A user with that email already exists.")
-        return email
+    def clean(self):
+        cleaned_data = super().clean()
+        try:
+            SignUpSchema(**cleaned_data)
+        except PydanticValidationError as e:
+            for error in e.errors():
+                field = error["loc"][0]
+                self.add_error(field, error["msg"])
+        return cleaned_data
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -163,3 +188,18 @@ class KYCForm(forms.ModelForm):
         self.fields["front_image"].required = True
         self.fields["back_image"].required = True
         self.fields["selfie_with_document"].required = True
+
+    def clean(self):
+        cleaned_data = super().clean()
+        data = {
+            k: v
+            for k, v in cleaned_data.items()
+            if k not in ["front_image", "back_image", "selfie_with_document"]
+        }
+        try:
+            KYCSchema(**data)
+        except PydanticValidationError as e:
+            for error in e.errors():
+                field = error["loc"][0]
+                self.add_error(field, error["msg"])
+        return cleaned_data

@@ -58,7 +58,10 @@ class TextInput(component.Component):
             "errors": self.errors,
             "input_classes": base_input_classes,
             "container_class": self.container_class,
-            "field_id": f"id_{self.name}",
+            "field_id": self.field.field.widget.attrs.get("id") or f"id_{self.name}"
+            if self.field
+            else f"id_{self.name}",
             "input_type": self.input_type,
             "value": self.field.value() if self.field else "",
+            "attrs": self.field.field.widget.attrs if self.field else {},
         }

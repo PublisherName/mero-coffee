@@ -108,9 +108,16 @@
 }
 
 .image-upload-error {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
     font-size: 0.875rem;
     color: #ef4444;
-    /* text-red-500 */
+}
+
+.image-upload-error-icon {
+    height: 1rem;
+    width: 1rem;
 }
 
 .hidden {

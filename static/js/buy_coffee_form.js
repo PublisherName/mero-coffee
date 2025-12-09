@@ -24,28 +24,45 @@ document.addEventListener('DOMContentLoaded', function () {
     const paymentInputs = document.querySelectorAll('.payment-provider-input');
 
     // Amount button handlers
+    let selectedAmount = null;
+
     amountButtons.forEach(btn => {
         btn.addEventListener('click', function () {
             const amount = this.getAttribute('data-amount');
-            amountInput.value = amount;
-            updateSubmitButton(amount);
-            clearError('amount-error');
+            selectedAmount = amount;
 
-            // Visual feedback
-            amountButtons.forEach(b => b.classList.remove('border-red-500', 'bg-red-500/20'));
-            this.classList.add('border-red-500', 'bg-red-500/20');
+            // Clear input visual value but keep track for submit
+            amountInput.value = '';
+
+            updateSubmitButton(amount);
+
+            if (typeof clearNumberError === 'function') {
+                clearNumberError(amountInput);
+            }
+
+            // Visual feedback - Use .selected class and direct styles
+            // Reset all
+            amountButtons.forEach(b => {
+                b.classList.remove('selected', 'border-red-500', 'bg-red-500/20');
+                b.classList.add('border-slate-700');
+            });
+
+            // Set active
+            this.classList.add('selected', 'border-red-500', 'bg-red-500/20');
+            this.classList.remove('border-slate-700');
         });
     });
 
     // Custom amount input handler
     amountInput.addEventListener('input', function () {
+        selectedAmount = null; // Clear selected button state
         const amount = parseInt(this.value) || 0;
         updateSubmitButton(amount);
-        validateAmount();
+        validateAmount(); // This now validates the input value directly
 
-        // Remove all button selections when custom amount is entered
+        // Remove all button selections
         amountButtons.forEach(b => {
-            b.classList.remove('border-red-500', 'bg-red-500/20', 'border-orange-500', 'bg-orange-500/20');
+            b.classList.remove('selected', 'border-red-500', 'bg-red-500/20', 'border-orange-500', 'bg-orange-500/20');
             b.classList.add('border-slate-700');
         });
     });
@@ -56,7 +73,9 @@ document.addEventListener('DOMContentLoaded', function () {
             nameInput.value = '';
             nameInput.disabled = true;
             nameInput.classList.add('opacity-50', 'cursor-not-allowed');
-            clearError('name-error');
+            if (typeof clearTextError === 'function') {
+                clearTextError(nameInput);
+            }
         } else {
             nameInput.disabled = false;
             nameInput.classList.remove('opacity-50', 'cursor-not-allowed');
@@ -107,19 +126,28 @@ document.addEventListener('DOMContentLoaded', function () {
     function validateAmount() {
         const amount = parseInt(amountInput.value) || 0;
         if (amount < coffeePrice) {
-            showError('amount-error', `Amount must be at least Rs. ${coffeePrice}`);
+            // Use component's showNumberError if available
+            if (typeof showNumberError === 'function') {
+                showNumberError(amountInput, `Amount must be at least Rs. ${coffeePrice}`);
+            }
             return false;
         }
-        clearError('amount-error');
+        if (typeof clearNumberError === 'function') {
+            clearNumberError(amountInput);
+        }
         return true;
     }
 
     function validateName() {
         if (!anonymousCheckbox.checked && !nameInput.value.trim()) {
-            showError('name-error', 'Name is required unless you choose to remain anonymous');
+            if (typeof showTextError === 'function') {
+                showTextError(nameInput, 'Name is required unless you choose to remain anonymous');
+            }
             return false;
         }
-        clearError('name-error');
+        if (typeof clearTextError === 'function') {
+            clearTextError(nameInput);
+        }
         return true;
     }
 
@@ -135,14 +163,18 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function showError(elementId, message) {
         const errorElement = document.getElementById(elementId);
-        errorElement.textContent = message;
-        errorElement.classList.remove('hidden');
+        if (errorElement) {
+            errorElement.textContent = message;
+            errorElement.classList.remove('hidden');
+        }
     }
 
     function clearError(elementId) {
         const errorElement = document.getElementById(elementId);
-        errorElement.textContent = '';
-        errorElement.classList.add('hidden');
+        if (errorElement) {
+            errorElement.textContent = '';
+            errorElement.classList.add('hidden');
+        }
     }
 
     function updateSubmitButton(amount) {
@@ -152,6 +184,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // Form submission
     form.addEventListener('submit', function (e) {
         e.preventDefault();
+
+        // If a button is selected but input is empty, fill it
+        if (selectedAmount && !amountInput.value) {
+            amountInput.value = selectedAmount;
+        }
 
         // Validate all fields
         const isAmountValid = validateAmount();
@@ -163,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
             this.submit();
         } else {
             // Scroll to first error
-            const firstError = document.querySelector('.text-red-400:not(.hidden)');
+            const firstError = document.querySelector('.number-input-error, .text_input-error, .textarea-input-error, .image-upload-error, .text-red-400:not(.hidden)');
             if (firstError) {
                 firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }

@@ -1,0 +1,44 @@
+<div class="number-input-container {{ container_class }}">
+    {% if label %}
+        <label for="{{ field_id }}" class="number-input-label">
+            {{ label }}
+            {% if required %}<span class="number-input-required">*</span>{% endif %}
+        </label>
+    {% endif %}
+
+    <div class="number-input-wrapper">
+        {% if prefix %}
+            <div class="number-input-prefix">
+                <span class="sm:text-sm">{{ prefix }}</span>
+            </div>
+        {% endif %}
+        <input type="number"
+               id="{{ field_id }}"
+               name="{{ name }}"
+               class="{{ input_classes }} number-input-field"
+               placeholder="{{ placeholder }}"
+               value="{{ value|default:'' }}"
+               {% if attrs.min_value %}min="{{ attrs.min_value }}"{% endif %}
+               {% if attrs.max_value %}max="{{ attrs.max_value }}"{% endif %}
+               {% if required %}required{% endif %}>
+    </div>
+
+    {% if help_text %}<p class="number-input-help">{{ help_text }}</p>{% endif %}
+
+    <div class="number-input-errors" id="{{ field_id }}-errors">
+        {% if errors %}
+            {% for error in errors %}
+                <p class="number-input-error">
+                    <svg class="number-input-error-icon" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                    {{ error }}
+                </p>
+            {% endfor %}
+        {% endif %}
+    </div>
+</div>
+
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/components/number_input.css' %}">
+<script src="{% static 'js/components/number_input.js' %}"></script>

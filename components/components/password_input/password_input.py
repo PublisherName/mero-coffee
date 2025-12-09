@@ -57,4 +57,5 @@ class PasswordInput(component.Component):
             "input_classes": base_input_classes,
             "container_class": self.container_class,
             "field_id": f"id_{self.name}",
+            "attrs": self.field.field.widget.attrs if self.field else {},
         }

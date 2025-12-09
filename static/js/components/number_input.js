@@ -1,11 +1,11 @@
-function showEmailError(input, message) {
+function showNumberError(input, message) {
     const errorId = input.id + '-errors';
     let errorContainer = document.getElementById(errorId);
 
     if (!errorContainer) {
-        const wrapper = input.closest('.email-input-container');
+        const wrapper = input.closest('.number-input-container');
         if (wrapper) {
-            errorContainer = wrapper.querySelector('.email-input-errors');
+            errorContainer = wrapper.querySelector('.number-input-errors');
         }
     }
 
@@ -14,10 +14,10 @@ function showEmailError(input, message) {
     errorContainer.innerHTML = '';
 
     const p = document.createElement('p');
-    p.className = 'email-input-error';
+    p.className = 'number-input-error';
 
     const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    svg.setAttribute('class', 'email-input-error-icon');
+    svg.setAttribute('class', 'number-input-error-icon');
     svg.setAttribute('fill', 'currentColor');
     svg.setAttribute('viewBox', '0 0 20 20');
 
@@ -37,14 +37,14 @@ function showEmailError(input, message) {
     input.classList.add('border-red-500', 'focus:border-red-500', 'focus:ring-red-500/50');
 }
 
-function clearEmailError(input) {
+function clearNumberError(input) {
     const errorId = input.id + '-errors';
     let errorContainer = document.getElementById(errorId);
 
     if (!errorContainer) {
-        const wrapper = input.closest('.email-input-container');
+        const wrapper = input.closest('.number-input-container');
         if (wrapper) {
-            errorContainer = wrapper.querySelector('.email-input-errors');
+            errorContainer = wrapper.querySelector('.number-input-errors');
         }
     }
 
@@ -59,38 +59,48 @@ function clearEmailError(input) {
 document.addEventListener('DOMContentLoaded', () => {
     const processedForms = new Set();
     const processedInputs = new Set();
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    document.querySelectorAll('.email-input-field').forEach(input => {
+    document.querySelectorAll('.number-input-field').forEach(input => {
         if (processedInputs.has(input)) return;
         processedInputs.add(input);
 
         // Validation logic
         const validate = () => {
+            const min = input.getAttribute('min');
+            const max = input.getAttribute('max');
             const required = input.hasAttribute('required');
-            const value = input.value.trim();
+            const value = parseFloat(input.value);
+            const hasValue = input.value.trim() !== '';
 
-            if (required && !value) {
+            if (required && !hasValue) {
                 if (input.classList.contains('border-red-500')) {
-                    showEmailError(input, 'This field is required.');
+                    showNumberError(input, 'This field is required.');
                 } else {
-                    clearEmailError(input);
+                    clearNumberError(input);
                 }
                 return false;
             }
 
-            if (value && !emailPattern.test(value)) {
-                showEmailError(input, 'Please enter a valid email address.');
-                return false;
+            if (hasValue) {
+                if (min && value < parseFloat(min)) {
+                    const label = input.closest('.number-input-container')?.querySelector('label')?.textContent.replace('*', '').trim() || 'Value';
+                    showNumberError(input, `${label} must be at least ${min}.`);
+                    return false;
+                }
+                if (max && value > parseFloat(max)) {
+                    const label = input.closest('.number-input-container')?.querySelector('label')?.textContent.replace('*', '').trim() || 'Value';
+                    showNumberError(input, `${label} must be at most ${max}.`);
+                    return false;
+                }
             }
 
-            clearEmailError(input);
+            clearNumberError(input);
             return true;
         };
 
         input.addEventListener('blur', () => {
             if (input.required && !input.value.trim()) {
-                showEmailError(input, 'This field is required.');
+                showNumberError(input, 'This field is required.');
             }
         });
 
@@ -104,14 +114,24 @@ document.addEventListener('DOMContentLoaded', () => {
             form.addEventListener('submit', e => {
                 let hasError = false;
 
-                form.querySelectorAll('.email-input-field').forEach(emailInput => {
-                    const value = emailInput.value.trim();
-                    if (emailInput.required && !value) {
+                form.querySelectorAll('.number-input-field').forEach(numInput => {
+                    const min = numInput.getAttribute('min');
+                    const max = numInput.getAttribute('max');
+                    const value = parseFloat(numInput.value);
+                    const hasValue = numInput.value.trim() !== '';
+                    const label = numInput.closest('.number-input-container')?.querySelector('label')?.textContent.replace('*', '').trim() || 'This field';
+
+                    if (numInput.required && !hasValue) {
                         hasError = true;
-                        showEmailError(emailInput, 'This field is required.');
-                    } else if (value && !emailPattern.test(value)) {
-                        hasError = true;
-                        showEmailError(emailInput, 'Please enter a valid email address.');
+                        showNumberError(numInput, 'This field is required.');
+                    } else if (hasValue) {
+                        if (min && value < parseFloat(min)) {
+                            hasError = true;
+                            showNumberError(numInput, `${label} must be at least ${min}.`);
+                        } else if (max && value > parseFloat(max)) {
+                            hasError = true;
+                            showNumberError(numInput, `${label} must be at most ${max}.`);
+                        }
                     }
                 });
 

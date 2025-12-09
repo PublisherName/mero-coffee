@@ -1,0 +1,74 @@
+/* Number Input Component Styles */
+
+.number-input-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0rem;
+}
+
+.number-input-label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: rgb(203 213 225);
+    margin-bottom: 0.5rem;
+}
+
+.number-input-required {
+    color: #ef4444;
+    margin-left: 0.25rem;
+}
+
+.number-input-help {
+    font-size: 0.875rem;
+    color: rgb(100 116 139);
+    margin-top: 0.25rem;
+}
+
+.number-input-errors {
+    font-size: 0.875rem;
+    color: rgb(239 68 68);
+    margin-top: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.number-input-error {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.number-input-error-icon {
+    height: 1rem;
+    width: 1rem;
+}
+
+.number-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.number-input-prefix {
+    position: absolute;
+    left: 1px;
+    top: 1px;
+    bottom: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+    background-color: rgba(30, 41, 59, 0.5);
+    border-right: 1px solid rgb(51, 65, 85);
+    border-radius: 0.5rem 0 0 0.5rem;
+    color: rgb(148, 163, 184);
+    pointer-events: none;
+    z-index: 10;
+}
+
+
+.number-input-field.has-prefix {
+    padding-left: 4.5rem !important;
+}
