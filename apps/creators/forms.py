@@ -66,7 +66,6 @@ class BuyCoffeeForm(forms.Form):
     """Form for buying coffee for a creator"""
 
     amount = forms.IntegerField(
-        min_value=1,
         widget=forms.NumberInput(
             attrs={
                 "class": (
@@ -76,7 +75,7 @@ class BuyCoffeeForm(forms.Form):
                 ),
                 "id": "custom_amount",
                 "placeholder": "Enter custom amount",
-                "min": "1",
+                "min_value": "100",
             }
         ),
     )

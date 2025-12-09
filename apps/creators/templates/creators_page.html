@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load viewcomponent_tags %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/creators/creators_page.css' %}">
 {% endblock extra_css %}
@@ -52,18 +53,14 @@
                             5x (Rs. {{ amount_multiples.5x }})
                         </button>
                     </div>
-                    <div class="input-group">
-                        <span class="input-prefix">Rs.</span>
-                        {{ form.amount }}
+                    <div class="mb-4">
+                        {% component "number_input" field=form.amount placeholder="Enter amount" min_value="1" prefix="Rs." %} {% endcomponent %}
+                        <p class="amount-hint">Minimum amount: Rs. {{ creator.coffee_price }}</p>
                     </div>
-                    <p class="amount-hint">Minimum amount: Rs. {{ creator.coffee_price }}</p>
-                    <p id="amount-error" class="error-message hidden"></p>
                 </div>
                 <!-- Supporter Name -->
                 <div class="form-field">
-                    <label for="{{ form.supporter_name.id_for_label }}" class="label-base">Your Name</label>
-                    {{ form.supporter_name }}
-                    <p id="name-error" class="error-message hidden"></p>
+                    {% component "text_input" field=form.supporter_name label="Your Name" placeholder="Your Name" %} {% endcomponent %}
                 </div>
                 <!-- Anonymous Checkbox -->
                 <div class="anonymous-checkbox">
@@ -72,8 +69,7 @@
                 </div>
                 <!-- Message -->
                 <div class="form-field-large">
-                    <label for="{{ form.message.id_for_label }}" class="label-base">Message</label>
-                    {{ form.message }}
+                    {% component "textarea_input" field=form.message label="Message" rows="3" placeholder="Write a supportive message..." %} {% endcomponent %}
                     <p class="char-counter">
                         <span id="char-count">0</span>/500 characters
                     </p>
@@ -120,13 +116,12 @@
                     </div>
                     <p id="payment-error" class="error-message hidden"></p>
                 </div>
-                <!-- Submit Button -->
                 <button type="submit" id="submitBtn" class="support-submit-btn">
                     Support Rs. <span id="submit-amount">{{ creator.coffee_price }}</span>
                 </button>
             </form>
         </div>
-        <!-- Recent Supporters -->
+        <!-- Recent  -->
         <div class="recent-supporters">
             <h3 class="recent-supporters-title">Recent Supporters 💝</h3>
             <div class="supporters-list">

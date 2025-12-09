@@ -10,8 +10,8 @@ class CreatorProfileSchema(BaseModel):
 
 class BuyCoffeeSchema(BaseModel):
     amount: int = Field(gt=0)
-    supporter_name: str = Field(max_length=255, default="")
     is_anonymous: bool = False
+    supporter_name: str = Field(max_length=255, default="")
     message: str = Field(max_length=500, default="")
     payment_provider: str
 

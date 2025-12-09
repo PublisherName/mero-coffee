@@ -8,6 +8,7 @@ class ComponentsConfig(AppConfig):
     def ready(self):  # noqa: PLR6301
         import components.components.email_input  # noqa: F401
         import components.components.image_upload  # noqa: F401
+        import components.components.number_input  # noqa: F401
         import components.components.password_input  # noqa: F401
         import components.components.select_button  # noqa: F401
         import components.components.text_input  # noqa: F401
