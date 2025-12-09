@@ -137,7 +137,7 @@ def kyc(request):
             messages.error(request, "Your KYC is already submitted and cannot be modified.")
             return redirect("dashboard:kyc")
 
-        form = KYCForm(request.POST, instance=kyc)
+        form = KYCForm(request.POST, request.FILES, instance=kyc)
         if form.is_valid():
             kyc = form.save(commit=False)
             kyc.status = KYC.Status.PENDING

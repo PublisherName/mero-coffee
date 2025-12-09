@@ -73,6 +73,7 @@ THIRD_PARTY_APPS = [
     "django_ratelimit",
     "django_viewcomponent",
     "cities_light",
+    "django_cleanup.apps.CleanupConfig",
 ]
 
 # Project Apps
@@ -112,6 +113,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "defender.middleware.FailedLoginMiddleware",
     "django_ratelimit.middleware.RatelimitMiddleware",
+    "root.middleware.FileRenameMiddleware",
 ]
 
 # Django-tailwind hotreload

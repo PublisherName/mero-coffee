@@ -41,7 +41,7 @@
         {% endif %}
 
         {% if kyc.status == 'not_filed' or kyc.status == 'rejected' %}
-            <form method="post" class="kyc-form" novalidate>
+            <form method="post" class="kyc-form" novalidate enctype="multipart/form-data">
                 {% csrf_token %}
                 {% component "text_input" field=form.full_name required=True %} {% endcomponent %}
                 {% component "text_input" field=form.phone required=True %} {% endcomponent %}
@@ -49,9 +49,26 @@
                 {% component "select_button" field=form.region required=True %} {% endcomponent %}
                 {% component "select_button" field=form.subregion required=True %} {% endcomponent %}
                 {% component "select_button" field=form.city required=True %} {% endcomponent %}
-                {% component "text_input" field=form.address input_type="text" required=True %} {% endcomponent %}
-                {% component "text_input" field=form.id_type required=True %} {% endcomponent %}
-                {% component "text_input" field=form.id_number required=True %} {% endcomponent %}
+                <div class="kyc-form-full-width">
+                    {% component "text_input" field=form.address input_type="text" required=True %} {% endcomponent %}
+                </div>
+
+                <div class="kyc-section-divider kyc-form-full-width">
+                    <div class="kyc-input-grid">
+                        {% component "select_button" field=form.id_type required=True %} {% endcomponent %}
+                        {% component "text_input" field=form.id_number required=True %} {% endcomponent %}
+                    </div>
+                </div>
+
+                <div class="kyc-form-full-width">
+                    <div class="kyc-document-grid">
+                        {% component "image_upload" field=form.front_image label="Front Side" required=True %} {% endcomponent %}
+                        {% component "image_upload" field=form.back_image label="Back Side" required=True %} {% endcomponent %}
+                    </div>
+                    <div class="kyc-document-single">
+                        {% component "image_upload" field=form.selfie_with_document label="Selfie with Document" required=True %} {% endcomponent %}
+                    </div>
+                </div>
 
                 <div class="kyc-form-full-width">
                     <button type="submit" class="kyc-submit-btn">
@@ -95,13 +112,13 @@
                     <label class="kyc-readonly-label">City</label>
                     <p class="kyc-readonly-value">{{ kyc.city.name|default:"—" }}</p>
                 </div>
-                <div class="kyc-readonly-field">
+                <div class="kyc-readonly-field kyc-form-full-width">
                     <label class="kyc-readonly-label">Address</label>
                     <p class="kyc-readonly-value">{{ kyc.address|default:"—" }}</p>
                 </div>
                 <div class="kyc-readonly-field">
                     <label class="kyc-readonly-label">ID Type</label>
-                    <p class="kyc-readonly-value">{{ kyc.id_type|default:"—" }}</p>
+                    <p class="kyc-readonly-value">{{ kyc.get_id_type_display|default:"—" }}</p>
                 </div>
                 <div class="kyc-readonly-field">
                     <label class="kyc-readonly-label">ID Number</label>

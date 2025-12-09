@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from .enums import VerificationDocumentType
+
 
 class User(AbstractUser):
     class Roles(models.TextChoices):
@@ -74,8 +76,11 @@ class KYC(models.Model):
         blank=True,
         related_name="country",
     )
-    id_type = models.CharField(max_length=50, blank=True)
+    id_type = models.CharField(max_length=50, choices=VerificationDocumentType.choices, blank=True)
     id_number = models.CharField(max_length=100, blank=True)
+    front_image = models.ImageField(upload_to="kyc/documents/", blank=True)
+    back_image = models.ImageField(upload_to="kyc/documents/", blank=True)
+    selfie_with_document = models.ImageField(upload_to="kyc/documents/", blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.NOT_FILED)
     rejection_reason = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

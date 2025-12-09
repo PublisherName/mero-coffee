@@ -115,6 +115,9 @@ class KYCForm(forms.ModelForm):
             "city",
             "id_type",
             "id_number",
+            "front_image",
+            "back_image",
+            "selfie_with_document",
         )
         widgets = {
             "full_name": forms.TextInput(
@@ -138,11 +141,17 @@ class KYCForm(forms.ModelForm):
             "city": forms.Select(
                 attrs={"placeholder": "Select City"},
             ),
-            "id_type": forms.TextInput(
-                attrs={"placeholder": "ID Type (e.g., Passport, License)"},
-            ),
             "id_number": forms.TextInput(
                 attrs={"placeholder": "ID Number"},
+            ),
+            "front_image": forms.FileInput(
+                attrs={"class": "hidden"},
+            ),
+            "back_image": forms.FileInput(
+                attrs={"class": "hidden"},
+            ),
+            "selfie_with_document": forms.FileInput(
+                attrs={"class": "hidden"},
             ),
         }
 
@@ -151,3 +160,6 @@ class KYCForm(forms.ModelForm):
         self.fields["region"].label_from_instance = lambda obj: obj.name
         self.fields["subregion"].label_from_instance = lambda obj: obj.name
         self.fields["city"].label_from_instance = lambda obj: obj.name
+        self.fields["front_image"].required = True
+        self.fields["back_image"].required = True
+        self.fields["selfie_with_document"].required = True

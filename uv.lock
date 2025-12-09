@@ -126,6 +126,7 @@ dependencies = [
     { name = "django" },
     { name = "django-admin-honeypot-updated-2021" },
     { name = "django-cities-light" },
+    { name = "django-cleanup" },
     { name = "django-defender" },
     { name = "django-jazzmin" },
     { name = "django-ratelimit" },
@@ -159,6 +160,7 @@ requires-dist = [
     { name = "django", specifier = ">=5.2.8" },
     { name = "django-admin-honeypot-updated-2021", specifier = ">=1.2.0" },
     { name = "django-cities-light", specifier = ">=3.10.2" },
+    { name = "django-cleanup", specifier = ">=9.0.0" },
     { name = "django-defender", specifier = ">=0.9.8" },
     { name = "django-jazzmin", specifier = ">=3.0.1" },
     { name = "django-ratelimit", specifier = ">=4.1.0" },
@@ -320,6 +322,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/2c/95/9f126c3852054b6f8cfb99c6bfaa103279c327a72c85313ef5c2469d856f/django_cities_light-3.10.2.tar.gz", hash = "sha256:4f4473affb3376a3e52b791b9347845d849ed876b26fac0b980edc765692aa86", size = 106188, upload-time = "2025-08-30T13:08:01.392Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ed/2f/19aa98982d1b85d15aabc15ff273e5ecd27542c2d3ca59f22dff9fb741de/django_cities_light-3.10.2-py3-none-any.whl", hash = "sha256:28ca79d954ea5e4771fc42f8a9235e0501ba482ef1b7d647035d186f18198aad", size = 124802, upload-time = "2025-08-30T13:07:59.947Z" },
+]
+
+[[package]]
+name = "django-cleanup"
+version = "9.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/4b/01/b15a8de8b9ec75ea157ec58f86411894ca1182305fabaee31193076e7f62/django_cleanup-9.0.0.tar.gz", hash = "sha256:bb9fb560aaf62959c81e31fa40885c36bbd5854d5aa21b90df2c7e4ba633531e", size = 17917, upload-time = "2024-09-18T21:58:06.089Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/87/d7/a83dc87c2383e125da29948f7bccf5b30126c087a5a831316482407a960f/django_cleanup-9.0.0-py3-none-any.whl", hash = "sha256:19f8b0e830233f9f0f683b17181f414672a0f48afe3ea3cc80ba47ae40ad880c", size = 10726, upload-time = "2024-09-18T21:58:04.626Z" },
 ]
 
 [[package]]
