@@ -1,7 +1,10 @@
 from django import forms
+from pydantic import ValidationError as PydanticValidationError
 
 from apps.creators.models import CreatorProfile
 from apps.payments.models import PaymentGateway
+
+from .schemas import BuyCoffeeSchema, CreatorProfileSchema
 
 
 class CreatorProfileForm(forms.ModelForm):
@@ -13,6 +16,8 @@ class CreatorProfileForm(forms.ModelForm):
                 attrs={
                     "id": "display_name",
                     "placeholder": "Enter your display name",
+                    "minlength": "3",
+                    "maxlength": "255",
                 }
             ),
             "bio": forms.Textarea(
@@ -20,6 +25,8 @@ class CreatorProfileForm(forms.ModelForm):
                     "rows": 4,
                     "id": "bio",
                     "placeholder": "Write something about yourself",
+                    "minlength": "3",
+                    "maxlength": "255",
                 }
             ),
             "avatar_url": forms.URLInput(
@@ -32,9 +39,27 @@ class CreatorProfileForm(forms.ModelForm):
                 attrs={
                     "id": "coffee_price",
                     "placeholder": "Enter coffee price in Rs.",
+                    "min": "1",
                 }
             ),
         }
+
+    def clean(self):
+        cleaned_data = super().clean()
+        try:
+            CreatorProfileSchema(**cleaned_data)
+        except PydanticValidationError as e:
+            for error in e.errors():
+                field = error["loc"][0]
+                self.add_error(field, error["msg"])
+        return cleaned_data
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["display_name"].required = True
+        self.fields["bio"].required = True
+        self.fields["avatar_url"].required = True
+        self.fields["coffee_price"].required = True
 
 
 class BuyCoffeeForm(forms.Form):
@@ -132,14 +157,16 @@ class BuyCoffeeForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        is_anonymous = cleaned_data.get("is_anonymous")
-        supporter_name = cleaned_data.get("supporter_name")
+        try:
+            schema_data = {**cleaned_data, "amount": cleaned_data.get("amount", self.coffee_price)}
+            BuyCoffeeSchema(**schema_data)
+        except PydanticValidationError as e:
+            for error in e.errors():
+                field = error["loc"][0]
+                self.add_error(field, error["msg"])
 
+        is_anonymous = cleaned_data.get("is_anonymous")
         if is_anonymous:
             cleaned_data["supporter_name"] = "Anonymous Supporter"
-        elif not supporter_name:
-            self.add_error(
-                "supporter_name", "Name is required unless you choose to remain anonymous"
-            )
 
         return cleaned_data

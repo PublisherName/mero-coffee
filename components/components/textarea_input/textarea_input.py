@@ -61,4 +61,5 @@ class TextareaInput(component.Component):
             "field_id": f"id_{self.name}",
             "rows": self.rows,
             "value": self.field.value() if self.field else "",
+            "attrs": self.field.field.widget.attrs if self.field else {},
         }

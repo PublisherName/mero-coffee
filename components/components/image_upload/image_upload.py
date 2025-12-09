@@ -35,4 +35,5 @@ class ImageUpload(component.Component):
             "field_id": f"id_{self.name}",
             "value": self.field.value() if self.field else "",
             "field": self.field,
+            "attrs": self.field.field.widget.attrs if self.field else {},
         }

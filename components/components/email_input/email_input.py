@@ -58,4 +58,5 @@ class EmailInput(component.Component):
             "container_class": self.container_class,
             "field_id": f"id_{self.name}",
             "value": self.field.value() if self.field else "",
+            "attrs": self.field.field.widget.attrs if self.field else {},
         }
