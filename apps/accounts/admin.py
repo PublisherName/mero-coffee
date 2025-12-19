@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.urls import reverse
 from django.utils.html import format_html
 
 from .models import KYC
@@ -63,9 +64,10 @@ class KYCAdmin(admin.ModelAdmin):
     @staticmethod
     def preview_front_image(obj):
         if obj.front_image:
+            url = reverse("accounts:serve_kyc_document", args=[obj.id, "front_image"])
             return format_html(
                 '<img src="{}" style="max-height: 200px; max-width: 300px;" />',
-                obj.front_image.url,
+                url,
             )
         return "No image uploaded"
 
@@ -74,9 +76,10 @@ class KYCAdmin(admin.ModelAdmin):
     @staticmethod
     def preview_back_image(obj):
         if obj.back_image:
+            url = reverse("accounts:serve_kyc_document", args=[obj.id, "back_image"])
             return format_html(
                 '<img src="{}" style="max-height: 200px; max-width: 300px;" />',
-                obj.back_image.url,
+                url,
             )
         return "No image uploaded"
 
@@ -85,9 +88,10 @@ class KYCAdmin(admin.ModelAdmin):
     @staticmethod
     def preview_selfie(obj):
         if obj.selfie_with_document:
+            url = reverse("accounts:serve_kyc_document", args=[obj.id, "selfie_with_document"])
             return format_html(
                 '<img src="{}" style="max-height: 200px; max-width: 300px;" />',
-                obj.selfie_with_document.url,
+                url,
             )
         return "No image uploaded"
 

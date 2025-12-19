@@ -6,6 +6,7 @@ from apps.accounts.views import (
     login_view,
     logout_view,
     resend_confirmation_view,
+    serve_kyc_document,
     signup_view,
     verify_email_view,
 )
@@ -16,6 +17,11 @@ urlpatterns = [
     path("signup/", signup_view, name="signup"),
     path("login/", login_view, name="login"),
     path("logout/", logout_view, name="logout"),
+    path(
+        "kyc/document/<uuid:kyc_id>/<str:field_name>/",
+        serve_kyc_document,
+        name="serve_kyc_document",
+    ),
     path(
         "email-confirmation/sent/<int:user_id>/",
         email_confirmation_sent_view,

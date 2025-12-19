@@ -127,11 +127,15 @@
 
                         <div class="kyc-form-full-width mt-4">
                             <div class="kyc-document-grid">
-                                {% component "image_upload" field=form.front_image label="Front Side" required=True %} {% endcomponent %}
-                                {% component "image_upload" field=form.back_image label="Back Side" required=True %} {% endcomponent %}
+                                {% url 'accounts:serve_kyc_document' kyc.id 'front_image' as front_url %}
+                                {% component "image_upload" field=form.front_image label="Front Side" required=True initial_url=front_url %} {% endcomponent %}
+
+                                {% url 'accounts:serve_kyc_document' kyc.id 'back_image' as back_url %}
+                                {% component "image_upload" field=form.back_image label="Back Side" required=True initial_url=back_url %} {% endcomponent %}
                             </div>
                             <div class="kyc-document-single">
-                                {% component "image_upload" field=form.selfie_with_document label="Selfie with Document" required=True %} {% endcomponent %}
+                                {% url 'accounts:serve_kyc_document' kyc.id 'selfie_with_document' as selfie_url %}
+                                {% component "image_upload" field=form.selfie_with_document label="Selfie with Document" required=True initial_url=selfie_url %} {% endcomponent %}
                             </div>
                         </div>
                     </div>
@@ -242,7 +246,7 @@
                                 <div class="space-y-3">
                                     <label class="kyc-readonly-label">Front Side</label>
                                     <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-slate-900/50 shadow-inner group">
-                                        <img src="{{ kyc.front_image.url }}"
+                                        <img src="{% url 'accounts:serve_kyc_document' kyc.id 'front_image' %}"
                                              alt="Front Side"
                                              width="600"
                                              height="450"
@@ -255,7 +259,7 @@
                                 <div class="space-y-3">
                                     <label class="kyc-readonly-label">Back Side</label>
                                     <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-slate-900/50 shadow-inner group">
-                                        <img src="{{ kyc.back_image.url }}"
+                                        <img src="{% url 'accounts:serve_kyc_document' kyc.id 'back_image' %}"
                                              alt="Back Side"
                                              width="600"
                                              height="450"
@@ -268,7 +272,7 @@
                                 <div class="space-y-3">
                                     <label class="kyc-readonly-label">Selfie with ID</label>
                                     <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-slate-900/50 shadow-inner group">
-                                        <img src="{{ kyc.selfie_with_document.url }}"
+                                        <img src="{% url 'accounts:serve_kyc_document' kyc.id 'selfie_with_document' %}"
                                              alt="Selfie"
                                              width="600"
                                              height="450"
@@ -278,7 +282,6 @@
                             {% endif %}
                         </div>
                     </div>
-
                     {% if kyc.status == 'pending' %}
                         <div class="mt-8 p-6 bg-slate-900/50 rounded-xl border border-blue-500/20 flex gap-4 items-start">
                             <div class="text-blue-400 mt-1">

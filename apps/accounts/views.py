@@ -2,10 +2,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
+from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django_ratelimit.decorators import ratelimit
 
 from .forms import LoginForm, SignUpForm
+from .models import KYC
 from .utills import send_verification_email, verify_email_verification_token
 
 User = get_user_model()
@@ -116,3 +118,24 @@ def verify_email_view(request):
         messages.success(request, "Your email has been verified successfully! You can now log in.")
 
     return redirect("accounts:login")
+
+
+@login_required
+def serve_kyc_document(request, kyc_id, field_name):
+    kyc = get_object_or_404(KYC, id=kyc_id)
+
+    if kyc.user != request.user and not request.user.is_superuser:
+        raise Http404("Permission denied")
+
+    allowed_fields = ["front_image", "back_image", "selfie_with_document"]
+    if field_name not in allowed_fields:
+        raise Http404("Invalid document type")
+
+    file_field = getattr(kyc, field_name)
+    if not file_field:
+        raise Http404("File not found")
+
+    try:
+        return FileResponse(file_field.open(), content_type="image/jpeg")
+    except FileNotFoundError:
+        raise Http404("File not found on disk")
