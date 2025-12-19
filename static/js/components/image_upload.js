@@ -56,10 +56,12 @@ function setupImageUpload(fieldId) {
             reader.onload = function (e) {
                 const preview = document.getElementById('preview-' + fieldId);
                 const placeholder = document.getElementById('placeholder-' + fieldId);
+                const changeOverlay = document.getElementById('change-overlay-' + fieldId);
                 if (preview && placeholder) {
                     preview.src = e.target.result;
                     preview.classList.remove('hidden');
                     placeholder.classList.add('hidden');
+                    if (changeOverlay) changeOverlay.classList.remove('hidden');
                 }
             }
             reader.readAsDataURL(e.target.files[0]);
@@ -72,10 +74,12 @@ function setupImageUpload(fieldId) {
             // Handle clearing variables if no file selected
             const preview = document.getElementById('preview-' + fieldId);
             const placeholder = document.getElementById('placeholder-' + fieldId);
+            const changeOverlay = document.getElementById('change-overlay-' + fieldId);
             if (preview && placeholder) {
                 preview.src = '#';
                 preview.classList.add('hidden');
                 placeholder.classList.remove('hidden');
+                if (changeOverlay) changeOverlay.classList.add('hidden');
             }
             // Re-validate if required
             if (input.required && container) {

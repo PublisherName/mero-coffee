@@ -14,14 +14,16 @@
 {% block main_content %}
     <div class="dashboard-header">
         <h1 class="dashboard-title">KYC Verification</h1>
-        <p class="dashboard-subtitle">Complete your Know Your Customer verification to unlock all features</p>
+        <p class="dashboard-subtitle">
+            Complete your Know Your Customer verification to unlock all features, including
+            withdrawals and higher transaction limits.
+        </p>
     </div>
 
     {% include "includes/kyc_status_alert.html" %}
     {% include "includes/messages.html" %}
 
     <div class="kyc-form-card">
-        <!-- Verification Status Badge -->
         {% if kyc.status == 'approved' %}
             <div class="kyc-verified-badge">
                 <div class="kyc-verified-icon">
@@ -33,104 +35,265 @@
                     </svg>
                 </div>
                 <div class="kyc-verified-content">
-                    <h3 class="kyc-verified-title">✓ KYC Verified</h3>
-                    <p class="kyc-verified-subtitle">Your identity has been successfully verified</p>
+                    <h3 class="kyc-verified-title">Identity Verified</h3>
+                    <p class="kyc-verified-subtitle">Thank you for verifying your identity. Your account is now fully unlocked.</p>
                     {% if kyc.updated_at %}<p class="kyc-verified-date">Verified on {{ kyc.updated_at|date:"F d, Y" }}</p>{% endif %}
                 </div>
             </div>
         {% endif %}
 
         {% if kyc.status == 'not_filed' or kyc.status == 'rejected' %}
-            <form method="post" class="kyc-form" novalidate enctype="multipart/form-data">
+            <form method="post" class="kyc-form-layout" novalidate enctype="multipart/form-data">
                 {% csrf_token %}
-                {% component "text_input" field=form.full_name required=True %} {% endcomponent %}
-                {% component "text_input" field=form.phone required=True %} {% endcomponent %}
-                {% component "select_button" field=form.country required=True %} {% endcomponent %}
-                {% component "select_button" field=form.region required=True %} {% endcomponent %}
-                {% component "select_button" field=form.subregion required=True %} {% endcomponent %}
-                {% component "select_button" field=form.city required=True %} {% endcomponent %}
-                <div class="kyc-form-full-width">
-                    {% component "text_input" field=form.address input_type="text" required=True %} {% endcomponent %}
+
+                <!-- Section 1: Personal Information -->
+                <div class="kyc-section">
+                    <div class="kyc-section-header">
+                        <div class="kyc-section-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                            </svg>
+                        </div>
+                        <div class="kyc-section-info">
+                            <h2>Personal Information</h2>
+                            <p>Provide your legal name and contact details as they appear on your ID.</p>
+                        </div>
+                    </div>
+
+                    <div class="kyc-form">
+                        {% component "text_input" field=form.full_name required=True %} {% endcomponent %}
+                        {% component "text_input" field=form.phone required=True %} {% endcomponent %}
+                    </div>
                 </div>
 
-                <div class="kyc-section-divider kyc-form-full-width">
-                    <div class="kyc-input-grid">
+                <!-- Section 2: Address Information -->
+                <div class="kyc-section">
+                    <div class="kyc-section-header">
+                        <div class="kyc-section-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1 1 15 0Z" />
+                            </svg>
+                        </div>
+                        <div class="kyc-section-info">
+                            <h2>Address Details</h2>
+                            <p>Your current residential address for verification purposes.</p>
+                        </div>
+                    </div>
+
+                    <div class="kyc-form">
+                        {% component "select_button" field=form.country required=True %} {% endcomponent %}
+                        {% component "select_button" field=form.region required=True %} {% endcomponent %}
+                        {% component "select_button" field=form.subregion required=True %} {% endcomponent %}
+                        {% component "select_button" field=form.city required=True %} {% endcomponent %}
+                        <div class="kyc-form-full-width">
+                            {% component "text_input" field=form.address input_type="text" required=True %} {% endcomponent %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: Identity Documents -->
+                <div class="kyc-section">
+                    <div class="kyc-section-header">
+                        <div class="kyc-section-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Zm6-10.125a1.875 1.875 0 1 1-3.75 0 1.875 1.875 0 0 1 3.75 0Zm1.294 6.336a6.721 6.721 0 0 1-3.17.789 6.721 6.721 0 0 1-3.168-.789 3.376 3.376 0 0 1 6.338 0Z" />
+                            </svg>
+                        </div>
+                        <div class="kyc-section-info">
+                            <h2>Identity Verification</h2>
+                            <p>Upload clear photos of your official government-issued ID.</p>
+                        </div>
+                    </div>
+
+                    <div class="kyc-form">
                         {% component "select_button" field=form.id_type required=True %} {% endcomponent %}
                         {% component "text_input" field=form.id_number required=True %} {% endcomponent %}
+
+                        <div class="kyc-form-full-width mt-4">
+                            <div class="kyc-document-grid">
+                                {% component "image_upload" field=form.front_image label="Front Side" required=True %} {% endcomponent %}
+                                {% component "image_upload" field=form.back_image label="Back Side" required=True %} {% endcomponent %}
+                            </div>
+                            <div class="kyc-document-single">
+                                {% component "image_upload" field=form.selfie_with_document label="Selfie with Document" required=True %} {% endcomponent %}
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="kyc-form-full-width">
-                    <div class="kyc-document-grid">
-                        {% component "image_upload" field=form.front_image label="Front Side" required=True %} {% endcomponent %}
-                        {% component "image_upload" field=form.back_image label="Back Side" required=True %} {% endcomponent %}
+                <div class="kyc-form-full-width border-t border-slate-800 pt-8 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                    <div class="flex-1">
+                        <p class="kyc-info-text !mt-0">
+                            <strong>Note:</strong> Files should be in JPG, PNG or PDF format and less than 5MB.
+                            Ensure all text is readable and your face is clearly visible.
+                        </p>
                     </div>
-                    <div class="kyc-document-single">
-                        {% component "image_upload" field=form.selfie_with_document label="Selfie with Document" required=True %} {% endcomponent %}
-                    </div>
-                </div>
-
-                <div class="kyc-form-full-width">
-                    <button type="submit" class="kyc-submit-btn">
+                    <button type="submit" class="kyc-submit-btn whitespace-nowrap">
                         {% if kyc.status == 'rejected' %}
-                            Resubmit KYC Verification
+                            Resubmit Verification
                         {% else %}
-                            Submit KYC Verification
+                            Submit for Review
                         {% endif %}
                     </button>
-                    <p class="kyc-info-text">
-                        <strong>Note:</strong> All information must be accurate and match your official identification
-                        documents.
-                        Your submission will be reviewed by our team within 24-48 hours.
-                    </p>
                 </div>
             </form>
         {% else %}
-            <!-- Readonly view for pending/approved status -->
-            <div class="kyc-form">
-                <div class="kyc-readonly-field">
-                    <label class="kyc-readonly-label">Full Name</label>
-                    <p class="kyc-readonly-value">{{ kyc.full_name|default:"—" }}</p>
-                </div>
-                <div class="kyc-readonly-field">
-                    <label class="kyc-readonly-label">Phone</label>
-                    <p class="kyc-readonly-value">{{ kyc.phone|default:"—" }}</p>
-                </div>
-                <div class="kyc-readonly-field">
-                    <label class="kyc-readonly-label">Country</label>
-                    <p class="kyc-readonly-value">{{ kyc.country.name|default:"—" }}</p>
-                </div>
-                <div class="kyc-readonly-field">
-                    <label class="kyc-readonly-label">Region</label>
-                    <p class="kyc-readonly-value">{{ kyc.region.name|default:"—" }}</p>
-                </div>
-                <div class="kyc-readonly-field">
-                    <label class="kyc-readonly-label">Sub Region</label>
-                    <p class="kyc-readonly-value">{{ kyc.subregion.name|default:"—" }}</p>
-                </div>
-                <div class="kyc-readonly-field">
-                    <label class="kyc-readonly-label">City</label>
-                    <p class="kyc-readonly-value">{{ kyc.city.name|default:"—" }}</p>
-                </div>
-                <div class="kyc-readonly-field kyc-form-full-width">
-                    <label class="kyc-readonly-label">Address</label>
-                    <p class="kyc-readonly-value">{{ kyc.address|default:"—" }}</p>
-                </div>
-                <div class="kyc-readonly-field">
-                    <label class="kyc-readonly-label">ID Type</label>
-                    <p class="kyc-readonly-value">{{ kyc.get_id_type_display|default:"—" }}</p>
-                </div>
-                <div class="kyc-readonly-field">
-                    <label class="kyc-readonly-label">ID Number</label>
-                    <p class="kyc-readonly-value">{{ kyc.id_number|default:"—" }}</p>
-                </div>
+            <!-- Enhanced Readonly view for pending/approved status -->
+            <div class="kyc-readonly-layout">
+                <div class="kyc-section">
+                    <div class="kyc-section-header">
+                        <div class="kyc-section-icon bg-slate-700">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                 fill="none"
+                                 viewBox="0 0 24 24"
+                                 stroke-width="1.5"
+                                 stroke="currentColor"
+                                 class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                            </svg>
+                        </div>
+                        <div class="kyc-section-info">
+                            <h2>Submitted Information</h2>
+                            <p>Here are the details we currently have on file for your verification.</p>
+                        </div>
+                    </div>
 
-                <div class="kyc-form-full-width">
+                    <div class="kyc-details-grid">
+                        <div class="kyc-readonly-field">
+                            <label class="kyc-readonly-label">Full Name</label>
+                            <p class="kyc-readonly-value">{{ kyc.full_name|default:"—" }}</p>
+                        </div>
+                        <div class="kyc-readonly-field">
+                            <label class="kyc-readonly-label">Phone Number</label>
+                            <p class="kyc-readonly-value">{{ kyc.phone|default:"—" }}</p>
+                        </div>
+                        <div class="kyc-readonly-field">
+                            <label class="kyc-readonly-label">ID Type</label>
+                            <p class="kyc-readonly-value">{{ kyc.get_id_type_display|default:"—" }}</p>
+                        </div>
+                        <div class="kyc-readonly-field">
+                            <label class="kyc-readonly-label">ID Number</label>
+                            <p class="kyc-readonly-value">{{ kyc.id_number|default:"—" }}</p>
+                        </div>
+                        <div class="kyc-readonly-field">
+                            <label class="kyc-readonly-label">Country</label>
+                            <p class="kyc-readonly-value">{{ kyc.country.name|default:"—" }}</p>
+                        </div>
+                        {% if kyc.region %}
+                            <div class="kyc-readonly-field">
+                                <label class="kyc-readonly-label">State / Region</label>
+                                <p class="kyc-readonly-value">{{ kyc.region.name }}</p>
+                            </div>
+                        {% endif %}
+                        {% if kyc.subregion %}
+                            <div class="kyc-readonly-field">
+                                <label class="kyc-readonly-label">Sub Region</label>
+                                <p class="kyc-readonly-value">{{ kyc.subregion.name }}</p>
+                            </div>
+                        {% endif %}
+                        <div class="kyc-readonly-field">
+                            <label class="kyc-readonly-label">City</label>
+                            <p class="kyc-readonly-value">{{ kyc.city.name|default:"—" }}</p>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 kyc-readonly-field">
+                        <label class="kyc-readonly-label">Residential Address</label>
+                        <p class="kyc-readonly-value">{{ kyc.address|default:"—" }}</p>
+                    </div>
+
+                    <!-- Documents Preview Section -->
+                    <div class="kyc-section mt-10">
+                        <div class="kyc-section-header">
+                            <div class="kyc-section-icon bg-slate-700">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                     fill="none"
+                                     viewBox="0 0 24 24"
+                                     stroke-width="1.5"
+                                     stroke="currentColor"
+                                     class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                                </svg>
+                            </div>
+                            <div class="kyc-section-info">
+                                <h2>Submitted Documents</h2>
+                                <p>Images of your identity documents and verification selfie.</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {% if kyc.front_image %}
+                                <div class="space-y-3">
+                                    <label class="kyc-readonly-label">Front Side</label>
+                                    <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-slate-900/50 shadow-inner group">
+                                        <img src="{{ kyc.front_image.url }}"
+                                             alt="Front Side"
+                                             width="600"
+                                             height="450"
+                                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if kyc.back_image %}
+                                <div class="space-y-3">
+                                    <label class="kyc-readonly-label">Back Side</label>
+                                    <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-slate-900/50 shadow-inner group">
+                                        <img src="{{ kyc.back_image.url }}"
+                                             alt="Back Side"
+                                             width="600"
+                                             height="450"
+                                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    </div>
+                                </div>
+                            {% endif %}
+
+                            {% if kyc.selfie_with_document %}
+                                <div class="space-y-3">
+                                    <label class="kyc-readonly-label">Selfie with ID</label>
+                                    <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-slate-900/50 shadow-inner group">
+                                        <img src="{{ kyc.selfie_with_document.url }}"
+                                             alt="Selfie"
+                                             width="600"
+                                             height="450"
+                                             class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
                     {% if kyc.status == 'pending' %}
-                        <p class="kyc-info-text">
-                            <strong>Info:</strong> Your KYC information is currently under review and cannot be edited.
-                            Please wait for admin approval.
-                        </p>
+                        <div class="mt-8 p-6 bg-slate-900/50 rounded-xl border border-blue-500/20 flex gap-4 items-start">
+                            <div class="text-blue-400 mt-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                                    <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-white mb-1">Under Review</h4>
+                                <p class="text-slate-400 text-sm">
+                                    Your verification is currently being processed. This typically
+                                    takes 24-48 hours. You will receive an email once the review is complete.
+                                </p>
+                            </div>
+                        </div>
                     {% endif %}
                 </div>
             </div>

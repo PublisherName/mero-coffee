@@ -191,11 +191,16 @@ class KYCForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        data = {
-            k: v
-            for k, v in cleaned_data.items()
-            if k not in ["front_image", "back_image", "selfie_with_document"]
-        }
+        data = {}
+        for k, v in cleaned_data.items():
+            if k in ["front_image", "back_image", "selfie_with_document"]:
+                continue
+
+            if k in ["country", "region", "subregion", "city"] and v:
+                data[k] = v.id
+            else:
+                data[k] = v
+
         try:
             KYCSchema(**data)
         except PydanticValidationError as e:

@@ -3,7 +3,7 @@
 .textarea-input-container {
     display: flex;
     flex-direction: column;
-    gap: 0rem;
+    gap: 0.5rem;
 }
 
 .textarea-input-label {
