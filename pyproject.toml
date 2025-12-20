@@ -38,6 +38,7 @@ development = [
     "djlint>=1.36.4",
     "pre-commit>=4.3.0",
     "ruff>=0.14.2",
+    "faker>=39.0.0",
 ]
 
 [tool.ruff]
