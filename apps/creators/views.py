@@ -2,6 +2,7 @@ import uuid
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.dashboard.views import get_kyc_context
@@ -57,6 +58,15 @@ def creators_list(request):
     creators = creators.search(search_query)
     creators = creators.apply_sort(sort_by)
 
+    paginator = Paginator(creators, 8)
+    page_number = request.GET.get("page")
+    creators = paginator.get_page(page_number)
+
+    # Calculate page range to show (5 pages max)
+    current_page = creators.number
+    total_pages = paginator.num_pages
+    page_range = range(max(1, current_page - 2), min(total_pages + 1, current_page + 3))
+
     # TODO: Add category choices from model
     category_choices = [
         ("all", "All Categories"),
@@ -80,6 +90,7 @@ def creators_list(request):
         "sort_by": sort_by,
         "category_choices": category_choices,
         "sort_choices": sort_choices,
+        "page_range": page_range,
     }
     return render(request, "creators_list.html", context)
 

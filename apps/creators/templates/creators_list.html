@@ -22,85 +22,107 @@
             <div class="search-filters-card">
                 <form method="get" action="{% url 'creators:creators_list' %}" class="search-filters-grid">
 
-                <input type="text" name="q" placeholder="Search creators..." class="search-input"
-                    value="{{ search_query|default:'' }}">
+                    <input type="text"
+                           name="q"
+                           placeholder="Search creators..."
+                           class="search-input"
+                           value="{{ search_query|default:'' }}">
 
-                {% component "select_button" name="category" choices=category_choices placeholder="All Categories" disabled=True container_class="filter-container" select_class="filter-select-component" %}
+                    {% component "select_button" name="category" choices=category_choices placeholder="All Categories" disabled=True container_class="filter-container" select_class="filter-select-component" %}
                 {% endcomponent %}
 
                 {% component "select_button" name="sort" choices=sort_choices selected=sort_by placeholder="Sort By" container_class="filter-container" select_class="filter-select-component" %}
-                {% endcomponent %}
+            {% endcomponent %}
 
-                <button type="submit" class="search-btn">Search</button>
-            </form>
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+    </div>
+</div>
+</section>
+<!-- Creators Grid -->
+<section class="creators-grid-section">
+    <div class="creators-grid-container">
+        {% if search_query %}
+            <div style="margin-bottom: 2rem;
+                        padding: 1rem;
+                        background: rgba(139, 92, 246, 0.1);
+                        border-radius: 0.75rem;
+                        border: 1px solid rgba(139, 92, 246, 0.2)">
+                <p style="color: #e9d5ff; margin: 0;">
+                    Search results for "<strong>{{ search_query }}</strong>"
+                    - {{ creators|length }} creator{{ creators|length|pluralize }} found
+                    <a href="{% url 'creators:creators_list' %}"
+                       style="color: #a78bfa;
+                              text-decoration: none;
+                              margin-left: 1rem;
+                              font-weight: 500">Clear search</a>
+                </p>
             </div>
-        </div>
-    </section>
-    <!-- Creators Grid -->
-    <section class="creators-grid-section">
-        <div class="creators-grid-container">
-            {% if search_query %}
-                <div style="margin-bottom: 2rem;
-                            padding: 1rem;
-                            background: rgba(139, 92, 246, 0.1);
-                            border-radius: 0.75rem;
-                            border: 1px solid rgba(139, 92, 246, 0.2)">
-                    <p style="color: #e9d5ff; margin: 0;">
-                        Search results for "<strong>{{ search_query }}</strong>"
-                        - {{ creators|length }} creator{{ creators|length|pluralize }} found
-                        <a href="{% url 'creators:creators_list' %}"
-                           style="color: #a78bfa;
-                                  text-decoration: none;
-                                  margin-left: 1rem;
-                                  font-weight: 500">Clear search</a>
-                    </p>
-                </div>
-            {% endif %}
-            <div class="creators-grid">
-                {% for creator in creators %}
-                    <a href="{% url 'creators:profile' creator.user.username %}" class="creator-card-link">
-                        <div class="creator-card">
-                            <!-- Creator Header Background -->
-                            <div class="creator-card-header"></div>
-                            <!-- Creator Info -->
-                            <div class="creator-card-body">
-                                <!-- Avatar -->
-                                <div class="creator-card-avatar"
-                                     style="background: linear-gradient(135deg, {{ creator.avatar_color }} 0%, {{ creator.avatar_color }}dd 100%)">
-                                    {{ creator.display_name|slice:":1" }}
-                                </div>
-                                <h3 class="creator-card-name">{{ creator.display_name }}</h3>
-                                <p class="creator-card-bio">{{ creator.bio|truncatewords:10 }}</p>
-                                <!-- Stats -->
-                                <div class="creator-card-stats">
-                                    <div class="creator-card-stat-row">
-                                        <span>Supporters:</span>
-                                        <span class="creator-card-stat-value">{{ creator.supporters }}</span>
-                                    </div>
-                                    <div class="creator-card-stat-row">
-                                        <span>Monthly:</span>
-                                        <span class="creator-card-monthly-value">Rs. {{ creator.monthly }}</span>
-                                    </div>
-                                </div>
-                                <!-- Button -->
-                                <button class="creator-card-btn">Support Now</button>
+        {% endif %}
+        <div class="creators-grid">
+            {% for creator in creators %}
+                <a href="{% url 'creators:profile' creator.user.username %}" class="creator-card-link">
+                    <div class="creator-card">
+                        <!-- Creator Header Background -->
+                        <div class="creator-card-header"></div>
+                        <!-- Creator Info -->
+                        <div class="creator-card-body">
+                            <!-- Avatar -->
+                            <div class="creator-card-avatar"
+                                 style="background: linear-gradient(135deg, {{ creator.avatar_color }} 0%, {{ creator.avatar_color }}dd 100%)">
+                                {{ creator.display_name|slice:":1" }}
                             </div>
+                            <h3 class="creator-card-name">{{ creator.display_name }}</h3>
+                            <p class="creator-card-bio">{{ creator.bio|truncatewords:10 }}</p>
+                            <!-- Stats -->
+                            <div class="creator-card-stats">
+                                <div class="creator-card-stat-row">
+                                    <span>Supporters:</span>
+                                    <span class="creator-card-stat-value">{{ creator.supporters }}</span>
+                                </div>
+                                <div class="creator-card-stat-row">
+                                    <span>Monthly:</span>
+                                    <span class="creator-card-monthly-value">Rs. {{ creator.monthly }}</span>
+                                </div>
+                            </div>
+                            <!-- Button -->
+                            <button class="creator-card-btn">Support Now</button>
                         </div>
-                    </a>
-                {% empty %}
-                    <div class="creators-empty">
-                        <p class="creators-empty-text">No creators found</p>
                     </div>
-                {% endfor %}
-            </div>
-            <!-- Pagination -->
-            <div class="pagination">
-                <button class="pagination-btn">Previous</button>
-                <button class="pagination-btn-active">1</button>
-                <button class="pagination-btn">2</button>
-                <button class="pagination-btn">3</button>
-                <button class="pagination-btn">Next</button>
-            </div>
+                </a>
+            {% empty %}
+                <div class="creators-empty">
+                    <p class="creators-empty-text">No creators found</p>
+                </div>
+            {% endfor %}
         </div>
-    </section>
+        <!-- Pagination -->
+        {% if creators.has_other_pages %}
+            <div class="pagination">
+                {% if creators.has_previous %}
+                    <a href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}"
+                       class="pagination-btn"><<</a>
+                    <a href="?page={{ creators.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}"
+                       class="pagination-btn">Previous</a>
+                {% endif %}
+
+                {% for num in page_range %}
+                    {% if creators.number == num %}
+                        <span class="pagination-btn-active">{{ num }}</span>
+                    {% else %}
+                        <a href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}"
+                           class="pagination-btn">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+
+                {% if creators.has_next %}
+                    <a href="?page={{ creators.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}"
+                       class="pagination-btn">Next</a>
+                    <a href="?page={{ creators.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}"
+                       class="pagination-btn">>></a>
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+</section>
 {% endblock content %}
