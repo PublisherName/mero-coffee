@@ -76,6 +76,7 @@ THIRD_PARTY_APPS = [
     "django_viewcomponent",
     "cities_light",
     "django_cleanup.apps.CleanupConfig",
+    "turnstile",
 ]
 
 # Project Apps
@@ -306,6 +307,16 @@ LOGGING = {
 }
 
 CITIES_LIGHT_INCLUDE_COUNTRIES = ["NP"]
+
+# Turnstile Configuration
+TURNSTILE_SITEKEY = env.str("TURNSTILE_SITEKEY", default="1x00000000000000000000AA")
+TURNSTILE_SECRET = env.str("TURNSTILE_SECRET", default="1x0000000000000000000000000000000AA")
+TURNSTILE_TIMEOUT = 5
+TURNSTILE_DEFAULT_CONFIG = {
+    "render": "always",
+    "theme": "auto",
+    "size": "flexible",
+}
 
 if IS_SERVER_SECURE:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")

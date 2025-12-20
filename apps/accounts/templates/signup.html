@@ -21,15 +21,12 @@
                 <div class="auth-form-grid">
                     {% component "text_input" field=form.first_name %} {% endcomponent %}
                     {% component "text_input" field=form.last_name %} {% endcomponent %}
-                    <div class="auth-form-grid-full">
-                        {% component "email_input" field=form.email %} {% endcomponent %}
-                    </div>
-                    <div class="auth-form-grid-full">
-                        {% component "text_input" field=form.username %} {% endcomponent %}
-                    </div>
+                    <div class="auth-form-grid-full">{% component "email_input" field=form.email %} {% endcomponent %}</div>
+                    <div class="auth-form-grid-full">{% component "text_input" field=form.username %} {% endcomponent %}</div>
                     {% component "password_input" field=form.password1 %} {% endcomponent %}
                     {% component "password_input" field=form.password2 %} {% endcomponent %}
                 </div>
+                {% component "turnstile_input" field=form.turnstile %} {% endcomponent %}
                 <button type="submit" class="auth-btn-primary">Sign Up</button>
             </form>
             <p class="auth-text-small-large">
