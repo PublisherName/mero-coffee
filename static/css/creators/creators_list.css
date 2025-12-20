@@ -123,8 +123,8 @@
 .search-input:focus,
 .filter-select:focus {
     outline: none;
-    border-color: rgb(239 68 68);
-    box-shadow: 0 0 0 2px rgb(239 68 68 / 0.5);
+    border-color: rgb(100 116 139);
+    box-shadow: 0 0 0 2px rgb(100 116 139 / 0.3);
 }
 
 .search-btn {
@@ -169,8 +169,8 @@
 
 .filter-select-component:focus {
     outline: none !important;
-    border-color: rgb(239 68 68) !important;
-    box-shadow: 0 0 0 2px rgb(239 68 68 / 0.5) !important;
+    border-color: rgb(100 116 139) !important;
+    box-shadow: 0 0 0 2px rgb(100 116 139 / 0.3) !important;
 }
 
 /* Ensure disabled state is visible */
