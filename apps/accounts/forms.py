@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from pydantic import ValidationError as PydanticValidationError
+from turnstile.fields import TurnstileField
 
 from .models import KYC
 from .schemas import KYCSchema, LoginSchema, SignUpSchema
@@ -28,6 +29,7 @@ class LoginForm(forms.Form):
             }
         ),
     )
+    turnstile = TurnstileField()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -61,6 +63,7 @@ class SignUpForm(forms.ModelForm):
         ),
         strip=False,
     )
+    turnstile = TurnstileField()
 
     class Meta:
         model = User

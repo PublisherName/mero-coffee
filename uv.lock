@@ -140,6 +140,7 @@ dependencies = [
     { name = "django-jazzmin" },
     { name = "django-ratelimit" },
     { name = "django-redis" },
+    { name = "django-turnstile" },
     { name = "django-viewcomponent" },
     { name = "environs", extra = ["django"] },
     { name = "marshmallow" },
@@ -178,6 +179,7 @@ requires-dist = [
     { name = "django-redis", specifier = ">=6.0.0" },
     { name = "django-tailwind", marker = "extra == 'production'", specifier = ">=4.4.1" },
     { name = "django-tailwind", extras = ["cookiecutter", "honcho", "reload"], marker = "extra == 'development'", specifier = ">=4.4.1" },
+    { name = "django-turnstile", specifier = ">=0.1.2" },
     { name = "django-viewcomponent", specifier = ">=1.0.11" },
     { name = "djlint", marker = "extra == 'development'", specifier = ">=1.36.4" },
     { name = "environs", extras = ["django"], specifier = ">=14.5.0" },
@@ -427,6 +429,15 @@ honcho = [
 ]
 reload = [
     { name = "django-browser-reload" },
+]
+
+[[package]]
+name = "django-turnstile"
+version = "0.1.2"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/dd/fd/7f916c3e603ad5d8f5e544eacd82df989d19662b551cb3c9fbfaedbe5464/django_turnstile-0.1.2.tar.gz", hash = "sha256:7eb4ec8452ff6799792233eddc037578ca465134d1409b385c05bdec911a5154", size = 5257, upload-time = "2024-10-17T12:21:01.107Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/61/7d/6dd43ddf5e4c26985656f6d945294a3c9166944577d25f9bce6634acc432/django_turnstile-0.1.2-py3-none-any.whl", hash = "sha256:e671222e89ef24117768fbc7311da21f9bc60be6bc975e942cd3eff95a4e2b2c", size = 6579, upload-time = "2024-10-17T12:20:59.223Z" },
 ]
 
 [[package]]

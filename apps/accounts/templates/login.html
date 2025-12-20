@@ -21,6 +21,7 @@
                     {% csrf_token %}
                     {% component "text_input" field=form.username %} {% endcomponent %}
                     {% component "password_input" field=form.password %} {% endcomponent %}
+                    {% component "turnstile_input" field=form.turnstile %} {% endcomponent %}
                     <button type="submit" class="auth-btn-primary">Login</button>
                 </form>
                 <div class="auth-footer-links">
