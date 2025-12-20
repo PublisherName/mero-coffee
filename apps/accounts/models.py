@@ -35,6 +35,12 @@ class User(AbstractUser):
         verbose_name=_("user permissions"),
     )
 
+    def save(self, *args, **kwargs):
+        if self.is_superuser and self.role != self.Roles.ADMIN:
+            self.role = self.Roles.ADMIN
+            self.verified = True
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return self.username
 
