@@ -329,3 +329,42 @@ if IS_SERVER_SECURE:
     SECURE_SSL_REDIRECT = True
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
+
+# Jazzmin Configuration
+JAZZMIN_SETTINGS = {
+    "site_title": "MeroCoffee Admin",
+    "site_header": "MeroCoffee",
+    "site_brand": "MeroCoffee",
+    "welcome_sign": "Welcome to MeroCoffee Admin",
+    "copyright": "MeroCoffee",
+    "show_sidebar": True,
+    "navigation_expanded": True,
+    "icons": {
+        "auth": "fas fa-users-cog",
+        "auth.user": "fas fa-user",
+        "auth.Group": "fas fa-users",
+        "accounts.User": "fas fa-user-circle",
+        "accounts.KYC": "fas fa-id-card",
+        "creators.CreatorProfile": "fas fa-user-tie",
+        "payments.PaymentGateway": "fas fa-credit-card",
+        "payments.SupportTransaction": "fas fa-exchange-alt",
+        "payments.PaymentLog": "fas fa-file-invoice",
+        "defender.AccessAttempt": "fas fa-shield-alt",
+        "admin_honeypot.LoginAttempt": "fas fa-bug",
+        "cities_light.Country": "fas fa-globe",
+        "cities_light.Region": "fas fa-map",
+        "cities_light.City": "fas fa-city",
+        "cities_light.Subregion": "fas fa-map-marker-alt",
+        "payments.Withdrawal": "fas fa-money-bill-wave",
+        "payments.Membership": "fas fa-crown",
+        "payments.Subscription": "fas fa-calendar-check",
+    },
+    "order_with_respect_to": [
+        "accounts",
+        "creators",
+        "payments",
+        "defender",
+        "admin_honeypot",
+        "cities_light",
+    ],
+}
