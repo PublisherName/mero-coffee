@@ -35,7 +35,13 @@ def login_view(request):
                     user = None
 
             if user is not None:
-                if not user.verified:
+                if user.role != User.Roles.CREATOR:
+                    messages.error(
+                        request,
+                        "Access is restricted to creators only. "
+                        "Supporters can enjoy the platform without logging in.",
+                    )
+                elif not user.verified:
                     messages.error(request, "Please verify your email before logging in.")
                 else:
                     login(request, user)

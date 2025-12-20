@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.accounts.decorators import role_required
+from apps.accounts.models import User
 from apps.dashboard.views import get_kyc_context
 from apps.payments.models import PaymentGateway, SupportTransaction
 
@@ -96,6 +98,7 @@ def creators_list(request):
 
 
 @login_required
+@role_required(User.Roles.CREATOR)
 def profile_settings(request):
     profile, _created = CreatorProfile.objects.get_or_create(user=request.user)
     if request.method == "POST":

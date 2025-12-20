@@ -56,6 +56,18 @@ class LoginViewTests(BaseTestCase):
         self.assertContains(response, "Please verify your email before logging in.")
 
     @patch("turnstile.fields.TurnstileField.validate")
+    def test_login_non_creator_user(self, mock_turnstile):
+        mock_turnstile.return_value = True
+        self.user.role = self.user_model.Roles.SUPPORTER
+        self.user.save()
+        response = self.client.post(
+            self.login_url,
+            self.mock_turnstile_response({"username": "testuser", "password": self.user_password}),
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Access is restricted to creators only")
+
+    @patch("turnstile.fields.TurnstileField.validate")
     def test_login_turnstile_failure(self, mock_turnstile):
         mock_turnstile.return_value = False
         response = self.client.post(

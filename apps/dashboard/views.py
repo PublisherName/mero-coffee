@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
+from apps.accounts.decorators import role_required
 from apps.accounts.forms import KYCForm
 from apps.accounts.models import KYC
 
@@ -23,12 +24,14 @@ def get_kyc_context(user):
 
 
 @login_required
+@role_required(User.Roles.CREATOR)
 def dashboard(request):
     context = get_kyc_context(request.user)
     return render(request, "overview.html", context)
 
 
 @login_required
+@role_required(User.Roles.CREATOR)
 def earnings(request):
     context = {
         "total_earnings": 12450,
@@ -50,6 +53,7 @@ def earnings(request):
 
 
 @login_required
+@role_required(User.Roles.CREATOR)
 def withdrawal(request):
     available_balance = 5500
 
@@ -93,6 +97,7 @@ def withdrawal(request):
 
 
 @login_required
+@role_required(User.Roles.CREATOR)
 def supporters(request):
     # Dummy supporters data
     recent_supporters = [
@@ -125,11 +130,8 @@ def supporters(request):
 
 
 @login_required
+@role_required(User.Roles.CREATOR)
 def kyc(request):
-    if request.user.role != request.user.Roles.CREATOR:
-        messages.error(request, "Only creators need to submit KYC.")
-        return redirect("dashboard:dashboard")
-
     kyc, _ = KYC.objects.get_or_create(user=request.user)
 
     if request.method == "POST":
