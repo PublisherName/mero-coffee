@@ -174,6 +174,9 @@ DEFENDER_LOCKOUT_TEMPLATE = "defender_lockout.html"
 RATELIMIT_VIEW = "apps.core.views.ratelimit_lockout_view"
 RATELIMIT_RATE = env.str("RATELIMIT_RATE", default="3/30m")
 
+# Test runner
+TEST_RUNNER = "root.test_runner.CustomTestRunner"
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [

@@ -108,4 +108,4 @@ def pricing(request):
 
 
 def ratelimit_lockout_view(request, exception=None):
-    return render(request, "ratelimit_lockout.html")
+    return render(request, "ratelimit_lockout.html", status=429)
