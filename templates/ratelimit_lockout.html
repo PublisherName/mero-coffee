@@ -25,14 +25,12 @@
             <!-- Error Code -->
             <h1 class="error-code error-code-warning">⏳</h1>
             <!-- Title -->
-            <h2 class="error-title">Too Many Login Attempts</h2>
+            <h2 class="error-title">Too Many Requests</h2>
             <!-- Message -->
             <p class="error-description">
-                We've detected too many failed login attempts from your IP address. 🛡️
+                We've detected too many requests from your IP address. 🛡️
                 <br>
                 For security reasons, please wait <strong>30 minutes</strong> before trying again.
-                <br>
-                If you've forgotten your password, you can reset it below.
             </p>
             <div class="error-actions">
                 <a href="{% url 'core:homepage' %}" class="error-btn-primary">
@@ -44,16 +42,6 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25" />
                     </svg>
                     Back to Home
-                </a>
-                <a href="{% url 'accounts:password_reset' %}" class="error-btn-secondary">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         fill="none"
-                         viewBox="0 0 24 24"
-                         stroke-width="1.5"
-                         stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z" />
-                    </svg>
-                    Reset Password
                 </a>
             </div>
         </div>
