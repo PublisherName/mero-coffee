@@ -20,28 +20,33 @@
         </p>
     </div>
 
-    {% include "includes/kyc_status_alert.html" %}
     {% include "includes/messages.html" %}
+    {% include "includes/kyc_status_alert.html" %}
+    {% if kyc_status == 'approved' %}
+        <div class="kyc-status-alert kyc-status-approved flex items-start gap-4 p-5 bg-green-500/5 border border-green-500/20 rounded-2xl">
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     fill="none"
+                     viewBox="0 0 24 24"
+                     stroke-width="2"
+                     stroke="currentColor"
+                     class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="flex-1">
+                <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-1">Verification Complete</h3>
+                <p class="text-green-100/70 text-sm leading-relaxed mb-2">
+                    Your identity has been successfully verified. You now have access to all account features.
+                </p>
+                {% if kyc.updated_at %}
+                    <p class="text-green-400/60 text-xs font-medium">Verified on {{ kyc.updated_at|date:"F d, Y" }}</p>
+                {% endif %}
+            </div>
+        </div>
+    {% endif %}
 
     <div class="kyc-form-card">
-        {% if kyc.status == 'approved' %}
-            <div class="kyc-verified-badge">
-                <div class="kyc-verified-icon">
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         viewBox="0 0 24 24"
-                         fill="currentColor"
-                         class="kyc-verified-checkmark">
-                        <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clip-rule="evenodd" />
-                    </svg>
-                </div>
-                <div class="kyc-verified-content">
-                    <h3 class="kyc-verified-title">Identity Verified</h3>
-                    <p class="kyc-verified-subtitle">Thank you for verifying your identity. Your account is now fully unlocked.</p>
-                    {% if kyc.updated_at %}<p class="kyc-verified-date">Verified on {{ kyc.updated_at|date:"F d, Y" }}</p>{% endif %}
-                </div>
-            </div>
-        {% endif %}
-
         {% if kyc.status == 'not_filed' or kyc.status == 'rejected' %}
             <form method="post" class="kyc-form-layout" novalidate enctype="multipart/form-data">
                 {% csrf_token %}
