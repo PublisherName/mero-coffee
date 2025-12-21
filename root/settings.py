@@ -87,6 +87,7 @@ PROJECT_APPS = [
     "apps.creators",
     "apps.dashboard",
     "apps.payments",
+    "apps.newsletter",
 ]
 
 # Combining all app groups
@@ -358,6 +359,7 @@ JAZZMIN_SETTINGS = {
         "payments.Withdrawal": "fas fa-money-bill-wave",
         "payments.Membership": "fas fa-crown",
         "payments.Subscription": "fas fa-calendar-check",
+        "newsletter.NewsletterSubscriber": "fas fa-envelope",
     },
     "order_with_respect_to": [
         "accounts",

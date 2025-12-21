@@ -16,6 +16,7 @@ urlpatterns = (
         path("", include("apps.creators.urls", namespace="creators")),
         path("", include("apps.payments.urls", namespace="payments")),
         path("dashboard/", include("apps.dashboard.urls", namespace="dashboard")),
+        path("newsletter/", include("apps.newsletter.urls", namespace="newsletter")),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
