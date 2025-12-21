@@ -15,6 +15,15 @@ class KYCAdmin(admin.ModelAdmin):
         "preview_front_image",
         "preview_back_image",
         "preview_selfie",
+        "full_name",
+        "phone",
+        "country_name",
+        "region_name",
+        "subregion_name",
+        "city_name",
+        "address",
+        "id_type",
+        "id_number",
     )
     autocomplete_fields = ["country", "region", "subregion", "city"]
     fieldsets = (
@@ -25,10 +34,10 @@ class KYCAdmin(admin.ModelAdmin):
                 "fields": (
                     "full_name",
                     "phone",
-                    "country",
-                    "region",
-                    "subregion",
-                    "city",
+                    "country_name",
+                    "region_name",
+                    "subregion_name",
+                    "city_name",
                     "address",
                 )
             },
@@ -39,11 +48,8 @@ class KYCAdmin(admin.ModelAdmin):
                 "fields": (
                     "id_type",
                     "id_number",
-                    "front_image",
                     "preview_front_image",
-                    "back_image",
                     "preview_back_image",
-                    "selfie_with_document",
                     "preview_selfie",
                 )
             },
@@ -62,11 +68,38 @@ class KYCAdmin(admin.ModelAdmin):
         ).filter(status__in=[KYC.Status.PENDING])
 
     @staticmethod
+    def country_name(obj):
+        return obj.country.name if obj.country else "-"
+
+    country_name.short_description = "Country"
+
+    @staticmethod
+    def region_name(obj):
+        return obj.region.name if obj.region else "-"
+
+    region_name.short_description = "Region"
+
+    @staticmethod
+    def subregion_name(obj):
+        return obj.subregion.name if obj.subregion else "-"
+
+    subregion_name.short_description = "Subregion"
+
+    @staticmethod
+    def city_name(obj):
+        return obj.city.name if obj.city else "-"
+
+    city_name.short_description = "City"
+
+    @staticmethod
     def preview_front_image(obj):
         if obj.front_image:
             url = reverse("accounts:serve_kyc_document", args=[obj.id, "front_image"])
             return format_html(
-                '<img src="{}" style="max-height: 200px; max-width: 300px;" />',
+                '<a href="{}" target="_blank">'
+                '<img src="{}" style="max-height: 200px; max-width: 300px;" />'
+                "</a>",
+                url,
                 url,
             )
         return "No image uploaded"
@@ -78,7 +111,10 @@ class KYCAdmin(admin.ModelAdmin):
         if obj.back_image:
             url = reverse("accounts:serve_kyc_document", args=[obj.id, "back_image"])
             return format_html(
-                '<img src="{}" style="max-height: 200px; max-width: 300px;" />',
+                '<a href="{}" target="_blank">'
+                '<img src="{}" style="max-height: 200px; max-width: 300px;" />'
+                "</a>",
+                url,
                 url,
             )
         return "No image uploaded"
@@ -90,7 +126,10 @@ class KYCAdmin(admin.ModelAdmin):
         if obj.selfie_with_document:
             url = reverse("accounts:serve_kyc_document", args=[obj.id, "selfie_with_document"])
             return format_html(
-                '<img src="{}" style="max-height: 200px; max-width: 300px;" />',
+                '<a href="{}" target="_blank">'
+                '<img src="{}" style="max-height: 200px; max-width: 300px;" />'
+                "</a>",
+                url,
                 url,
             )
         return "No image uploaded"

@@ -4,6 +4,8 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from root.storage import PrivateMediaStorage
+
 from .enums import VerificationDocumentType
 
 
@@ -88,9 +90,15 @@ class KYC(models.Model):
     )
     id_type = models.CharField(max_length=50, choices=VerificationDocumentType.choices, blank=True)
     id_number = models.CharField(max_length=100, blank=True)
-    front_image = models.ImageField(upload_to="private/kyc/documents/", blank=True)
-    back_image = models.ImageField(upload_to="private/kyc/documents/", blank=True)
-    selfie_with_document = models.ImageField(upload_to="private/kyc/documents/", blank=True)
+    front_image = models.ImageField(
+        upload_to="kyc/documents/", storage=PrivateMediaStorage(), blank=True
+    )
+    back_image = models.ImageField(
+        upload_to="kyc/documents/", storage=PrivateMediaStorage(), blank=True
+    )
+    selfie_with_document = models.ImageField(
+        upload_to="kyc/documents/", storage=PrivateMediaStorage(), blank=True
+    )
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.NOT_FILED)
     rejection_reason = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

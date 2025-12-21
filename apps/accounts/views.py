@@ -6,6 +6,8 @@ from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django_ratelimit.decorators import ratelimit
 
+from apps.accounts.decorators import role_required
+
 from .forms import LoginForm, SignUpForm
 from .models import KYC
 from .utills import send_verification_email, verify_email_verification_token
@@ -127,6 +129,7 @@ def verify_email_view(request):
 
 
 @login_required
+@role_required(User.Roles.CREATOR, User.Roles.ADMIN)
 def serve_kyc_document(request, kyc_id, field_name):
     kyc = get_object_or_404(KYC, id=kyc_id)
 

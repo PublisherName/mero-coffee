@@ -221,6 +221,10 @@ STATIC_ROOT = BASE_DIR / "public"
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
+# Private media files
+PRIVATE_MEDIA_ROOT = BASE_DIR / "private" / "media"
+PRIVATE_MEDIA_URL = "/private-media/"
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
