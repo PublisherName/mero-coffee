@@ -134,11 +134,12 @@ class BuyCoffeeForm(forms.Form):
         ),
     )
 
-    def __init__(self, *args, coffee_price=100, **kwargs):
+    def __init__(self, *args, creator=None, **kwargs):
         super().__init__(*args, **kwargs)
-        self.coffee_price = coffee_price
-        self.fields["amount"].widget.attrs["min"] = str(coffee_price)
-        self.fields["amount"].widget.attrs["placeholder"] = str(coffee_price)
+        self.creator = creator
+        self.coffee_price = creator.coffee_price
+        self.fields["amount"].widget.attrs["min_value"] = str(self.coffee_price)
+        self.fields["amount"].widget.attrs["placeholder"] = str(self.coffee_price)
 
         # Populate payment providers dynamically
         gateways = PaymentGateway.objects.filter(is_active=True)
@@ -156,6 +157,12 @@ class BuyCoffeeForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
+
+        if self.creator and not self.creator.can_receive_payment:
+            self.add_error(
+                None, "This profile cannot receive support until KYC verification is completed."
+            )
+
         try:
             schema_data = {**cleaned_data, "amount": cleaned_data.get("amount", self.coffee_price)}
             BuyCoffeeSchema(**schema_data)

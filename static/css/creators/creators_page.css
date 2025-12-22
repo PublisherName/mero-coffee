@@ -32,6 +32,50 @@
     text-align: center;
 }
 
+/* Privacy Notice */
+.privacy-notice {
+    background: linear-gradient(135deg, rgb(245 158 11 / 0.1), rgb(251 191 36 / 0.1));
+    border: 1px solid rgb(245 158 11 / 0.3);
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    backdrop-filter: blur(8px);
+}
+
+.privacy-notice-icon {
+    font-size: 1.5rem;
+    width: 2.5rem;
+    height: 2.5rem;
+    background: linear-gradient(135deg, rgb(245 158 11), rgb(251 191 36));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    flex-shrink: 0;
+}
+
+.privacy-notice-content {
+    flex: 1;
+}
+
+.privacy-notice-title {
+    color: rgb(251 191 36);
+    font-size: 1.125rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.privacy-notice-message {
+    color: rgb(250 204 21);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    margin: 0;
+}
+
 .creator-avatar-large {
     width: 8rem;
     height: 8rem;

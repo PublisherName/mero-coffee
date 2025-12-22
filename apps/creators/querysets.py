@@ -1,8 +1,11 @@
 from datetime import timedelta
 
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.db.models import Count, Q, Sum
 from django.utils import timezone
+
+User = get_user_model()
 
 
 class CreatorProfileQuerySet(models.QuerySet):
@@ -10,6 +13,7 @@ class CreatorProfileQuerySet(models.QuerySet):
         return self.filter(
             user__is_active=True,
             user__is_staff=False,
+            user__role=User.Roles.CREATOR,
             user__verified=True,
             user__kyc__status="approved",
         )
