@@ -9,6 +9,16 @@
 {% endblock title %}
 {% block content %}
     <div class="creator-page-container">
+        <!-- Privacy Notice for Private Profiles -->
+        {% if privacy_notice %}
+            <div class="privacy-notice">
+                <div class="privacy-notice-icon">🔒</div>
+                <div class="privacy-notice-content">
+                    <h3 class="privacy-notice-title">Private Profile</h3>
+                    <p class="privacy-notice-message">{{ privacy_notice }}</p>
+                </div>
+            </div>
+        {% endif %}
         <!-- Creator Header -->
         <div class="creator-header">
             <div class="creator-avatar-large">{{ creator.display_name|slice:":1" }}</div>
@@ -19,7 +29,7 @@
                 <span class="creator-stat-badge">💰 Rs. {{ monthly_income|default:"0" }} / month</span>
             </div>
         </div>
-        <!-- Support Section -->
+
         <div class="support-section">
             <h2 class="support-title">Buy {{ creator.display_name }} a Coffee ☕</h2>
             <!-- Form Errors -->
@@ -54,7 +64,7 @@
                         </button>
                     </div>
                     <div class="mb-4">
-                        {% component "number_input" field=form.amount placeholder="Enter amount" min_value="1" prefix="Rs." %} {% endcomponent %}
+                        {% component "number_input" field=form.amount prefix="Rs." %} {% endcomponent %}
                         <p class="amount-hint">Minimum amount: Rs. {{ creator.coffee_price }}</p>
                     </div>
                 </div>
@@ -121,7 +131,7 @@
                 </button>
             </form>
         </div>
-        <!-- Recent  -->
+
         <div class="recent-supporters">
             <h3 class="recent-supporters-title">Recent Supporters 💝</h3>
             <div class="supporters-list">

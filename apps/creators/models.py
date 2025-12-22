@@ -5,6 +5,8 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 
+from apps.accounts.models import KYC
+
 from .managers import CreatorProfileManager
 
 
@@ -69,3 +71,13 @@ class CreatorProfile(models.Model):
             or 0
         )
         return int(total)
+
+    @property
+    def can_receive_payment(self):
+        """Check if profile is publicly accessible (KYC verified)"""
+        return (
+            self.user.is_active
+            and self.user.role == self.user.Roles.CREATOR
+            and self.user.verified
+            and self.user.kyc.status == KYC.Status.APPROVED
+        )

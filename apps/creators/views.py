@@ -3,7 +3,7 @@ import uuid
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 
 from apps.accounts.decorators import role_required
 from apps.accounts.models import User
@@ -15,26 +15,43 @@ from .models import CreatorProfile
 
 
 def profile(request, username):
-    creator = get_object_or_404(CreatorProfile.objects.by_username(username))
+    try:
+        creator = CreatorProfile.objects.select_related("user", "user__kyc").get(
+            user__username=username
+        )
+    except CreatorProfile.DoesNotExist:
+        return render(request, "400.html", {"error_message": "Profile not found."}, status=400)
+
+    is_owner = request.user.is_authenticated and request.user == creator.user
+
+    if not creator.can_receive_payment and not is_owner:
+        return render(
+            request, "400.html", {"error_message": "This profile is private."}, status=400
+        )
+
+    privacy_notice = (
+        "This profile is private and only visible to the owner."
+        if not creator.can_receive_payment
+        else None
+    )
+
+    form = BuyCoffeeForm(request.POST or None, creator=creator)
+
+    # TODO: Update with real stats
     supporter_count = creator.supporters
     monthly_income = 10000
 
-    if request.method == "POST":
-        form = BuyCoffeeForm(request.POST, coffee_price=creator.coffee_price)
-        if form.is_valid():
-            transaction = SupportTransaction.objects.create(
-                creator=creator,
-                supporter_name=form.cleaned_data["supporter_name"],
-                amount=form.cleaned_data["amount"],
-                payment_method=form.cleaned_data["payment_provider"],
-                message=form.cleaned_data["message"],
-                transaction_id=str(uuid.uuid4()),
-                payment_status="pending",
-            )
-            return redirect("payments:checkout", transaction_id=transaction.transaction_id)
-        messages.error(request, "Please correct the errors in the form.")
-    else:
-        form = BuyCoffeeForm(coffee_price=creator.coffee_price)
+    if request.method == "POST" and form.is_valid():
+        transaction = SupportTransaction.objects.create(
+            creator=creator,
+            supporter_name=form.cleaned_data["supporter_name"],
+            amount=form.cleaned_data["amount"],
+            payment_method=form.cleaned_data["payment_provider"],
+            message=form.cleaned_data["message"],
+            transaction_id=str(uuid.uuid4()),
+            payment_status="pending",
+        )
+        return redirect("payments:checkout", transaction_id=transaction.transaction_id)
 
     context = {
         "creator": creator,
@@ -48,6 +65,8 @@ def profile(request, username):
             "3x": creator.coffee_price * 3,
             "5x": creator.coffee_price * 5,
         },
+        "is_owner": is_owner,
+        "privacy_notice": privacy_notice,
     }
     return render(request, "creators_page.html", context)
 

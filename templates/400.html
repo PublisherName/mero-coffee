@@ -28,10 +28,14 @@
             <h2 class="error-title">Bad Request</h2>
             <!-- Message -->
             <p class="error-description">
-                Oops! Something went wrong with your request. ☕
-                <br>
-                The server couldn't understand what you were asking for.
-                This might be due to a typo in the URL or an invalid request.
+                {% if error_message %}
+                    {{ error_message }} ☕
+                {% else %}
+                    Oops! Something went wrong with your request. ☕
+                    <br>
+                    The server couldn't understand what you were asking for.
+                    This might be due to a typo in the URL or an invalid request.
+                {% endif %}
             </p>
             <!-- Actions -->
             <div class="error-actions">
