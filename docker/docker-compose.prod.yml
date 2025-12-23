@@ -8,6 +8,15 @@ services:
     networks:
       - default
       - external-services
+
+  celery_worker:
+    env_file: .env
+    environment:
+      - CELERY_WORKER=true
+    image: ghcr.io/publishername/merocoffee:${PROJECT_VERSION}
+    networks:
+      - default
+      - external-services
 networks:
   external-services:
     external: true

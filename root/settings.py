@@ -78,6 +78,7 @@ THIRD_PARTY_APPS = [
     "cities_light",
     "django_cleanup.apps.CleanupConfig",
     "turnstile",
+    "django_celery_results",
 ]
 
 # Project Apps
@@ -204,7 +205,7 @@ LOGIN_URL = "/login/"
 
 # Internationalization
 LANGUAGE_CODE = "en-us"
-TIME_ZONE = "UTC"
+TIME_ZONE = "Asia/Kathmandu"
 USE_I18N = True
 USE_TZ = True
 
@@ -337,6 +338,19 @@ if IS_SERVER_SECURE:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_HSTS_PRELOAD = True
 
+# Celery Settings
+USE_CELERY = env.bool("USE_CELERY", default=False)
+if USE_CELERY:
+    CELERY_BROKER_URL = CACHES["default"]["LOCATION"]
+    CELERY_RESULT_BACKEND = env.str("CELERY_RESULT_BACKEND", default="django-db")
+    CELERY_ACCEPT_CONTENT = ["json"]
+    CELERY_TASK_SERIALIZER = "json"
+    CELERY_RESULT_SERIALIZER = "json"
+    CELERY_TIMEZONE = TIME_ZONE
+    CELERY_ENABLE_UTC = False
+    CELERY_WORKER_CONCURRENCY = 4
+    CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+
 # Jazzmin Configuration
 JAZZMIN_SETTINGS = {
     "site_title": "MeroCoffee Admin",
@@ -366,11 +380,15 @@ JAZZMIN_SETTINGS = {
         "payments.Membership": "fas fa-crown",
         "payments.Subscription": "fas fa-calendar-check",
         "newsletter.NewsletterSubscriber": "fas fa-envelope",
+        "django_celery_results.TaskResult": "fas fa-tasks",
+        "django_celery_results.GroupResult": "fas fa-layer-group",
+        "django_celery_results.ChordResult": "fas fa-project-diagram",
     },
     "order_with_respect_to": [
         "accounts",
         "creators",
         "payments",
+        "django_celery_results",
         "defender",
         "admin_honeypot",
         "cities_light",

@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.core.mail import EmailMessage
 from django.template import Context, Template
-from django.utils.html import strip_tags
 
 from apps.emails.models import EmailTemplate
+from apps.emails.tasks import send_email_task
 
 
 class EmailService:
@@ -18,80 +18,51 @@ class EmailService:
     def send_email(
         cls, template_name, recipient_list, context=None, from_email=None, attachments=None
     ):
-        """
-        Send email using a template from database
-
-        Args:
-            template_name (str): Name of the email template
-            recipient_list (list): List of email addresses
-            context (dict): Context variables for template rendering
-            from_email (str): Override default from email
-            attachments (list): List of file attachments
-
-        Returns:
-            bool: True if email sent successfully, False otherwise
-        """
+        """Simplified email sending with Celery support"""
         try:
             template = EmailTemplate.objects.get(name=template_name, is_active=True)
-        except EmailTemplate.DoesNotExist:
-            return False
 
-        if not context:
-            context = {}
+            context = context or {}
+            ctx = {
+                "site_url": cls._get_site_url(),
+                "site_name": getattr(settings, "SITE_NAME", "MeroCoffee"),
+                **context,
+            }
+            subject = Template(template.subject).render(Context(ctx))
+            html_message = Template(template.html_content).render(Context(ctx))
 
-        # Add default context variables
-        default_context = {
-            "site_url": cls._get_site_url,
-            "site_name": getattr(settings, "SITE_NAME", "MeroCoffee"),
-        }
-        default_context.update(context)
+            from_email = from_email or settings.DEFAULT_FROM_EMAIL
 
-        try:
-            # Render subject
-            subject_template = Template(template.subject)
-            subject = subject_template.render(Context(default_context))
-
-            # Render HTML content
-            html_template = Template(template.html_content)
-            html_message = html_template.render(Context(default_context))
-
-            # Generate text content
-            text_message = template.text_content
-            if text_message:
-                text_template = Template(text_message)
-                text_message = text_template.render(Context(default_context))
+            if getattr(settings, "USE_CELERY", False):
+                attachments_data = [
+                    {
+                        "filename": att.get("filename", "attachment"),
+                        "content": att.get("content", b""),
+                        "mimetype": att.get("mimetype", "application/octet-stream"),
+                    }
+                    for att in (attachments or [])
+                    if isinstance(att, dict)
+                ]
+                send_email_task.delay(
+                    subject, html_message, from_email, recipient_list, "html", attachments_data
+                )
+                return True
             else:
-                text_message = strip_tags(html_message)
+                email = EmailMessage(subject, html_message, from_email, recipient_list)
+                email.content_subtype = "html"
 
-            # Determine from email
-            if from_email is None:
-                from_email = settings.DEFAULT_FROM_EMAIL
-
-            # Create email message
-            email = EmailMessage(
-                subject=subject,
-                body=html_message,
-                from_email=from_email,
-                to=recipient_list,
-            )
-            email.content_subtype = "html"
-
-            # Add attachments if provided
-            if attachments:
-                for attachment in attachments:
-                    if isinstance(attachment, dict):
+                for att in attachments or []:
+                    if isinstance(att, dict):
                         email.attach(
-                            attachment.get("filename", "attachment"),
-                            attachment.get("content", b""),
-                            attachment.get("mimetype", "application/octet-stream"),
+                            att.get("filename", "attachment"),
+                            att.get("content", b""),
+                            att.get("mimetype", "application/octet-stream"),
                         )
                     else:
-                        # Assume it's a file-like object
-                        email.attach(attachment)
+                        email.attach(att)
 
-            email.send()
-            return True
-
+                email.send()
+                return True
         except Exception:
             return False
 
