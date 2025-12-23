@@ -2,15 +2,18 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.tokens import default_token_generator
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.decorators import role_required
+from apps.emails.services import EmailService
 
 from .forms import LoginForm, SignUpForm
 from .models import KYC
-from .utills import send_verification_email, verify_email_verification_token
 
 User = get_user_model()
 
@@ -75,7 +78,25 @@ def signup_view(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
-            send_verification_email(user)
+
+            token = default_token_generator.make_token(user)
+            uid = str(user.pk)
+
+            verify_url = settings.SITE_BASE_URL + reverse(
+                "accounts:verify_email", kwargs={"uidb64": uid, "token": token}
+            )
+
+            context = {
+                "username": user.username,
+                "verification_url": verify_url,
+                "expiration_hours": settings.TOKEN_EXPIRATION_HOURS,
+            }
+
+            EmailService.send_template_email(
+                template_name="email_verification",
+                recipient=user.email,
+                context=context,
+            )
             messages.success(request, "A confirmation email has been sent to your inbox.")
             return redirect("accounts:email_confirmation_sent_view", user_id=user.id)
         else:
@@ -94,38 +115,87 @@ def resend_confirmation_view(request, user_id):
         messages.info(request, "Your email is already verified.")
         return redirect("accounts:login")
 
-    send_verification_email(user)
+    token = default_token_generator.make_token(user)
+    uid = str(user.pk)
+
+    verify_url = settings.SITE_BASE_URL + reverse(
+        "accounts:verify_email", kwargs={"uidb64": uid, "token": token}
+    )
+
+    context = {
+        "username": user.username,
+        "verification_url": verify_url,
+        "expiration_hours": settings.TOKEN_EXPIRATION_HOURS,
+    }
+
+    EmailService.send_template_email(
+        template_name="email_verification",
+        recipient=user.email,
+        context=context,
+    )
     messages.success(request, "A new confirmation email has been sent to your inbox.")
     return redirect("accounts:email_confirmation_sent_view", user_id=user.id)
 
 
 @ratelimit(key="ip", rate=settings.RATELIMIT_RATE, method="GET", block=True)
-def verify_email_view(request):
-    token = request.GET.get("token")
-    if not token:
+def verify_email_view(request, uidb64, token):
+    try:
+        uid = int(uidb64)
+        user = User.objects.get(pk=uid)
+    except (TypeError, ValueError, User.DoesNotExist):
         messages.error(request, "Invalid verification link.")
         return redirect("accounts:login")
 
-    user_id = verify_email_verification_token(token)
-    if user_id is None:
+    if not default_token_generator.check_token(user, token):
         messages.error(request, "Verification link is invalid or expired.")
         return redirect("accounts:login")
 
-    try:
-        user = User.objects.get(id=user_id)
-    except User.DoesNotExist:
-        messages.error(request, "User not found.")
-        return redirect("accounts:login")
-
-    if user.is_active:
-        messages.info(request, "Your email is already verified. Please , login.")
+    if user.is_active and user.verified:
+        messages.info(request, "Your email is already verified. Please log in.")
     else:
         user.is_active = True
         user.verified = True
-        user.save()
+        user.save(update_fields=["is_active", "verified"])
         messages.success(request, "Your email has been verified successfully! You can now log in.")
 
     return redirect("accounts:login")
+
+
+@ratelimit(key="ip", rate=settings.RATELIMIT_RATE, method="POST", block=True)
+def password_reset_view(request):
+    """Custom password reset view using EmailService"""
+    if request.method == "POST":
+        form = PasswordResetForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data["email"]
+            try:
+                user = User.objects.get(email=email)
+
+                token = default_token_generator.make_token(user)
+                uid = str(user.pk)
+
+                password_reset_url = settings.SITE_BASE_URL + reverse(
+                    "accounts:password_reset_confirm", kwargs={"uidb64": uid, "token": token}
+                )
+
+                context = {
+                    "username": user.username,
+                    "password_reset_url": password_reset_url,
+                    "expiration_hours": 24,
+                }
+
+                EmailService.send_template_email(
+                    template_name="password_reset",
+                    recipient=user.email,
+                    context=context,
+                )
+                return redirect("accounts:password_reset_done")
+            except User.DoesNotExist:
+                return redirect("accounts:password_reset_done")
+    else:
+        form = PasswordResetForm()
+
+    return render(request, "password_reset_form.html", {"form": form})
 
 
 @login_required

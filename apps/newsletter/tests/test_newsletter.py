@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 from django.core import mail
 from django.test import override_settings
 from django.urls import reverse
@@ -23,11 +25,12 @@ class NewsletterSubscribeTestCase(BaseNewsletterTestCase):
         self.assertEqual(subscriber.email, "test@example.com")
         self.assertFalse(subscriber.is_verified)
 
-    def test_subscribe_sends_verification_email(self):
+    @patch("apps.newsletter.views.EmailService.send_template_email")
+    def test_subscribe_sends_verification_email(self, mock_send_email):
         response = self.client.post(reverse("newsletter:subscribe"), {"email": "test@example.com"})
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("Verify your MeroCoffee Newsletter Subscription", mail.outbox[0].subject)
+        mock_send_email.assert_called_once()
+        self.assertEqual(mock_send_email.call_args[1]["template_name"], "newsletter_verification")
 
     def test_subscribe_invalid_email(self):
         response = self.client.post(reverse("newsletter:subscribe"), {"email": "invalid-email"})
@@ -66,14 +69,15 @@ class NewsletterSubscribeTestCase(BaseNewsletterTestCase):
         self.assertTrue(subscriber.is_verified)
         self.assertIsNotNone(subscriber.verified_at)
 
-    def test_verify_email_sends_welcome_email(self):
+    @patch("apps.newsletter.views.EmailService.send_template_email")
+    def test_verify_email_sends_welcome_email(self, mock_send_email):
         subscriber = NewsletterSubscriber.objects.create(email="test@example.com")
         response = self.client.get(
             reverse("newsletter:verify_email", args=[subscriber.verification_token])
         )
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(len(mail.outbox), 1)
-        self.assertIn("Welcome to MeroCoffee Newsletter", mail.outbox[0].subject)
+        mock_send_email.assert_called_once()
+        self.assertEqual(mock_send_email.call_args[1]["template_name"], "newsletter_welcome")
 
     def test_verify_email_invalid_token(self):
         response = self.client.get(

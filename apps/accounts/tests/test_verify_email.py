@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from django.contrib.auth.tokens import default_token_generator
 from django.core.cache import cache
 from django.test import override_settings
 from django.urls import reverse
@@ -12,70 +13,121 @@ from .base import BaseTestCase
 )
 class VerifyEmailViewTests(BaseTestCase):
     def setUp(self):
-        self.verify_url = reverse("accounts:verify_email")
+        super().setUp()
         self.login_url = reverse("accounts:login")
-        self.token = {"token": "valid_token"}
         cache.clear()
 
-    def test_verify_email_no_token(self):
-        response = self.client.get(self.verify_url)
+    @classmethod
+    def _build_url(cls, user, token):
+        uidb64 = user.pk
+        return reverse(
+            "accounts:verify_email",
+            kwargs={"uidb64": uidb64, "token": token},
+        )
+
+    def test_verify_email_invalid_uid(self):
+        url = reverse(
+            "accounts:verify_email",
+            kwargs={"uidb64": "invalid-uid", "token": "some-token"},
+        )
+        response = self.client.get(url)
+
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertIn("Invalid verification link", str(messages[0]))
         self.assertRedirects(response, self.login_url)
 
-    @patch("apps.accounts.views.verify_email_verification_token")
-    def test_verify_email_invalid_token(self, mock_verify_token):
-        mock_verify_token.return_value = None
-        response = self.client.get(self.verify_url, self.token)
+    @patch("apps.accounts.views.default_token_generator")
+    def test_verify_email_invalid_token(self, mock_token_gen):
+        user = self.create_user(verified=False)
+        uidb64 = user.pk
+        token = "invalid-token"
+
+        mock_token_gen.check_token.return_value = False
+
+        url = reverse(
+            "accounts:verify_email",
+            kwargs={"uidb64": uidb64, "token": token},
+        )
+        response = self.client.get(url)
+
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertIn("invalid or expired", str(messages[0]))
         self.assertRedirects(response, self.login_url)
 
-    @patch("apps.accounts.views.verify_email_verification_token")
-    def test_verify_email_user_not_found(self, mock_verify_token):
-        mock_verify_token.return_value = 99999
-        response = self.client.get(self.verify_url, self.token)
+    def test_verify_email_user_not_found(self):
+        uidb64 = 99999
+        token = "some-token"
+
+        url = reverse(
+            "accounts:verify_email",
+            kwargs={"uidb64": uidb64, "token": token},
+        )
+        response = self.client.get(url)
+
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
-        self.assertIn("User not found", str(messages[0]))
+        self.assertIn("Invalid verification link", str(messages[0]))
         self.assertRedirects(response, self.login_url)
 
-    @patch("apps.accounts.views.verify_email_verification_token")
-    def test_verify_email_already_verified(self, mock_verify_token):
+    @patch("apps.accounts.views.default_token_generator")
+    def test_verify_email_already_verified(self, mock_token_gen):
         user = self.create_user(verified=True)
-        mock_verify_token.return_value = user.id
-        response = self.client.get(self.verify_url, self.token)
+        user.is_active = True
+        user.save()
+
+        uidb64 = user.pk
+        token = "valid-token"
+        mock_token_gen.check_token.return_value = True
+
+        url = reverse(
+            "accounts:verify_email",
+            kwargs={"uidb64": uidb64, "token": token},
+        )
+        response = self.client.get(url)
+
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertIn("already verified", str(messages[0]))
         self.assertRedirects(response, self.login_url)
 
-    @patch("apps.accounts.views.verify_email_verification_token")
-    def test_verify_email_success(self, mock_verify_token):
+    def test_verify_email_success(self):
         user = self.create_user(verified=False)
         user.is_active = False
         user.save()
-        mock_verify_token.return_value = user.id
 
-        response = self.client.get(self.verify_url, self.token)
+        uidb64 = user.pk
+        token = default_token_generator.make_token(user)
+
+        url = reverse(
+            "accounts:verify_email",
+            kwargs={"uidb64": uidb64, "token": token},
+        )
+        response = self.client.get(url)
 
         user.refresh_from_db()
         self.assertTrue(user.is_active)
         self.assertTrue(user.verified)
+
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertIn("verified successfully", str(messages[0]))
         self.assertRedirects(response, self.login_url)
 
-    @patch("apps.accounts.views.verify_email_verification_token")
-    def test_verify_email_rate_limit(self, mock_verify_token):
+    @override_settings(RATELIMIT_ENABLE=True)
+    def test_verify_email_rate_limit(self):
         user = self.create_user(verified=False)
-        mock_verify_token.return_value = user.id
+        uidb64 = user.pk
+        token = default_token_generator.make_token(user)
+
+        url = reverse(
+            "accounts:verify_email",
+            kwargs={"uidb64": uidb64, "token": token},
+        )
 
         for _ in range(3):
-            self.client.get(self.verify_url, self.token)
+            self.client.get(url)
 
-        response = self.client.get(self.verify_url, self.token)
+        response = self.client.get(url)
         self.assertEqual(response.status_code, 429)

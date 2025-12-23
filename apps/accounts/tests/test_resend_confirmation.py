@@ -15,14 +15,19 @@ class ResendConfirmationViewTests(BaseTestCase):
         self.login_url = reverse("accounts:login")
         cache.clear()
 
-    @patch("apps.accounts.views.send_verification_email")
+    @patch("apps.emails.services.EmailService.send_template_email")
     def test_resend_confirmation_unverified_user(self, mock_send_email):
         user = self.create_user(verified=False)
         resend_url = reverse("accounts:resend_confirmation", args=[user.id])
 
         response = self.client.post(resend_url)
 
-        mock_send_email.assert_called_once_with(user)
+        mock_send_email.assert_called_once()
+        call_args = mock_send_email.call_args
+        self.assertEqual(call_args[1]["template_name"], "email_verification")
+        self.assertEqual(call_args[1]["recipient"], user.email)
+        self.assertIn("verification_url", call_args[1]["context"])
+
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
         self.assertIn("new confirmation email has been sent", str(messages[0]))
@@ -46,7 +51,7 @@ class ResendConfirmationViewTests(BaseTestCase):
         response = self.client.post(resend_url)
         self.assertEqual(response.status_code, 404)
 
-    @patch("apps.accounts.views.send_verification_email")
+    @patch("apps.emails.services.EmailService.send_template_email")
     def test_resend_confirmation_rate_limit(self, mock_send_email):
         user = self.create_user(verified=False)
         resend_url = reverse("accounts:resend_confirmation", args=[user.id])

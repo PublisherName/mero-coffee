@@ -29,7 +29,7 @@ class SignUpViewTests(BaseTestCase):
             self.mock_turnstile_response(data),
         )
 
-    @patch("apps.accounts.views.send_verification_email")
+    @patch("apps.emails.services.EmailService.send_template_email")
     @patch("turnstile.fields.TurnstileField.validate")
     def test_signup_success(self, mock_turnstile, mock_send_email):
         mock_turnstile.return_value = True
@@ -41,7 +41,11 @@ class SignUpViewTests(BaseTestCase):
         self.assertEqual(user.username, self.base_signup_data["username"])
         self.assertFalse(user.is_active)
         self.assertFalse(user.verified)
-        mock_send_email.assert_called_once_with(user)
+        mock_send_email.assert_called_once()
+        call_args = mock_send_email.call_args
+        self.assertEqual(call_args[1]["template_name"], "email_verification")
+        self.assertEqual(call_args[1]["recipient"], user.email)
+        self.assertIn("verification_url", call_args[1]["context"])
 
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)

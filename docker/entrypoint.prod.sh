@@ -3,4 +3,5 @@
 ./manage.py migrate --no-input
 ./manage.py loaddata fixtures/nepal_cities_light.json
 ./manage.py seed_payment_gateways
+./manage.py seed_email_templates
 gunicorn root.asgi:application -k uvicorn.workers.UvicornH11Worker -b 0.0.0.0:8000

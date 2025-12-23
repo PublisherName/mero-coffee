@@ -1,10 +1,12 @@
 from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils import timezone
 from django_ratelimit.decorators import ratelimit
 
-from .emails import send_newsletter_verification_email, send_newsletter_welcome_email
+from apps.emails.services import EmailService
+
 from .forms import NewsletterSubscribeForm
 from .models import NewsletterSubscriber
 
@@ -18,7 +20,20 @@ def subscribe(request):
             subscriber, created = NewsletterSubscriber.objects.get_or_create(email=email)
 
             if created or not subscriber.is_verified:
-                send_newsletter_verification_email(subscriber)
+                verification_url = settings.SITE_BASE_URL.rstrip("/") + reverse(
+                    "newsletter:verify_email", args=[subscriber.verification_token]
+                )
+
+                context = {
+                    "verification_url": verification_url,
+                    "email": subscriber.email,
+                }
+
+                EmailService.send_template_email(
+                    template_name="newsletter_verification",
+                    recipient=subscriber.email,
+                    context=context,
+                )
                 messages.success(request, "Please check your email to verify your subscription.")
             else:
                 messages.info(request, "You are already subscribed to our newsletter.")
@@ -42,7 +57,13 @@ def verify_email(request, token):
             subscriber.verified_at = timezone.now()
             subscriber.save()
 
-            send_newsletter_welcome_email(subscriber)
+            context = {
+                "email": subscriber.email,
+            }
+
+            EmailService.send_template_email(
+                template_name="newsletter_welcome", recipient=subscriber.email, context=context
+            )
 
             messages.success(
                 request,

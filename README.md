@@ -67,6 +67,7 @@ Welcome to **MeroCoffee**, a fullstack web application built with Django and Tai
     ```bash
     uv run python manage.py seed_payment_gateways
     uv run python manage.py loaddata fixtures/nepal_cities_light.json
+    uv run python manage.py seed_email_templates
     ```
 
 6. Install tailwind dependency

@@ -5,6 +5,7 @@ from apps.accounts.views import (
     email_confirmation_sent_view,
     login_view,
     logout_view,
+    password_reset_view,
     resend_confirmation_view,
     serve_kyc_document,
     signup_view,
@@ -32,15 +33,10 @@ urlpatterns = [
         resend_confirmation_view,
         name="resend_confirmation",
     ),
-    path("verify-email/", verify_email_view, name="verify_email"),
+    path("verify-email/<uidb64>/<token>", verify_email_view, name="verify_email"),
     path(
         "password_reset/",
-        auth_views.PasswordResetView.as_view(
-            template_name="password_reset_form.html",
-            email_template_name="includes/email/password_reset_email.html",
-            subject_template_name="includes/email/password_reset_subject.txt",
-            success_url="/password_reset/done/",
-        ),
+        password_reset_view,
         name="password_reset",
     ),
     path(

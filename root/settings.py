@@ -40,6 +40,7 @@ else:
 
 # Environment-based settings
 SITE_BASE_URL = env.str("SITE_BASE_URL", default="http://127.0.0.1:8000/")
+SITE_NAME = env.str("SITE_NAME", default="MeroCoffee")
 
 CSRF_TRUSTED_ORIGINS = [SITE_BASE_URL]
 
@@ -88,6 +89,7 @@ PROJECT_APPS = [
     "apps.dashboard",
     "apps.payments",
     "apps.newsletter",
+    "apps.emails",
 ]
 
 # Combining all app groups
