@@ -102,7 +102,7 @@ TAILWIND_APP_NAME = "theme"
 NPM_BIN_PATH = env.str("NPM_BIN_PATH", default="/usr/bin/npm")
 
 if DEBUG:
-    INSTALLED_APPS += ["django_browser_reload"]
+    INSTALLED_APPS += ["django_browser_reload", "debug_toolbar"]
     # Required for django-browser-reload to work
     INTERNAL_IPS = [
         "127.0.0.1",
@@ -125,6 +125,7 @@ MIDDLEWARE = [
 
 # Django-tailwind hotreload
 if DEBUG:
+    MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
     MIDDLEWARE += [
         "django_browser_reload.middleware.BrowserReloadMiddleware",
     ]
