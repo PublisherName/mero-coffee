@@ -15,15 +15,12 @@ from .models import CreatorProfile
 
 
 def profile(request, username):
-    try:
-        creator = CreatorProfile.objects.select_related("user", "user__kyc").get(
-            user__username=username
-        )
-    except CreatorProfile.DoesNotExist:
+    creator = CreatorProfile.objects.by_username(username).first()
+
+    if not creator:
         return render(request, "400.html", {"error_message": "Profile not found."}, status=400)
 
-    is_owner = request.user.is_authenticated and request.user == creator.user
-
+    is_owner = request.user.is_authenticated and request.user.pk == creator.user.pk
     if not creator.can_receive_payment and not is_owner:
         return render(
             request, "400.html", {"error_message": "This profile is private."}, status=400
@@ -34,12 +31,9 @@ def profile(request, username):
         if not creator.can_receive_payment
         else None
     )
+    payment_gateway = PaymentGateway.objects.filter(is_active=True)
 
-    form = BuyCoffeeForm(request.POST or None, creator=creator)
-
-    # TODO: Update with real stats
-    supporter_count = creator.supporters
-    monthly_income = 10000
+    form = BuyCoffeeForm(request.POST or None, creator=creator, payment_gateway=payment_gateway)
 
     if request.method == "POST" and form.is_valid():
         transaction = SupportTransaction.objects.create(
@@ -56,9 +50,9 @@ def profile(request, username):
     context = {
         "creator": creator,
         "form": form,
-        "supporter_count": supporter_count,
-        "monthly_income": monthly_income,
-        "payment_gateways": PaymentGateway.objects.filter(is_active=True),
+        "supporter_count": creator.supporter_count,
+        "monthly_income": creator.monthly_income,
+        "payment_gateways": payment_gateway,
         "amount_multiples": {
             "1x": creator.coffee_price,
             "2x": creator.coffee_price * 2,
@@ -76,11 +70,13 @@ def creators_list(request):
     search_query = request.GET.get("q", "").strip()
     sort_by = request.GET.get("sort", "").strip()
 
-    creators = creators.search(search_query)
-    creators = creators.apply_sort(sort_by)
+    if search_query:
+        creators = creators.search(search_query)
+    if sort_by:
+        creators = creators.apply_sort(sort_by)
 
     paginator = Paginator(creators, 8)
-    page_number = request.GET.get("page")
+    page_number = request.GET.get("page") or 1
     creators = paginator.get_page(page_number)
 
     # Calculate page range to show (5 pages max)

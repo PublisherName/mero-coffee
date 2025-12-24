@@ -134,18 +134,22 @@ class BuyCoffeeForm(forms.Form):
         ),
     )
 
-    def __init__(self, *args, creator=None, **kwargs):
+    def __init__(self, *args, creator=None, payment_gateway=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.creator = creator
         self.coffee_price = creator.coffee_price
         self.fields["amount"].widget.attrs["min_value"] = str(self.coffee_price)
         self.fields["amount"].widget.attrs["placeholder"] = str(self.coffee_price)
 
-        # Populate payment providers dynamically
-        gateways = PaymentGateway.objects.filter(is_active=True)
-        self.fields["payment_provider"].choices = [
-            (gateway.slug, gateway.name) for gateway in gateways
-        ]
+        if payment_gateway:
+            self.fields["payment_provider"].choices = [
+                (gateway.slug, gateway.name) for gateway in payment_gateway
+            ]
+        else:
+            gateways = PaymentGateway.objects.filter(is_active=True)
+            self.fields["payment_provider"].choices = [
+                (gateway.slug, gateway.name) for gateway in gateways
+            ]
 
     def clean_amount(self):
         amount = self.cleaned_data.get("amount")

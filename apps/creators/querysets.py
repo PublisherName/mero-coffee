@@ -2,23 +2,66 @@ from datetime import timedelta
 
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.db.models import Count, Q, Sum
+from django.db.models import BooleanField, Case, Count, Q, Sum, Value, When
 from django.utils import timezone
 
 User = get_user_model()
 
 
 class CreatorProfileQuerySet(models.QuerySet):
-    def active_creators(self):
+    def is_creators(self):
         return self.filter(
             user__is_active=True,
             user__is_staff=False,
             user__role=User.Roles.CREATOR,
+        )
+
+    def active_creators(self):
+        return self.is_creators().filter(
             user__verified=True,
             user__kyc__status="approved",
         )
 
     def by_username(self, username):
+        start = timezone.now() - timedelta(days=30)
+        return (
+            self.is_creators()
+            .filter(user__username=username)
+            .select_related("user__kyc")
+            .only(
+                "id",
+                "display_name",
+                "bio",
+                "avatar_url",
+                "coffee_price",
+                "is_active",
+                "user__username",
+                "user__role",
+                "user__verified",
+                "user__kyc__status",
+            )
+            .annotate(
+                supporter_count=Count(
+                    "support_transactions__supporter_name",
+                    filter=Q(support_transactions__payment_status="completed"),
+                    distinct=True,
+                ),
+                monthly_income=Sum(
+                    "support_transactions__amount",
+                    filter=Q(
+                        support_transactions__payment_status="completed",
+                        support_transactions__created_at__gte=start,
+                    ),
+                ),
+                can_receive_payment=Case(
+                    When(user__verified=True, user__kyc__status="approved", then=Value(True)),
+                    default=Value(False),
+                    output_field=BooleanField(),
+                ),
+            )
+        )
+
+    def by_username_active(self, username):
         return self.active_creators().filter(user__username=username).select_related("user")
 
     def search(self, text):

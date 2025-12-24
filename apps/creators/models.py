@@ -1,11 +1,5 @@
-from datetime import timedelta
-
 from django.conf import settings
 from django.db import models
-from django.db.models import Sum
-from django.utils import timezone
-
-from apps.accounts.models import KYC
 
 from .managers import CreatorProfileManager
 
@@ -45,39 +39,3 @@ class CreatorProfile(models.Model):
         # Use hash of username to consistently pick a color
         username_hash = hash(self.user.username)
         return colors[username_hash % len(colors)]
-
-    @property
-    def supporters(self):
-        """Count of unique supporters"""
-        from apps.payments.models import SupportTransaction
-
-        return (
-            SupportTransaction.objects.filter(creator=self, payment_status="completed")
-            .values("supporter_name")
-            .distinct()
-            .count()
-        )
-
-    @property
-    def monthly(self):
-        """Calculate monthly income from last 30 days"""
-        from apps.payments.models import SupportTransaction
-
-        thirty_days_ago = timezone.now() - timedelta(days=30)
-        total = (
-            SupportTransaction.objects.filter(
-                creator=self, payment_status="completed", created_at__gte=thirty_days_ago
-            ).aggregate(total=Sum("amount"))["total"]
-            or 0
-        )
-        return int(total)
-
-    @property
-    def can_receive_payment(self):
-        """Check if profile is publicly accessible (KYC verified)"""
-        return (
-            self.user.is_active
-            and self.user.role == self.user.Roles.CREATOR
-            and self.user.verified
-            and self.user.kyc.status == KYC.Status.APPROVED
-        )

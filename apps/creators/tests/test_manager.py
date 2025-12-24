@@ -41,6 +41,18 @@ class CreatorProfileManagerTests(BaseCreatorsTestCase):
         creator = CreatorProfile.objects.by_username("verified").first()
         self.assertEqual(creator, self.verified_creator)
 
+    def test_by_username_unverified(self):
+        creator = CreatorProfile.objects.by_username("unverified").first()
+        self.assertEqual(creator, self.unverified_creator)
+
+    def test_by_username_active(self):
+        creator = CreatorProfile.objects.by_username_active("verified").first()
+        self.assertEqual(creator, self.verified_creator)
+
+    def test_by_username_active_unverified_not_found(self):
+        creator = CreatorProfile.objects.by_username_active("unverified").first()
+        self.assertIsNone(creator)
+
     def test_by_username_not_found(self):
         creator = CreatorProfile.objects.by_username("nonexistent").first()
         self.assertIsNone(creator)
