@@ -8,6 +8,11 @@ class LoginSchema(BaseModel):
     username: str = Field(min_length=1, max_length=150)
     password: str = Field(min_length=1)
 
+    @field_validator("username")
+    @classmethod
+    def normalize_username(cls, v):
+        return v.lower() if v else v
+
 
 class SignUpSchema(BaseModel):
     username: str = Field(min_length=3, max_length=150)
@@ -24,12 +29,18 @@ class SignUpSchema(BaseModel):
             raise ValueError("Password must be at least 8 characters long")
         return v
 
+    @field_validator("username")
+    @classmethod
+    def normalize_username(cls, v):
+        return v.lower() if v else v
+
     @field_validator("email")
     @classmethod
-    def validate_email_is_unique(cls, v):
-        if User.objects.filter(email=v).exists():
+    def normalize_and_validate_email(cls, v):
+        email_lower = v.lower() if v else v
+        if User.objects.filter(email__iexact=email_lower).exists():
             raise ValueError("A user with that email already exists.")
-        return v
+        return email_lower
 
 
 class KYCSchema(BaseModel):

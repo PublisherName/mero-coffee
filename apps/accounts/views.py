@@ -30,11 +30,11 @@ def login_view(request):
 
             user = None
             try:
-                user_obj = User.objects.get(username=login_input)
+                user_obj = User.objects.get(username__iexact=login_input)
                 user = authenticate(request, username=user_obj.username, password=password)
             except User.DoesNotExist:
                 try:
-                    user_obj = User.objects.get(email=login_input)
+                    user_obj = User.objects.get(email__iexact=login_input)
                     user = authenticate(request, username=user_obj.username, password=password)
                 except User.DoesNotExist:
                     user = None
@@ -169,7 +169,7 @@ def password_reset_view(request):
         if form.is_valid():
             email = form.cleaned_data["email"]
             try:
-                user = User.objects.get(email=email)
+                user = User.objects.get(email__iexact=email)
 
                 token = default_token_generator.make_token(user)
                 uid = str(user.pk)
