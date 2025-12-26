@@ -31,6 +31,10 @@ class LoginForm(forms.Form):
     )
     turnstile = TurnstileField()
 
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        return username.lower() if username else username
+
     def clean(self):
         cleaned_data = super().clean()
         try:
@@ -96,6 +100,14 @@ class SignUpForm(forms.ModelForm):
                 }
             ),
         }
+
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        return username.lower() if username else username
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        return email.lower() if email else email
 
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")

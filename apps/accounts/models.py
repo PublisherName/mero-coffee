@@ -38,6 +38,11 @@ class User(AbstractUser):
     )
 
     def save(self, *args, **kwargs):
+        if self.username:
+            self.username = self.username.lower()
+        if self.email:
+            self.email = self.email.lower()
+
         if self.is_superuser and self.role != self.Roles.ADMIN:
             self.role = self.Roles.ADMIN
             self.verified = True
