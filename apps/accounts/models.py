@@ -42,6 +42,10 @@ class User(AbstractUser):
             self.username = self.username.lower()
         if self.email:
             self.email = self.email.lower()
+        if self.first_name:
+            self.first_name = self.first_name.strip().title()
+        if self.last_name:
+            self.last_name = self.last_name.strip().title()
 
         if self.is_superuser and self.role != self.Roles.ADMIN:
             self.role = self.Roles.ADMIN
@@ -108,6 +112,16 @@ class KYC(models.Model):
     rejection_reason = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def save(self, *args, **kwargs):
+        if self.full_name:
+            self.full_name = self.full_name.strip().title()
+        if self.address:
+            segments = [seg.strip().title() for seg in self.address.split(",")]
+            self.address = ", ".join(segments)
+        if self.id_number:
+            self.id_number = self.id_number.strip().upper()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"KYC - {self.user.username} ({self.status})"

@@ -42,6 +42,11 @@ class SignUpSchema(BaseModel):
             raise ValueError("A user with that email already exists.")
         return email_lower
 
+    @field_validator("first_name", "last_name")
+    @classmethod
+    def normalize_names(cls, v):
+        return v.strip().title() if v else v
+
 
 class KYCSchema(BaseModel):
     full_name: str = Field(min_length=1, max_length=255)
@@ -60,3 +65,21 @@ class KYCSchema(BaseModel):
         if not v.replace("+", "").replace("-", "").replace(" ", "").isdigit():
             raise ValueError("Phone number must contain only digits, +, -, and spaces")
         return v
+
+    @field_validator("full_name")
+    @classmethod
+    def normalize_full_name(cls, v):
+        return v.strip().title() if v else v
+
+    @field_validator("address")
+    @classmethod
+    def normalize_address(cls, v):
+        if v:
+            segments = [seg.strip().title() for seg in v.split(",")]
+            return ", ".join(segments)
+        return v
+
+    @field_validator("id_number")
+    @classmethod
+    def normalize_id_number(cls, v):
+        return v.strip().upper() if v else v

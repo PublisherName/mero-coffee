@@ -109,6 +109,14 @@ class SignUpForm(forms.ModelForm):
         email = self.cleaned_data.get("email")
         return email.lower() if email else email
 
+    def clean_first_name(self):
+        first_name = self.cleaned_data.get("first_name")
+        return first_name.strip().title() if first_name else first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data.get("last_name")
+        return last_name.strip().title() if last_name else last_name
+
     def clean_password2(self):
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
@@ -203,6 +211,21 @@ class KYCForm(forms.ModelForm):
         self.fields["front_image"].required = True
         self.fields["back_image"].required = True
         self.fields["selfie_with_document"].required = True
+
+    def clean_full_name(self):
+        full_name = self.cleaned_data.get("full_name")
+        return full_name.strip().title() if full_name else full_name
+
+    def clean_address(self):
+        address = self.cleaned_data.get("address")
+        if address:
+            segments = [seg.strip().title() for seg in address.split(",")]
+            return ", ".join(segments)
+        return address
+
+    def clean_id_number(self):
+        id_number = self.cleaned_data.get("id_number")
+        return id_number.strip().upper() if id_number else id_number
 
     def clean(self):
         cleaned_data = super().clean()
