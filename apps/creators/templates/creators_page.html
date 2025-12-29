@@ -132,27 +132,23 @@
             </form>
         </div>
 
-        <div class="recent-supporters">
-            <h3 class="recent-supporters-title">Recent Supporters 💝</h3>
-            <div class="supporters-list">
-                <div class="supporter-item">
-                    <div class="supporter-header">
-                        <p class="supporter-name">Bibek Ghimire</p>
-                        <span class="supporter-amount">Rs. 500</span>
-                    </div>
-                    <p class="supporter-message">Great content! Keep it up! 🔥</p>
-                    <p class="supporter-time">2 hours ago</p>
-                </div>
-                <div class="supporter-item">
-                    <div class="supporter-header">
-                        <p class="supporter-name">Sneha Poudel</p>
-                        <span class="supporter-amount">Rs. 200</span>
-                    </div>
-                    <p class="supporter-message">Love your work!</p>
-                    <p class="supporter-time">5 hours ago</p>
+        {% if recent_supporters %}
+            <div class="recent-supporters">
+                <h3 class="recent-supporters-title">Recent Supporters 💝</h3>
+                <div class="supporters-list">
+                    {% for supporter in recent_supporters %}
+                        <div class="supporter-item">
+                            <div class="supporter-header">
+                                <p class="supporter-name">{{ supporter.supporter_name }}</p>
+                                <span class="supporter-amount">Rs. {{ supporter.amount }}</span>
+                            </div>
+                            {% if supporter.message %}<p class="supporter-message">{{ supporter.message }}</p>{% endif %}
+                            <p class="supporter-time">{{ supporter.created_at|timesince }}</p>
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
-        </div>
+        {% endif %}
     </div>
     <script src="{% static 'js/buy_coffee_form.js' %}"></script>
 {% endblock content %}

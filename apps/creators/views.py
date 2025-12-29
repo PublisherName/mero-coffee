@@ -47,7 +47,13 @@ def profile(request, username):
             payment_status="pending",
         )
         return redirect("payments:checkout", transaction_id=transaction.transaction_id)
+
     coffee_price = max(creator.coffee_price, settings.MINIMUM_DONATION_AMOUNT)
+
+    recent_supporters = SupportTransaction.objects.filter(
+        creator=creator, payment_status="completed"
+    ).order_by("-created_at")[:5]
+
     context = {
         "creator": creator,
         "form": form,
@@ -55,6 +61,7 @@ def profile(request, username):
         "supporter_count": creator.supporter_count,
         "monthly_income": creator.monthly_income,
         "payment_gateways": payment_gateway,
+        "recent_supporters": recent_supporters,
         "amount_multiples": {
             "1x": coffee_price,
             "2x": coffee_price * 2,

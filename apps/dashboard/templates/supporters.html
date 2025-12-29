@@ -26,10 +26,10 @@
                     <tbody class="supporters-table-body">
                         {% for supporter in supporters %}
                             <tr class="supporters-table-row">
-                                <td class="supporters-table-cell supporter-name-cell">{{ supporter.name }}</td>
+                                <td class="supporters-table-cell supporter-name-cell">{{ supporter.supporter_name }}</td>
                                 <td class="supporters-table-cell supporter-amount-cell">Rs. {{ supporter.amount }}</td>
                                 <td class="supporters-table-cell supporter-message-cell">{{ supporter.message|default:"—" }}</td>
-                                <td class="supporters-table-cell supporter-date-cell">{{ supporter.date|date:"M d, Y" }}</td>
+                                <td class="supporters-table-cell supporter-date-cell">{{ supporter.created_at|date:"M d, Y" }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>

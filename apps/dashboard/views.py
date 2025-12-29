@@ -3,11 +3,14 @@ from datetime import datetime, timedelta
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.db import models
 from django.shortcuts import redirect, render
 
 from apps.accounts.decorators import role_required
 from apps.accounts.forms import KYCForm
 from apps.accounts.models import KYC
+from apps.creators.models import CreatorProfile
+from apps.payments.models import SupportTransaction, Withdrawal
 
 User = get_user_model()
 
@@ -26,26 +29,97 @@ def get_kyc_context(user):
 @login_required
 @role_required(User.Roles.CREATOR)
 def dashboard(request):
-    context = get_kyc_context(request.user)
+    creator_profile = CreatorProfile.objects.get(user=request.user)
+
+    completed_transactions = SupportTransaction.objects.filter(
+        creator=creator_profile, payment_status="completed"
+    )
+
+    recent_supporters = completed_transactions.order_by("-created_at")[:5]
+
+    # Calculate stats
+    total_earnings = completed_transactions.aggregate(total=models.Sum("amount"))["total"] or 0
+
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    monthly_earnings = (
+        completed_transactions.filter(
+            created_at__year=current_year, created_at__month=current_month
+        ).aggregate(total=models.Sum("amount"))["total"]
+        or 0
+    )
+
+    supporter_count = completed_transactions.count()
+
+    average_support = total_earnings / supporter_count if supporter_count > 0 else 0
+
+    context = {
+        "recent_supporters": recent_supporters,
+        "total_earnings": total_earnings,
+        "monthly_earnings": monthly_earnings,
+        "supporter_count": supporter_count,
+        "average_support": round(average_support, 2),
+    }
+    context.update(get_kyc_context(request.user))
     return render(request, "overview.html", context)
 
 
 @login_required
 @role_required(User.Roles.CREATOR)
 def earnings(request):
+    creator_profile = CreatorProfile.objects.get(user=request.user)
+
+    completed_transactions = SupportTransaction.objects.filter(
+        creator=creator_profile, payment_status="completed"
+    )
+
+    total_earnings = completed_transactions.aggregate(total=models.Sum("amount"))["total"] or 0
+
+    current_month = datetime.now().month
+    current_year = datetime.now().year
+    monthly_earnings = (
+        completed_transactions.filter(
+            created_at__year=current_year, created_at__month=current_month
+        ).aggregate(total=models.Sum("amount"))["total"]
+        or 0
+    )
+
+    processed_withdrawals = (
+        Withdrawal.objects.filter(creator=creator_profile, status="processed").aggregate(
+            total=models.Sum("amount")
+        )["total"]
+        or 0
+    )
+
+    pending_payout = total_earnings - processed_withdrawals
+
+    earnings_list = completed_transactions.order_by("-created_at").values(
+        "created_at", "supporter_name", "amount", "message"
+    )
+
+    # Calculate monthly earnings for chart (last 6 months)
+    chart_labels = []
+    chart_data = []
+    for i in range(5, -1, -1):
+        month_date = datetime.now() - timedelta(days=30 * i)
+        month = month_date.month
+        year = month_date.year
+        monthly_sum = (
+            completed_transactions.filter(
+                created_at__year=year, created_at__month=month
+            ).aggregate(total=models.Sum("amount"))["total"]
+            or 0
+        )
+        chart_labels.append(month_date.strftime("%B %Y"))
+        chart_data.append(monthly_sum)
+
     context = {
-        "total_earnings": 12450,
-        "monthly_earnings": 3200,
-        "pending_payout": 1500,
-        "supporter_count": 47,
-        "earnings_list": [
-            {
-                "date": datetime(2025, 11, 28),
-                "supporter_name": "Subash Ghimire",
-                "amount": 500,
-                "message": "Great content!",
-            },
-        ],
+        "total_earnings": total_earnings,
+        "monthly_earnings": monthly_earnings,
+        "pending_payout": pending_payout,
+        "earnings_list": earnings_list,
+        "chart_labels": chart_labels,
+        "chart_data": chart_data,
     }
     context.update(get_kyc_context(request.user))
 
@@ -99,27 +173,10 @@ def withdrawal(request):
 @login_required
 @role_required(User.Roles.CREATOR)
 def supporters(request):
-    # Dummy supporters data
-    recent_supporters = [
-        {
-            "name": "Bibek Ghimire",
-            "amount": 500,
-            "message": "Great content! Keep it up! 🔥",
-            "date": datetime.now() - timedelta(hours=2),
-        },
-        {
-            "name": "Sneha Poudel",
-            "amount": 200,
-            "message": "Love your work!",
-            "date": datetime.now() - timedelta(hours=5),
-        },
-        {
-            "name": "Rajesh Thapa",
-            "amount": 100,
-            "message": None,
-            "date": datetime.now() - timedelta(days=1),
-        },
-    ]
+    creator_profile = CreatorProfile.objects.get(user=request.user)
+    recent_supporters = SupportTransaction.objects.filter(
+        creator=creator_profile, payment_status="completed"
+    ).order_by("-created_at")[:25]
 
     context = {
         "supporters": recent_supporters,
