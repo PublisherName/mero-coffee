@@ -46,6 +46,18 @@ class CreatorProfileForm(PydanticValidationMixin, forms.ModelForm):
             ),
         }
 
+    def clean_display_name(self):
+        display_name = self.cleaned_data.get("display_name")
+        return display_name.strip().title() if display_name else display_name
+
+    def clean_bio(self):
+        bio = self.cleaned_data.get("bio")
+        return bio.strip().capitalize() if bio else bio
+
+    def clean_avatar_url(self):
+        avatar_url = self.cleaned_data.get("avatar_url")
+        return avatar_url.strip().lower() if avatar_url else avatar_url
+
     def clean(self):
         cleaned_data = super().clean()
         self.validate_with_pydantic()
@@ -148,6 +160,14 @@ class BuyCoffeeForm(PydanticValidationMixin, forms.Form):
             self.fields["payment_provider"].choices = [
                 (gateway.slug, gateway.name) for gateway in gateways
             ]
+
+    def clean_supporter_name(self):
+        supporter_name = self.cleaned_data.get("supporter_name")
+        return supporter_name.strip().title() if supporter_name else supporter_name
+
+    def clean_message(self):
+        message = self.cleaned_data.get("message")
+        return message.strip().capitalize() if message else message
 
     def clean_amount(self):
         amount = self.cleaned_data.get("amount")
