@@ -1,13 +1,15 @@
 from django import forms
-from pydantic import ValidationError as PydanticValidationError
 
 from apps.creators.models import CreatorProfile
 from apps.payments.models import PaymentGateway
+from root.forms.pydantic_mixins import PydanticValidationMixin
 
 from .schemas import BuyCoffeeSchema, CreatorProfileSchema
 
 
-class CreatorProfileForm(forms.ModelForm):
+class CreatorProfileForm(PydanticValidationMixin, forms.ModelForm):
+    pydantic_schema = CreatorProfileSchema
+
     class Meta:
         model = CreatorProfile
         fields = ["display_name", "bio", "avatar_url", "coffee_price"]
@@ -46,12 +48,7 @@ class CreatorProfileForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        try:
-            CreatorProfileSchema(**cleaned_data)
-        except PydanticValidationError as e:
-            for error in e.errors():
-                field = error["loc"][0]
-                self.add_error(field, error["msg"])
+        self.validate_with_pydantic()
         return cleaned_data
 
     def __init__(self, *args, **kwargs):
@@ -62,7 +59,8 @@ class CreatorProfileForm(forms.ModelForm):
         self.fields["coffee_price"].required = True
 
 
-class BuyCoffeeForm(forms.Form):
+class BuyCoffeeForm(PydanticValidationMixin, forms.Form):
+    pydantic_schema = BuyCoffeeSchema
     """Form for buying coffee for a creator"""
 
     amount = forms.IntegerField(
@@ -167,13 +165,8 @@ class BuyCoffeeForm(forms.Form):
                 None, "This profile cannot receive support until KYC verification is completed."
             )
 
-        try:
-            schema_data = {**cleaned_data, "amount": cleaned_data.get("amount", self.coffee_price)}
-            BuyCoffeeSchema(**schema_data)
-        except PydanticValidationError as e:
-            for error in e.errors():
-                field = error["loc"][0]
-                self.add_error(field, error["msg"])
+        schema_data = {**cleaned_data, "amount": cleaned_data.get("amount", self.coffee_price)}
+        self.validate_with_pydantic(schema_data)
 
         is_anonymous = cleaned_data.get("is_anonymous")
         if is_anonymous:

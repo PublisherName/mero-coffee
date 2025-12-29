@@ -1,11 +1,14 @@
 from django import forms
-from pydantic import ValidationError as PydanticValidationError
+
+from root.forms.pydantic_mixins import PydanticValidationMixin
 
 from .models import NewsletterSubscriber
 from .schemas import NewsletterSubscribeSchema
 
 
-class NewsletterSubscribeForm(forms.ModelForm):
+class NewsletterSubscribeForm(PydanticValidationMixin, forms.ModelForm):
+    pydantic_schema = NewsletterSubscribeSchema
+
     class Meta:
         model = NewsletterSubscriber
         fields = ("email",)
@@ -25,10 +28,5 @@ class NewsletterSubscribeForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        try:
-            NewsletterSubscribeSchema(**cleaned_data)
-        except PydanticValidationError as e:
-            for error in e.errors():
-                field = error["loc"][0]
-                self.add_error(field, error["msg"])
+        self.validate_with_pydantic()
         return cleaned_data

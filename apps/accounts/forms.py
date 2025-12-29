@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from pydantic import ValidationError as PydanticValidationError
 from turnstile.fields import TurnstileField
+
+from root.forms.pydantic_mixins import PydanticValidationMixin
 
 from .models import KYC
 from .schemas import KYCSchema, LoginSchema, SignUpSchema
@@ -9,7 +10,9 @@ from .schemas import KYCSchema, LoginSchema, SignUpSchema
 User = get_user_model()
 
 
-class LoginForm(forms.Form):
+class LoginForm(PydanticValidationMixin, forms.Form):
+    pydantic_schema = LoginSchema
+
     username = forms.CharField(
         max_length=150,
         label="Username or Email",
@@ -37,16 +40,12 @@ class LoginForm(forms.Form):
 
     def clean(self):
         cleaned_data = super().clean()
-        try:
-            LoginSchema(**cleaned_data)
-        except PydanticValidationError as e:
-            for error in e.errors():
-                field = error["loc"][0]
-                self.add_error(field, error["msg"])
+        self.validate_with_pydantic()
         return cleaned_data
 
 
-class SignUpForm(forms.ModelForm):
+class SignUpForm(PydanticValidationMixin, forms.ModelForm):
+    pydantic_schema = SignUpSchema
     password1 = forms.CharField(
         label="Password",
         widget=forms.PasswordInput(
@@ -126,12 +125,7 @@ class SignUpForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        try:
-            SignUpSchema(**cleaned_data)
-        except PydanticValidationError as e:
-            for error in e.errors():
-                field = error["loc"][0]
-                self.add_error(field, error["msg"])
+        self.validate_with_pydantic()
         return cleaned_data
 
     def __init__(self, *args, **kwargs):
@@ -150,7 +144,9 @@ class SignUpForm(forms.ModelForm):
         return user
 
 
-class KYCForm(forms.ModelForm):
+class KYCForm(PydanticValidationMixin, forms.ModelForm):
+    pydantic_schema = KYCSchema
+
     class Meta:
         model = KYC
         fields = (
@@ -239,10 +235,5 @@ class KYCForm(forms.ModelForm):
             else:
                 data[k] = v
 
-        try:
-            KYCSchema(**data)
-        except PydanticValidationError as e:
-            for error in e.errors():
-                field = error["loc"][0]
-                self.add_error(field, error["msg"])
+        self.validate_with_pydantic(data)
         return cleaned_data

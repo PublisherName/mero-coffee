@@ -15,12 +15,19 @@ class LoginSchema(BaseModel):
 
 
 class SignUpSchema(BaseModel):
-    username: str = Field(min_length=3, max_length=150)
+    username: str = Field(min_length=1, max_length=150)
     email: EmailStr
     first_name: str = Field(min_length=1, max_length=150)
     last_name: str = Field(min_length=1, max_length=150)
-    password1: str = Field(min_length=8)
-    password2: str = Field(min_length=8)
+    password1: str = Field(min_length=1)
+    password2: str = Field(min_length=1)
+
+    @field_validator("username")
+    @classmethod
+    def validate_username(cls, v):
+        if len(v) < 3:
+            raise ValueError("Username must be at least 3 character long")
+        return v.lower() if v else v
 
     @field_validator("password1")
     @classmethod
@@ -28,11 +35,6 @@ class SignUpSchema(BaseModel):
         if len(v) < 8:
             raise ValueError("Password must be at least 8 characters long")
         return v
-
-    @field_validator("username")
-    @classmethod
-    def normalize_username(cls, v):
-        return v.lower() if v else v
 
     @field_validator("email")
     @classmethod
