@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from django.conf import settings
 from django.urls import reverse
 
 from .base import BaseCreatorsTestCase
@@ -30,7 +31,7 @@ class ProfileSettingsViewTests(BaseCreatorsTestCase):
         data = {
             "display_name": "New Name",
             "bio": "New bio",
-            "coffee_price": 150,
+            "coffee_price": settings.MINIMUM_DONATION_AMOUNT,
             "avatar_url": "https://example.com/avatar.jpg",
         }
         response = self.client.post(self.url, data)

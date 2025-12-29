@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from django.conf import settings
 from django.urls import reverse
 
 from apps.payments.models import PaymentGateway
@@ -10,7 +11,9 @@ from .base import BaseCreatorsTestCase
 class ProfileViewTests(BaseCreatorsTestCase):
     def setUp(self):
         self.verified_creator = self.create_creator_profile(
-            display_name="Verified Creator", bio="Verified bio", coffee_price=100
+            display_name="Verified Creator",
+            bio="Verified bio",
+            coffee_price=max(settings.MINIMUM_DONATION_AMOUNT, 100),
         )
         self.unverified_creator = self.create_creator_profile(
             user=self.create_user(
@@ -18,7 +21,7 @@ class ProfileViewTests(BaseCreatorsTestCase):
             ),
             display_name="Unverified Creator",
             bio="Unverified bio",
-            coffee_price=100,
+            coffee_price=max(settings.MINIMUM_DONATION_AMOUNT, 100),
         )
         self.gateway = PaymentGateway.objects.create(name="eSewa", slug="esewa", is_active=True)
 
@@ -77,7 +80,7 @@ class ProfileViewTests(BaseCreatorsTestCase):
         url = reverse("creators:profile", args=[self.verified_creator.user.username])
         data = {
             "supporter_name": "John Doe",
-            "amount": 100,
+            "amount": settings.MINIMUM_DONATION_AMOUNT,
             "payment_provider": "esewa",
             "message": "Keep up the good work!",
         }
@@ -98,13 +101,13 @@ class ProfileViewTests(BaseCreatorsTestCase):
         url = reverse("creators:profile", args=[self.verified_creator.user.username])
         data = {
             "supporter_name": "John Doe",
-            "amount": 50,
+            "amount": settings.MINIMUM_DONATION_AMOUNT - 1,
             "payment_provider": "esewa",
             "message": "Support",
         }
         response = self.client.post(url, data)
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "at least Rs. 100")
+        self.assertContains(response, "at least Rs.")
 
     def test_different_user_cannot_access_private_profile(self):
         """Different authenticated user should not access private profile"""

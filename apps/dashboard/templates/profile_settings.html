@@ -24,7 +24,7 @@
             {% component "text_input" field=form.display_name %} {% endcomponent %}
             {% component "textarea_input" field=form.bio rows=5 %} {% endcomponent %}
             {% component "text_input" field=form.avatar_url %} {% endcomponent %}
-            {% component "text_input" field=form.coffee_price input_type="number" %} {% endcomponent %}
+            {% component "number_input" field=form.coffee_price prefix="Rs." %} {% endcomponent %}
             <button type="submit" class="form-submit-btn">Save Changes</button>
         </form>
 

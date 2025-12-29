@@ -44,7 +44,7 @@
                     </ul>
                 </div>
             {% endif %}
-            <form method="post" id="buyCoffeeForm" data-coffee-price="{{ creator.coffee_price }}" novalidate>
+            <form method="post" id="buyCoffeeForm" data-coffee-price="{{ coffee_price }}" novalidate>
                 {% csrf_token %}
                 <!-- Amount Selection -->
                 <div class="amount-section">
@@ -65,7 +65,7 @@
                     </div>
                     <div class="mb-4">
                         {% component "number_input" field=form.amount prefix="Rs." %} {% endcomponent %}
-                        <p class="amount-hint">Minimum amount: Rs. {{ creator.coffee_price }}</p>
+                        <p class="amount-hint">Minimum amount: Rs. {{ coffee_price }}</p>
                     </div>
                 </div>
                 <!-- Supporter Name -->
@@ -127,7 +127,7 @@
                     <p id="payment-error" class="error-message hidden"></p>
                 </div>
                 <button type="submit" id="submitBtn" class="support-submit-btn">
-                    Support Rs. <span id="submit-amount">{{ creator.coffee_price }}</span>
+                    Support Rs. <span id="submit-amount">{{ coffee_price }}</span>
                 </button>
             </form>
         </div>

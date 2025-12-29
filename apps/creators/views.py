@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
@@ -46,18 +47,19 @@ def profile(request, username):
             payment_status="pending",
         )
         return redirect("payments:checkout", transaction_id=transaction.transaction_id)
-
+    coffee_price = max(creator.coffee_price, settings.MINIMUM_DONATION_AMOUNT)
     context = {
         "creator": creator,
         "form": form,
+        "coffee_price": coffee_price,
         "supporter_count": creator.supporter_count,
         "monthly_income": creator.monthly_income,
         "payment_gateways": payment_gateway,
         "amount_multiples": {
-            "1x": creator.coffee_price,
-            "2x": creator.coffee_price * 2,
-            "3x": creator.coffee_price * 3,
-            "5x": creator.coffee_price * 5,
+            "1x": coffee_price,
+            "2x": coffee_price * 2,
+            "3x": coffee_price * 3,
+            "5x": coffee_price * 5,
         },
         "is_owner": is_owner,
         "privacy_notice": privacy_notice,
