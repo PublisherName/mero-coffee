@@ -71,6 +71,12 @@ class PaymentLog(models.Model):
 
 
 class Withdrawal(models.Model):
+    PAYMENT_METHODS = [
+        ("bank", "Bank Transfer"),
+        ("esewa", "eSewa"),
+        ("khalti", "Khalti"),
+    ]
+
     STATUS_CHOICES = [
         ("pending", "Pending"),
         ("processed", "Processed"),
@@ -81,8 +87,12 @@ class Withdrawal(models.Model):
         "creators.CreatorProfile", on_delete=models.CASCADE, related_name="withdrawals"
     )
     amount = models.PositiveIntegerField()
-    bank_account = models.CharField(max_length=100)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS, default="bank")
+    account_details = models.CharField(
+        max_length=100, blank=True, help_text="Bank account number, eSewa ID, or Khalti number"
+    )
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    remarks = models.TextField(blank=True, default="")
     requested_at = models.DateTimeField(auto_now_add=True)
     processed_at = models.DateTimeField(null=True, blank=True)
 
