@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
@@ -10,6 +11,7 @@ from apps.accounts.decorators import role_required
 from apps.accounts.forms import KYCForm
 from apps.accounts.models import KYC
 from apps.creators.models import CreatorProfile
+from apps.payments.forms import WithdrawalForm
 from apps.payments.models import SupportTransaction, Withdrawal
 
 User = get_user_model()
@@ -129,41 +131,25 @@ def earnings(request):
 @login_required
 @role_required(User.Roles.CREATOR)
 def withdrawal(request):
-    available_balance = 5500
+    creator_profile = CreatorProfile.objects.by_username(username=request.user.username).first()
+    if request.method == "POST":
+        form = WithdrawalForm(request.POST, creator_profile=creator_profile)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Withdrawal request submitted successfully.")
+            return redirect("dashboard:withdrawal")
+    else:
+        form = WithdrawalForm(creator_profile=creator_profile)
 
-    # Payment method choices for the select component
-    payment_method_choices = [
-        ("bank", "Bank Transfer"),
-        ("eSewa", "eSewa"),
-        ("khalti", "Khalti"),
-    ]
-
-    # Dummy withdrawal history data
-    withdrawals = [
-        {
-            "date": datetime.now() - timedelta(days=1),
-            "amount": 1000,
-            "payment_method": "eSewa",
-            "status": "completed",
-        },
-        {
-            "date": datetime.now() - timedelta(days=5),
-            "amount": 1500,
-            "payment_method": "Bank Transfer",
-            "status": "pending",
-        },
-        {
-            "date": datetime.now() - timedelta(days=10),
-            "amount": 2000,
-            "payment_method": "khalti",
-            "status": "rejected",
-        },
-    ]
+    withdrawals = creator_profile.withdrawals.order_by("-requested_at")[:10]
 
     context = {
-        "available_balance": available_balance,
-        "payment_method_choices": payment_method_choices,
+        "form": form,
         "withdrawals": withdrawals,
+        "available_balance": creator_profile.available_balance,
+        "pending_balance": creator_profile.pending_balance,
+        "withdrawn_balance": creator_profile.withdrawn_balance,
+        "min_withdrawal": settings.MIN_WITHDRAWAL_AMOUNT,
     }
     context.update(get_kyc_context(request.user))
 

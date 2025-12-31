@@ -1,5 +1,10 @@
+from decimal import Decimal
+
 from django.conf import settings
 from django.db import models
+from django.db.models import Sum
+
+from apps.payments.models import SupportTransaction, Withdrawal
 
 from .managers import CreatorProfileManager
 
@@ -39,3 +44,22 @@ class CreatorProfile(models.Model):
         # Use hash of username to consistently pick a color
         username_hash = hash(self.user.username)
         return colors[username_hash % len(colors)]
+
+    @property
+    def total_earnings(self):
+        completed = SupportTransaction.objects.filter(creator=self, payment_status="completed")
+        return completed.aggregate(total=Sum("amount"))["total"] or Decimal("0")
+
+    @property
+    def pending_balance(self):
+        pending_balance = Withdrawal.objects.filter(creator=self, status="pending")
+        return pending_balance.aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
+
+    @property
+    def withdrawn_balance(self):
+        withdrawn_balance = Withdrawal.objects.filter(creator=self, status="processed")
+        return withdrawn_balance.aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
+
+    @property
+    def available_balance(self):
+        return self.total_earnings - (self.pending_balance + self.withdrawn_balance)

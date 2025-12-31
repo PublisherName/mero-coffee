@@ -1,3 +1,5 @@
+from time import timezone
+
 from django.contrib import admin
 
 from apps.payments.models import (
@@ -48,7 +50,48 @@ class PaymentLogAdmin(admin.ModelAdmin):
 class WithdrawalAdmin(admin.ModelAdmin):
     list_display = ("creator", "amount", "status", "requested_at", "processed_at")
     list_filter = ("status", "requested_at", "processed_at")
-    search_fields = ("creator__display_name", "bank_account")
+    search_fields = ("creator__display_name", "creator__user__email", "account_details")
+
+    readonly_fields = (
+        "creator",
+        "amount",
+        "payment_method",
+        "account_details",
+        "requested_at",
+        "processed_at",
+    )
+
+    fieldsets = (
+        (
+            "Request Details",
+            {
+                "fields": (
+                    "creator",
+                    "amount",
+                    "payment_method",
+                    "account_details",
+                    "requested_at",
+                ),
+                "classes": ("wide",),
+            },
+        ),
+        (
+            "Admin Actions",
+            {"fields": ("status", "remarks", "processed_at"), "classes": ("collapse",)},
+        ),
+    )
+
+    actions = ["mark_processed", "mark_rejected"]
+
+    @admin.action(description="Mark selected withdrawals as processed")
+    def mark_processed(self, request, queryset):
+        updated = queryset.update(status="processed", processed_at=timezone.now())
+        self.message_user(request, f"{updated} withdrawal(s) marked as processed.")
+
+    @admin.action(description="Mark selected withdrawals as rejected")
+    def mark_rejected(self, request, queryset):
+        updated = queryset.update(status="rejected")
+        self.message_user(request, f"{updated} withdrawal(s) marked as rejected.")
 
 
 @admin.register(Membership)
