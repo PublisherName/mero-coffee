@@ -13,6 +13,9 @@ class CreatorProfileManager(models.Manager):
     def active_creators(self):
         return self.get_queryset().active_creators()
 
+    def active_creators_with_stats(self):
+        return self.get_queryset().active_creators_with_stats()
+
     def by_username(self, username):
         return self.get_queryset().by_username(username)
 

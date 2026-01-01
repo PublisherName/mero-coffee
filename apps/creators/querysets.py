@@ -9,6 +9,32 @@ User = get_user_model()
 
 
 class CreatorProfileQuerySet(models.QuerySet):
+    @classmethod
+    def _monthly_start(cls):
+        return timezone.now() - timedelta(days=30)
+
+    def _creator_stats(self):
+        start = self._monthly_start()
+        return {
+            "supporter_count": Count(
+                "support_transactions__supporter_name",
+                filter=Q(support_transactions__payment_status="completed"),
+                distinct=True,
+            ),
+            "monthly_income": Sum(
+                "support_transactions__amount",
+                filter=Q(
+                    support_transactions__payment_status="completed",
+                    support_transactions__created_at__gte=start,
+                ),
+            ),
+            "can_receive_payment": Case(
+                When(user__verified=True, user__kyc__status="approved", then=Value(True)),
+                default=Value(False),
+                output_field=BooleanField(),
+            ),
+        }
+
     def is_creators(self):
         return self.filter(
             user__is_active=True,
@@ -22,8 +48,10 @@ class CreatorProfileQuerySet(models.QuerySet):
             user__kyc__status="approved",
         )
 
+    def active_creators_with_stats(self):
+        return self.active_creators().annotate(**self._creator_stats())
+
     def by_username(self, username):
-        start = timezone.now() - timedelta(days=30)
         return (
             self.is_creators()
             .filter(user__username=username)
@@ -40,29 +68,16 @@ class CreatorProfileQuerySet(models.QuerySet):
                 "user__verified",
                 "user__kyc__status",
             )
-            .annotate(
-                supporter_count=Count(
-                    "support_transactions__supporter_name",
-                    filter=Q(support_transactions__payment_status="completed"),
-                    distinct=True,
-                ),
-                monthly_income=Sum(
-                    "support_transactions__amount",
-                    filter=Q(
-                        support_transactions__payment_status="completed",
-                        support_transactions__created_at__gte=start,
-                    ),
-                ),
-                can_receive_payment=Case(
-                    When(user__verified=True, user__kyc__status="approved", then=Value(True)),
-                    default=Value(False),
-                    output_field=BooleanField(),
-                ),
-            )
+            .annotate(**self._creator_stats())
         )
 
     def by_username_active(self, username):
-        return self.active_creators().filter(user__username=username).select_related("user")
+        return (
+            self.active_creators()
+            .filter(user__username=username)
+            .annotate(**self._creator_stats())
+            .select_related("user")
+        )
 
     def search(self, text):
         if not text:
@@ -90,7 +105,7 @@ class CreatorProfileQuerySet(models.QuerySet):
         return self.active_creators().order_by("-user__date_joined")
 
     def sort_monthly(self):
-        start = timezone.now() - timedelta(days=30)
+        start = self._monthly_start()
         return self.annotate(
             monthly_income=Sum(
                 "support_transactions__amount",

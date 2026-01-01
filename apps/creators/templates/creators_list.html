@@ -78,11 +78,11 @@
                             <div class="creator-card-stats">
                                 <div class="creator-card-stat-row">
                                     <span>Supporters:</span>
-                                    <span class="creator-card-stat-value">{{ creator.supporters }}</span>
+                                    <span class="creator-card-stat-value">{{ creator.supporter_count }}</span>
                                 </div>
                                 <div class="creator-card-stat-row">
                                     <span>Monthly:</span>
-                                    <span class="creator-card-monthly-value">Rs. {{ creator.monthly }}</span>
+                                    <span class="creator-card-monthly-value">Rs. {{ creator.monthly_income|default:"0" }}</span>
                                 </div>
                             </div>
                             <!-- Button -->
