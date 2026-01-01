@@ -1,22 +1,23 @@
 from django.db import models
+from django.db.models import TextChoices
+from django.utils.translation import gettext_lazy as _
 
 
 class EmailTemplate(models.Model):
     """Model for storing email templates in database"""
 
-    TEMPLATE_TYPES = [
-        ("newsletter_verification", "Newsletter Verification"),
-        ("newsletter_welcome", "Newsletter Welcome"),
-        ("user_registration", "User Registration"),
-        ("password_reset", "Password Reset"),
-        ("email_verification", "Email Verification"),
-        ("custom", "Custom"),
-    ]
+    class Type(TextChoices):
+        NEWSLETTER_VERIFICATION = "newsletter_verification", _("Newsletter Verification")
+        NEWSLETTER_WELCOME = "newsletter_welcome", _("Newsletter Welcome")
+        USER_REGISTRATION = "user_registration", _("User Registration")
+        PASSWORD_RESET = "password_reset", _("Password Reset")
+        EMAIL_VERIFICATION = "email_verification", _("Email Verification")
+        CUSTOM = "custom", _("Custom")
 
     name = models.CharField(
         max_length=100, unique=True, help_text="Unique identifier for this template"
     )
-    template_type = models.CharField(max_length=50, choices=TEMPLATE_TYPES, default="custom")
+    template_type = models.CharField(max_length=50, choices=Type, default=Type.CUSTOM)
     subject = models.CharField(max_length=255, help_text="Email subject line")
     html_content = models.TextField(help_text="HTML content with template variables")
     text_content = models.TextField(

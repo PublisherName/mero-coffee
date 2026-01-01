@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 class PaymentGateway(models.Model):
@@ -25,16 +26,14 @@ class PaymentGateway(models.Model):
 
 
 class SupportTransaction(models.Model):
-    PAYMENT_METHODS = [
-        ("esewa", "eSewa"),
-        ("khalti", "Khalti"),
-    ]
+    class Methods(models.TextChoices):
+        ESEWA = "esewa", _("eSewa")
+        KHALTI = "khalti", _("Khalti")
 
-    PAYMENT_STATUS = [
-        ("pending", "Pending"),
-        ("completed", "Completed"),
-        ("failed", "Failed"),
-    ]
+    class Status(models.TextChoices):
+        PENDING = "pending", _("Pending")
+        COMPLETED = "completed", _("Completed")
+        FAILED = "failed", _("Failed")
 
     creator = models.ForeignKey(
         "creators.CreatorProfile", on_delete=models.CASCADE, related_name="support_transactions"
@@ -42,8 +41,10 @@ class SupportTransaction(models.Model):
     supporter_name = models.CharField(max_length=255)
     amount = models.PositiveIntegerField()
     message = models.TextField(blank=True)
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS)
-    payment_status = models.CharField(max_length=20, choices=PAYMENT_STATUS, default="pending")
+    payment_method = models.CharField(max_length=20, choices=Methods.choices)
+    payment_status = models.CharField(
+        max_length=20, choices=Status.choices, default=Status.PENDING
+    )
     transaction_id = models.CharField(max_length=255, unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -52,15 +53,14 @@ class SupportTransaction(models.Model):
 
 
 class PaymentLog(models.Model):
-    GATEWAYS = [
-        ("esewa", "eSewa"),
-        ("khalti", "Khalti"),
-    ]
+    class Gateways(models.TextChoices):
+        ESEWA = "esewa", _("eSewa")
+        KHALTI = "khalti", _("Khalti")
 
     transaction = models.ForeignKey(
         SupportTransaction, on_delete=models.CASCADE, related_name="payment_logs"
     )
-    gateway = models.CharField(max_length=20, choices=GATEWAYS)
+    gateway = models.CharField(max_length=20, choices=Gateways.choices)
     request_payload = models.JSONField()
     response_payload = models.JSONField()
     status = models.CharField(max_length=50)
@@ -71,27 +71,25 @@ class PaymentLog(models.Model):
 
 
 class Withdrawal(models.Model):
-    PAYMENT_METHODS = [
-        ("bank", "Bank Transfer"),
-        ("esewa", "eSewa"),
-        ("khalti", "Khalti"),
-    ]
+    class Methods(models.TextChoices):
+        BANK = "bank", _("Bank Transfer")
+        ESEWA = "esewa", _("eSewa")
+        KHALTI = "khalti", _("Khalti")
 
-    STATUS_CHOICES = [
-        ("pending", "Pending"),
-        ("processed", "Processed"),
-        ("rejected", "Rejected"),
-    ]
+    class Status(models.TextChoices):
+        PENDING = "pending", _("Pending")
+        PROCESSED = "processed", _("Processed")
+        REJECTED = "rejected", _("Rejected")
 
     creator = models.ForeignKey(
         "creators.CreatorProfile", on_delete=models.CASCADE, related_name="withdrawals"
     )
     amount = models.PositiveIntegerField()
-    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHODS, default="bank")
+    payment_method = models.CharField(max_length=20, choices=Methods.choices, default=Methods.BANK)
     account_details = models.CharField(
         max_length=100, blank=True, help_text="Bank account number, eSewa ID, or Khalti number"
     )
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.PENDING)
     remarks = models.TextField(blank=True, default="")
     requested_at = models.DateTimeField(auto_now_add=True)
     processed_at = models.DateTimeField(null=True, blank=True)
@@ -101,10 +99,9 @@ class Withdrawal(models.Model):
 
 
 class Membership(models.Model):
-    BILLING_INTERVALS = [
-        ("monthly", "Monthly"),
-        ("yearly", "Yearly"),
-    ]
+    class Intervals(models.TextChoices):
+        MONTHLY = "monthly", _("Monthly")
+        YEARLY = "yearly", _("Yearly")
 
     creator = models.ForeignKey(
         "creators.CreatorProfile", on_delete=models.CASCADE, related_name="memberships"
@@ -113,7 +110,7 @@ class Membership(models.Model):
     price = models.PositiveIntegerField()
     benefits = models.TextField()
     billing_interval = models.CharField(
-        max_length=20, choices=BILLING_INTERVALS, default="monthly"
+        max_length=20, choices=Intervals.choices, default=Intervals.MONTHLY
     )
 
     def __str__(self):
@@ -121,17 +118,16 @@ class Membership(models.Model):
 
 
 class Subscription(models.Model):
-    STATUS_CHOICES = [
-        ("active", "Active"),
-        ("cancelled", "Cancelled"),
-        ("expired", "Expired"),
-    ]
+    class Status(models.TextChoices):
+        Active = "active", _("Active")
+        Cancelled = "cancelled", _("Cancelled")
+        Expired = "expired", _("Expired")
 
     membership = models.ForeignKey(
         Membership, on_delete=models.CASCADE, related_name="subscriptions"
     )
     supporter_email = models.EmailField()
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="active")
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.Active)
     start_date = models.DateField()
     next_billing_date = models.DateField()
     cancelled_at = models.DateField(null=True, blank=True)

@@ -47,17 +47,21 @@ class CreatorProfile(models.Model):
 
     @property
     def total_earnings(self):
-        completed = SupportTransaction.objects.filter(creator=self, payment_status="completed")
+        completed = SupportTransaction.objects.filter(
+            creator=self, payment_status=SupportTransaction.Status.COMPLETED
+        )
         return completed.aggregate(total=Sum("amount"))["total"] or Decimal("0")
 
     @property
     def pending_balance(self):
-        pending_balance = Withdrawal.objects.filter(creator=self, status="pending")
+        pending_balance = Withdrawal.objects.filter(creator=self, status=Withdrawal.Status.PENDING)
         return pending_balance.aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
 
     @property
     def withdrawn_balance(self):
-        withdrawn_balance = Withdrawal.objects.filter(creator=self, status="processed")
+        withdrawn_balance = Withdrawal.objects.filter(
+            creator=self, status=Withdrawal.Status.PROCESSED
+        )
         return withdrawn_balance.aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
 
     @property

@@ -25,7 +25,7 @@ class BasePaymentsTestCase(TestCase):
         user.verified = verified
         user.save()
         if verified:
-            KYC.objects.create(user=user, status="approved")
+            KYC.objects.create(user=user, status=KYC.Status.APPROVED)
         return user
 
     def create_creator_profile(self, user=None, **kwargs):
@@ -42,14 +42,17 @@ class BasePaymentsTestCase(TestCase):
 
     @classmethod
     def create_support_transaction(
-        cls, creator_profile, amount=Decimal("100"), payment_status="completed"
+        cls,
+        creator_profile,
+        amount=Decimal("100"),
+        payment_status=SupportTransaction.Status.COMPLETED,
     ):
         txn = SupportTransaction.objects.create(
             creator=creator_profile,
             supporter_name="Test Supporter",
             amount=amount,
             message="Test message",
-            payment_method="esewa",
+            payment_method=SupportTransaction.Methods.ESEWA,
             payment_status=payment_status,
             transaction_id=f"test_txn_{uuid4().hex[:8]}",
         )
@@ -57,7 +60,11 @@ class BasePaymentsTestCase(TestCase):
 
     @classmethod
     def create_withdrawal(
-        cls, creator_profile, amount=Decimal("100"), status="pending", payment_method="bank"
+        cls,
+        creator_profile,
+        amount=Decimal("100"),
+        status=Withdrawal.Status.PENDING,
+        payment_method=Withdrawal.Methods.BANK,
     ):
         """Create test withdrawal with Decimal precision"""
         withdrawal = Withdrawal.objects.create(
@@ -67,7 +74,7 @@ class BasePaymentsTestCase(TestCase):
             account_details=f"Test {payment_method}: {uuid4().hex[:8]}",
             status=status,
         )
-        if status == "processed":
+        if status == Withdrawal.Status.PROCESSED:
             withdrawal.processed_at = timezone.now()
             withdrawal.save(update_fields=["processed_at"])
         return withdrawal

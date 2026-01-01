@@ -34,7 +34,7 @@ def dashboard(request):
     creator_profile = CreatorProfile.objects.get(user=request.user)
 
     completed_transactions = SupportTransaction.objects.filter(
-        creator=creator_profile, payment_status="completed"
+        creator=creator_profile, payment_status=SupportTransaction.Status.COMPLETED
     )
 
     recent_supporters = completed_transactions.order_by("-created_at")[:5]
@@ -72,7 +72,7 @@ def earnings(request):
     creator_profile = CreatorProfile.objects.get(user=request.user)
 
     completed_transactions = SupportTransaction.objects.filter(
-        creator=creator_profile, payment_status="completed"
+        creator=creator_profile, payment_status=SupportTransaction.Status.COMPLETED
     )
 
     total_earnings = completed_transactions.aggregate(total=models.Sum("amount"))["total"] or 0
@@ -87,9 +87,9 @@ def earnings(request):
     )
 
     processed_withdrawals = (
-        Withdrawal.objects.filter(creator=creator_profile, status="processed").aggregate(
-            total=models.Sum("amount")
-        )["total"]
+        Withdrawal.objects.filter(
+            creator=creator_profile, status=Withdrawal.Status.PROCESSED
+        ).aggregate(total=models.Sum("amount"))["total"]
         or 0
     )
 
@@ -161,7 +161,7 @@ def withdrawal(request):
 def supporters(request):
     creator_profile = CreatorProfile.objects.get(user=request.user)
     recent_supporters = SupportTransaction.objects.filter(
-        creator=creator_profile, payment_status="completed"
+        creator=creator_profile, payment_status=SupportTransaction.Status.COMPLETED
     ).order_by("-created_at")[:25]
 
     context = {

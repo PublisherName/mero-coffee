@@ -26,21 +26,21 @@ class WithdrawalFormTests(BasePaymentsTestCase):
         """Test form accepts valid withdrawal data"""
         form_data = {
             "amount": 200,
-            "payment_method": "bank",
+            "payment_method": Withdrawal.Methods.BANK,
             "account_details": "Bank account: 1234567890",
         }
         form = WithdrawalForm(data=form_data, creator_profile=self.creator_profile)
 
         self.assertTrue(form.is_valid())
         self.assertEqual(form.cleaned_data["amount"], 200)
-        self.assertEqual(form.cleaned_data["payment_method"], "bank")
+        self.assertEqual(form.cleaned_data["payment_method"], Withdrawal.Methods.BANK)
         self.assertEqual(form.cleaned_data["account_details"], "Bank account: 1234567890")
 
     def test_form_amount_exceeds_available_balance(self):
         """Test form rejects amount exceeding available balance"""
         form_data = {
             "amount": 600,
-            "payment_method": "bank",
+            "payment_method": Withdrawal.Methods.BANK,
             "account_details": "Bank account: 1234567890",
         }
         form = WithdrawalForm(data=form_data, creator_profile=self.creator_profile)
@@ -53,7 +53,7 @@ class WithdrawalFormTests(BasePaymentsTestCase):
         """Test form rejects amount below minimum withdrawal"""
         form_data = {
             "amount": 50,
-            "payment_method": "bank",
+            "payment_method": Withdrawal.Methods.BANK,
             "account_details": "Bank account: 1234567890",
         }
         form = WithdrawalForm(data=form_data, creator_profile=self.creator_profile)
@@ -64,7 +64,11 @@ class WithdrawalFormTests(BasePaymentsTestCase):
 
     def test_form_empty_account_details(self):
         """Test form rejects empty account details"""
-        form_data = {"amount": 200, "payment_method": "bank", "account_details": ""}
+        form_data = {
+            "amount": 200,
+            "payment_method": Withdrawal.Methods.BANK,
+            "account_details": "",
+        }
         form = WithdrawalForm(data=form_data, creator_profile=self.creator_profile)
 
         self.assertFalse(form.is_valid())
@@ -79,7 +83,7 @@ class WithdrawalFormTests(BasePaymentsTestCase):
 
         form_data = {
             "amount": 200,
-            "payment_method": "bank",
+            "payment_method": Withdrawal.Methods.BANK,
             "account_details": "Bank account: 1234567890",
         }
         form = WithdrawalForm(data=form_data, creator_profile=unverified_profile)
@@ -94,7 +98,7 @@ class WithdrawalFormTests(BasePaymentsTestCase):
 
         form_data = {
             "amount": 200,
-            "payment_method": "bank",
+            "payment_method": Withdrawal.Methods.BANK,
             "account_details": "Bank account: 1234567890",
         }
         form = WithdrawalForm(data=form_data, creator_profile=self.creator_profile)
@@ -106,7 +110,7 @@ class WithdrawalFormTests(BasePaymentsTestCase):
         """Test form save method creates withdrawal instance"""
         form_data = {
             "amount": 200,
-            "payment_method": "esewa",
+            "payment_method": Withdrawal.Methods.ESEWA,
             "account_details": "eSewa ID: 1234567890",
         }
         form = WithdrawalForm(data=form_data, creator_profile=self.creator_profile)
@@ -117,9 +121,9 @@ class WithdrawalFormTests(BasePaymentsTestCase):
         self.assertIsInstance(withdrawal, Withdrawal)
         self.assertEqual(withdrawal.creator, self.creator_profile)
         self.assertEqual(withdrawal.amount, 200)
-        self.assertEqual(withdrawal.payment_method, "esewa")
+        self.assertEqual(withdrawal.payment_method, Withdrawal.Methods.ESEWA)
         self.assertEqual(withdrawal.account_details, "eSewa ID: 1234567890")
-        self.assertEqual(withdrawal.status, "pending")
+        self.assertEqual(withdrawal.status, Withdrawal.Status.PENDING)
 
     @override_settings(MIN_WITHDRAWAL_AMOUNT=200)
     def test_form_uses_custom_min_withdrawal_setting(self):
@@ -129,7 +133,7 @@ class WithdrawalFormTests(BasePaymentsTestCase):
 
         form_data = {
             "amount": 150,
-            "payment_method": "bank",
+            "payment_method": Withdrawal.Methods.BANK,
             "account_details": "Bank account: 1234567890",
         }
         form = WithdrawalForm(data=form_data, creator_profile=self.creator_profile)
@@ -140,15 +144,19 @@ class WithdrawalFormTests(BasePaymentsTestCase):
     def test_form_with_pending_and_processed_withdrawals(self):
         """Test available balance calculation with pending and processed withdrawals"""
 
-        self.create_withdrawal(self.creator_profile, amount=Decimal("100"), status="pending")
-        self.create_withdrawal(self.creator_profile, amount=Decimal("200"), status="processed")
+        self.create_withdrawal(
+            self.creator_profile, amount=Decimal("100"), status=Withdrawal.Status.PENDING
+        )
+        self.create_withdrawal(
+            self.creator_profile, amount=Decimal("200"), status=Withdrawal.Status.PROCESSED
+        )
 
         form = WithdrawalForm(creator_profile=self.creator_profile)
         self.assertEqual(form._available_balance, Decimal("200"))  # 500 - 100 -200
 
         form_data = {
             "amount": "200",
-            "payment_method": "bank",
+            "payment_method": Withdrawal.Methods.BANK,
             "account_details": "Bank account: 1234567890",
         }
         form = WithdrawalForm(data=form_data, creator_profile=self.creator_profile)

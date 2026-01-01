@@ -81,7 +81,7 @@ class EsewaStrategy(PaymentStrategy):
 
             PaymentLog.objects.create(
                 transaction=transaction,
-                gateway="esewa",
+                gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
                 status="signature_mismatch",
@@ -108,7 +108,7 @@ class EsewaStrategy(PaymentStrategy):
             api_status = api_response.get("status")
             PaymentLog.objects.create(
                 transaction=transaction,
-                gateway="esewa",
+                gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={"action": "double_verification"},
                 response_payload=api_response,
                 status=f"api_{api_status.lower() if api_status else 'unknown'}",
@@ -119,7 +119,7 @@ class EsewaStrategy(PaymentStrategy):
         except requests.RequestException as e:
             PaymentLog.objects.create(
                 transaction=transaction,
-                gateway="esewa",
+                gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={"action": "double_verification_failed"},
                 response_payload={"error": str(e)},
                 status="api_error",
@@ -141,7 +141,7 @@ class EsewaStrategy(PaymentStrategy):
             transaction.save()
             PaymentLog.objects.create(
                 transaction=transaction,
-                gateway="esewa",
+                gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
                 status="success",
@@ -158,7 +158,7 @@ class EsewaStrategy(PaymentStrategy):
         if status == "PENDING":
             PaymentLog.objects.create(
                 transaction=transaction,
-                gateway="esewa",
+                gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
                 status="pending",
@@ -176,7 +176,7 @@ class EsewaStrategy(PaymentStrategy):
             transaction.save()
             PaymentLog.objects.create(
                 transaction=transaction,
-                gateway="esewa",
+                gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
                 status=status.lower(),
@@ -192,7 +192,7 @@ class EsewaStrategy(PaymentStrategy):
         if status == "AMBIGUOUS":
             PaymentLog.objects.create(
                 transaction=transaction,
-                gateway="esewa",
+                gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
                 status="ambiguous",
@@ -210,7 +210,7 @@ class EsewaStrategy(PaymentStrategy):
             transaction.save()
             PaymentLog.objects.create(
                 transaction=transaction,
-                gateway="esewa",
+                gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
                 status=status.lower(),
@@ -222,7 +222,7 @@ class EsewaStrategy(PaymentStrategy):
 
         PaymentLog.objects.create(
             transaction=transaction,
-            gateway="esewa",
+            gateway=PaymentLog.Gateways.ESEWA,
             request_payload={},
             response_payload=data,
             status=f"unknown_status_{status.lower() if status else 'none'}",
@@ -309,7 +309,7 @@ class EsewaStrategy(PaymentStrategy):
 
                 PaymentLog.objects.create(
                     transaction=transaction,
-                    gateway="esewa",
+                    gateway=PaymentLog.Gateways.ESEWA,
                     request_payload={},
                     response_payload=data,
                     status="failed",

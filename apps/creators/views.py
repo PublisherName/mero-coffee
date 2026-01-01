@@ -51,7 +51,7 @@ def profile(request, username):
     coffee_price = max(creator.coffee_price, settings.MINIMUM_DONATION_AMOUNT)
 
     recent_supporters = SupportTransaction.objects.filter(
-        creator=creator, payment_status="completed"
+        creator=creator, payment_status=SupportTransaction.Status.COMPLETED
     ).order_by("-created_at")[:5]
 
     context = {

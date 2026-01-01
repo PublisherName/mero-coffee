@@ -62,7 +62,9 @@ class WithdrawalForm(PydanticValidationMixin, forms.ModelForm):
             )
 
     def _has_pending_transaction(self):
-        pending_count = self.creator_profile.withdrawals.filter(status="pending").count()
+        pending_count = self.creator_profile.withdrawals.filter(
+            status=Withdrawal.Status.PENDING
+        ).count()
         if pending_count > 0:
             raise forms.ValidationError(
                 "You already have pending withdrawal request(s). Please wait for processing."

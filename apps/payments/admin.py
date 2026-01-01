@@ -85,12 +85,12 @@ class WithdrawalAdmin(admin.ModelAdmin):
 
     @admin.action(description="Mark selected withdrawals as processed")
     def mark_processed(self, request, queryset):
-        updated = queryset.update(status="processed", processed_at=timezone.now())
+        updated = queryset.update(status=Withdrawal.Status.PROCESSED, processed_at=timezone.now())
         self.message_user(request, f"{updated} withdrawal(s) marked as processed.")
 
     @admin.action(description="Mark selected withdrawals as rejected")
     def mark_rejected(self, request, queryset):
-        updated = queryset.update(status="rejected")
+        updated = queryset.update(status=Withdrawal.Status.REJECTED)
         self.message_user(request, f"{updated} withdrawal(s) marked as rejected.")
 
 
