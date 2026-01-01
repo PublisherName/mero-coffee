@@ -48,6 +48,7 @@
 
     <div class="kyc-form-card">
         {% if kyc.status == 'not_filed' or kyc.status == 'rejected' %}
+            {% include "includes/form_error.html" %}
             <form method="post" class="kyc-form-layout" novalidate enctype="multipart/form-data">
                 {% csrf_token %}
 

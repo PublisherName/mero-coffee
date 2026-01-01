@@ -18,6 +18,7 @@
     <div class="profile-settings-container">
 
         {% include "includes/messages.html" %}
+        {% include "includes/form_error.html" %}
 
         <form method="post" novalidate class="profile-settings-form">
             {% csrf_token %}

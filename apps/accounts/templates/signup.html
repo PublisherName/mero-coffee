@@ -16,6 +16,7 @@
             <h2 class="auth-title-large">Create Your Account</h2>
             <p class="auth-subtitle-large">Join MeroCoffee and start earning today</p>
             {% include "includes/messages.html" %}
+            {% include "includes/form_error.html" %}
             <form method="post" novalidate class="auth-form-large">
                 {% csrf_token %}
                 <div class="auth-form-grid">
