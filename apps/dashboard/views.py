@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from decimal import Decimal
 
 from django.conf import settings
 from django.contrib import messages
@@ -31,36 +32,30 @@ def get_kyc_context(user):
 @login_required
 @role_required(User.Roles.CREATOR)
 def dashboard(request):
-    creator_profile = CreatorProfile.objects.get(user=request.user)
+    creator_profile = CreatorProfile.objects.by_username(username=request.user.username).first()
 
-    completed_transactions = SupportTransaction.objects.filter(
-        creator=creator_profile, payment_status=SupportTransaction.Status.COMPLETED
+    average_support = (
+        creator_profile.total_earnings / creator_profile.supporter_count
+        if creator_profile.supporter_count > 0
+        else 0
     )
 
-    recent_supporters = completed_transactions.order_by("-created_at")[:5]
+    recent_supporters = creator_profile.support_transactions.filter(
+        payment_status="completed"
+    ).order_by("-created_at")[:5]
 
-    # Calculate stats
-    total_earnings = completed_transactions.aggregate(total=models.Sum("amount"))["total"] or 0
-
-    current_month = datetime.now().month
-    current_year = datetime.now().year
-    monthly_earnings = (
-        completed_transactions.filter(
-            created_at__year=current_year, created_at__month=current_month
-        ).aggregate(total=models.Sum("amount"))["total"]
-        or 0
+    average_support = (
+        creator_profile.total_earnings / creator_profile.supporter_count
+        if creator_profile.supporter_count > 0
+        else 0
     )
-
-    supporter_count = completed_transactions.count()
-
-    average_support = total_earnings / supporter_count if supporter_count > 0 else 0
 
     context = {
         "recent_supporters": recent_supporters,
-        "total_earnings": total_earnings,
-        "monthly_earnings": monthly_earnings,
-        "supporter_count": supporter_count,
-        "average_support": round(average_support, 2),
+        "total_earnings": creator_profile.total_earnings,
+        "monthly_earnings": creator_profile.monthly_income,
+        "supporter_count": creator_profile.supporter_count,
+        "average_support": Decimal(average_support),
     }
     context.update(get_kyc_context(request.user))
     return render(request, "overview.html", context)

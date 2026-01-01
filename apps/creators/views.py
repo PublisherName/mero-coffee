@@ -75,7 +75,8 @@ def profile(request, username):
 
 
 def creators_list(request):
-    creators = CreatorProfile.objects.active_creators().select_related("user")
+    creators = CreatorProfile.objects.active_creators_with_stats().select_related("user")
+
     search_query = request.GET.get("q", "").strip()
     sort_by = request.GET.get("sort", "").strip()
 
