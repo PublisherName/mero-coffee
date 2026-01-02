@@ -15,7 +15,7 @@ class CreatorProfileManagerTests(BaseCreatorsTestCase):
         )
         self.unverified_creator = self.create_creator_profile(
             user=self.create_user(
-                username="unverified", email="unverified@example.com", verified=False
+                username="unverified", email="unverified@example.com", is_verified=False
             ),
             display_name="Unverified Creator",
         )
@@ -25,7 +25,7 @@ class CreatorProfileManagerTests(BaseCreatorsTestCase):
                 email="staff@example.com",
                 password="testpass123",
                 is_staff=True,
-                verified=True,
+                is_verified=True,
             ),
             display_name="Staff Creator",
         )

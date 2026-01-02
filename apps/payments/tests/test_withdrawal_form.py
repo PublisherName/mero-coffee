@@ -77,7 +77,7 @@ class WithdrawalFormTests(BasePaymentsTestCase):
 
     def test_form_kyc_not_verified(self):
         """Test form rejects withdrawal when KYC is not verified"""
-        unverified_user = self.create_user("unverified", "unverified@test.com", verified=False)
+        unverified_user = self.create_user("unverified", "unverified@test.com", is_verified=False)
         unverified_profile = self.create_creator_profile(unverified_user)
         self.create_support_transaction(unverified_profile, amount=500)
 

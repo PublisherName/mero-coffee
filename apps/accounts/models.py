@@ -17,7 +17,7 @@ class User(AbstractUser):
 
     email = models.EmailField(_("email address"), unique=True)
     role = models.CharField(max_length=20, choices=Roles.choices, default=Roles.CREATOR)
-    verified = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
 
     groups = models.ManyToManyField(
         Group,
@@ -49,7 +49,7 @@ class User(AbstractUser):
 
         if self.is_superuser and self.role != self.Roles.ADMIN:
             self.role = self.Roles.ADMIN
-            self.verified = True
+            self.is_verified = True
         super().save(*args, **kwargs)
 
     def __str__(self):

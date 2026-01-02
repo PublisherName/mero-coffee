@@ -137,7 +137,7 @@ class SignUpForm(PydanticValidationMixin, forms.ModelForm):
     def save(self, commit=True):
         user = super().save(commit=False)
         user.set_password(self.cleaned_data["password1"])
-        user.is_active = False
+        user.is_active = True
         user.is_verified = False
         if commit:
             user.save()

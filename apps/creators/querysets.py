@@ -29,7 +29,7 @@ class CreatorProfileQuerySet(models.QuerySet):
                 ),
             ),
             "can_receive_payment": Case(
-                When(user__verified=True, user__kyc__status="approved", then=Value(True)),
+                When(user__is_verified=True, user__kyc__status="approved", then=Value(True)),
                 default=Value(False),
                 output_field=BooleanField(),
             ),
@@ -44,7 +44,7 @@ class CreatorProfileQuerySet(models.QuerySet):
 
     def active_creators(self):
         return self.is_creators().filter(
-            user__verified=True,
+            user__is_verified=True,
             user__kyc__status="approved",
         )
 
@@ -65,7 +65,7 @@ class CreatorProfileQuerySet(models.QuerySet):
                 "is_active",
                 "user__username",
                 "user__role",
-                "user__verified",
+                "user__is_verified",
                 "user__kyc__status",
             )
             .annotate(**self._creator_stats())

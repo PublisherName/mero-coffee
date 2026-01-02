@@ -39,7 +39,6 @@ def login_view(request):
                     user = authenticate(request, username=user_obj.username, password=password)
                 except User.DoesNotExist:
                     user = None
-
             if user is not None:
                 if user.role != User.Roles.CREATOR:
                     messages.error(
@@ -47,7 +46,7 @@ def login_view(request):
                         "Access is restricted to creators only. "
                         "Supporters can enjoy the platform without logging in.",
                     )
-                elif not user.verified:
+                elif not user.is_verified:
                     messages.error(request, "Please verify your email before logging in.")
                 else:
                     login(request, user)
@@ -114,7 +113,7 @@ def signup_view(request):
 def resend_confirmation_view(request, user_id):
     user = get_object_or_404(User, id=user_id)
 
-    if user.verified:
+    if user.is_verified:
         messages.info(request, "Your email is already verified.")
         return redirect("accounts:login")
 
@@ -153,12 +152,11 @@ def verify_email_view(request, uidb64, token):
         messages.error(request, "Verification link is invalid or expired.")
         return redirect("accounts:login")
 
-    if user.is_active and user.verified:
+    if user.is_active and user.is_verified:
         messages.info(request, "Your email is already verified. Please log in.")
     else:
-        user.is_active = True
-        user.verified = True
-        user.save(update_fields=["is_active", "verified"])
+        user.is_verified = True
+        user.save(update_fields=["is_verified"])
         messages.success(request, "Your email has been verified successfully! You can now log in.")
 
     return redirect("accounts:login")

@@ -10,13 +10,13 @@ User = get_user_model()
 class BaseCreatorsTestCase(TestCase):
     user_password = "testpass123"
 
-    def create_user(self, username="testuser", email="test@example.com", verified=True):
+    def create_user(self, username="testuser", email="test@example.com", is_verified=True):
         user = User.objects.create_user(
             username=username, email=email, password=self.user_password
         )
-        user.verified = verified
+        user.is_verified = is_verified
         user.save()
-        if verified:
+        if is_verified:
             KYC.objects.create(user=user, status="approved")
         return user
 
