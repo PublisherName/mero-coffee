@@ -11,6 +11,7 @@ class EmailInput(component.Component):
         name=None,
         label=None,
         required=False,
+        disabled=False,
         placeholder="",
         help_text=None,
         input_class="",
@@ -22,6 +23,7 @@ class EmailInput(component.Component):
         self.name = name or (field.name if field else "")
         self.label = label or (field.label if field else "")
         self.required = required or (field.field.required if field else False)
+        self.disabled = disabled or (field.field.disabled if field else False)
         self.placeholder = placeholder or (
             field.field.widget.attrs.get("placeholder", "") if field else ""
         )
@@ -51,6 +53,7 @@ class EmailInput(component.Component):
             "name": self.name,
             "label": self.label,
             "required": self.required,
+            "disabled": self.disabled,
             "placeholder": self.placeholder,
             "help_text": self.help_text,
             "errors": self.errors,

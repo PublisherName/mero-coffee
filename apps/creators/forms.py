@@ -11,6 +11,17 @@ from .schemas import BuyCoffeeSchema, CreatorProfileSchema
 class CreatorProfileForm(PydanticValidationMixin, forms.ModelForm):
     pydantic_schema = CreatorProfileSchema
 
+    email = forms.EmailField(
+        required=False,
+        disabled=True,
+        widget=forms.EmailInput(
+            attrs={
+                "id": "email",
+                "placeholder": "Your email address",
+            }
+        ),
+    )
+
     class Meta:
         model = CreatorProfile
         fields = ["display_name", "bio", "avatar_url", "coffee_price"]
@@ -75,6 +86,8 @@ class CreatorProfileForm(PydanticValidationMixin, forms.ModelForm):
         profile = kwargs.get("instance")
         if profile:
             self.min_amount = max(profile.coffee_price or 0, settings.MINIMUM_DONATION_AMOUNT)
+            if profile.user:
+                self.fields["email"].initial = profile.user.email
 
         self.fields["coffee_price"].widget.attrs["min_value"] = str(self.min_amount)
         self.fields["coffee_price"].widget.attrs["placeholder"] = str(self.min_amount)
