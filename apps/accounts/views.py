@@ -107,7 +107,9 @@ def signup_view(request):
     return render(request, "signup.html", {"form": form})
 
 
-@ratelimit(key="ip", rate=settings.RATELIMIT_RATE, method="POST", block=True)
+@ratelimit(
+    key="ip", rate=lambda group, request: settings.RATELIMIT_RATE, method="POST", block=True
+)
 def resend_confirmation_view(request, user_id):
     user = get_object_or_404(User, id=user_id)
 
@@ -137,7 +139,7 @@ def resend_confirmation_view(request, user_id):
     return redirect("accounts:email_confirmation_sent_view", user_id=user.id)
 
 
-@ratelimit(key="ip", rate=settings.RATELIMIT_RATE, method="GET", block=True)
+@ratelimit(key="ip", rate=lambda group, request: settings.RATELIMIT_RATE, method="GET", block=True)
 def verify_email_view(request, uidb64, token):
     try:
         uid = int(uidb64)
@@ -161,7 +163,9 @@ def verify_email_view(request, uidb64, token):
     return redirect("accounts:login")
 
 
-@ratelimit(key="ip", rate=settings.RATELIMIT_RATE, method="POST", block=True)
+@ratelimit(
+    key="ip", rate=lambda group, request: settings.RATELIMIT_RATE, method="POST", block=True
+)
 def password_reset_view(request):
     """Custom password reset view using EmailService"""
     if request.method == "POST":

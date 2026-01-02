@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from django.conf import settings
 from django.core import mail
 from django.test import override_settings
 from django.urls import reverse
@@ -101,9 +102,15 @@ class NewsletterSubscribeTestCase(BaseNewsletterTestCase):
         self.assertEqual(len(mail.outbox), 0)
 
 
+TEST_MIDDLEWARE = list(settings.MIDDLEWARE)
+TEST_MIDDLEWARE.insert(-1, "django_ratelimit.middleware.RatelimitMiddleware")
+
+
 @override_settings(
     CACHES={"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}},
     RATELIMIT_ENABLE=True,
+    RATELIMIT_RATE="3/30m",
+    MIDDLEWARE=TEST_MIDDLEWARE,
 )
 class NewsletterRateLimitTestCase(BaseNewsletterTestCase):
     def test_subscribe_rate_limit(self):
