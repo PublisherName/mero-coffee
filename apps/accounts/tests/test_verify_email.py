@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.cache import cache
 from django.test import override_settings
@@ -10,6 +11,7 @@ from .base import BaseTestCase
 
 @override_settings(
     CACHES={"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}},
+    RATELIMIT_ENABLE=False,
 )
 class VerifyEmailViewTests(BaseTestCase):
     def setUp(self):
@@ -115,7 +117,14 @@ class VerifyEmailViewTests(BaseTestCase):
         self.assertIn("verified successfully", str(messages[0]))
         self.assertRedirects(response, self.login_url)
 
-    @override_settings(RATELIMIT_ENABLE=True)
+    TEST_MIDDLEWARE = list(settings.MIDDLEWARE)
+    TEST_MIDDLEWARE.insert(-1, "django_ratelimit.middleware.RatelimitMiddleware")
+
+    @override_settings(
+        RATELIMIT_ENABLE=True,
+        RATELIMIT_RATE="3/30m",
+        MIDDLEWARE=TEST_MIDDLEWARE,
+    )
     def test_verify_email_rate_limit(self):
         user = self.create_user(verified=False)
         uidb64 = user.pk

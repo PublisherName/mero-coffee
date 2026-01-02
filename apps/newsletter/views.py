@@ -11,7 +11,9 @@ from .forms import NewsletterSubscribeForm
 from .models import NewsletterSubscriber
 
 
-@ratelimit(key="ip", rate=settings.RATELIMIT_RATE, method="POST", block=True)
+@ratelimit(
+    key="ip", rate=lambda group, request: settings.RATELIMIT_RATE, method="POST", block=True
+)
 def subscribe(request):
     if request.method == "POST":
         form = NewsletterSubscribeForm(request.POST)
@@ -48,7 +50,7 @@ def subscribe(request):
     return redirect("core:homepage")
 
 
-@ratelimit(key="ip", rate=settings.RATELIMIT_RATE, method="GET", block=True)
+@ratelimit(key="ip", rate=lambda group, request: settings.RATELIMIT_RATE, method="GET", block=True)
 def verify_email(request, token):
     try:
         subscriber = NewsletterSubscriber.objects.get(verification_token=token)

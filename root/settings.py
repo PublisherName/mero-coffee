@@ -119,9 +119,12 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "defender.middleware.FailedLoginMiddleware",
-    "django_ratelimit.middleware.RatelimitMiddleware",
     "root.middleware.FileRenameMiddleware",
 ]
+
+# Add rate limiting middleware only in secure environments
+if IS_SERVER_SECURE:
+    MIDDLEWARE.insert(-1, "django_ratelimit.middleware.RatelimitMiddleware")
 
 # Django-tailwind hotreload
 if DEBUG:
@@ -177,7 +180,10 @@ DEFENDER_LOCKOUT_TEMPLATE = "defender_lockout.html"
 
 # Ratelimit config
 RATELIMIT_VIEW = "apps.core.views.ratelimit_lockout_view"
-RATELIMIT_RATE = env.str("RATELIMIT_RATE", default="3/30m")
+if IS_SERVER_SECURE:
+    RATELIMIT_RATE = env.str("RATELIMIT_RATE", default="3/30m")
+else:
+    RATELIMIT_RATE = None
 
 # Test runner
 TEST_RUNNER = "root.test_runner.CustomTestRunner"

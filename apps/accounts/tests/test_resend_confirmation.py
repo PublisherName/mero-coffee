@@ -1,5 +1,6 @@
 from unittest.mock import patch
 
+from django.conf import settings
 from django.core.cache import cache
 from django.test import override_settings
 from django.urls import reverse
@@ -9,6 +10,7 @@ from .base import BaseTestCase
 
 @override_settings(
     CACHES={"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}},
+    RATELIMIT_ENABLE=False,
 )
 class ResendConfirmationViewTests(BaseTestCase):
     def setUp(self):
@@ -51,6 +53,10 @@ class ResendConfirmationViewTests(BaseTestCase):
         response = self.client.post(resend_url)
         self.assertEqual(response.status_code, 404)
 
+    TEST_MIDDLEWARE = list(settings.MIDDLEWARE)
+    TEST_MIDDLEWARE.insert(-1, "django_ratelimit.middleware.RatelimitMiddleware")
+
+    @override_settings(RATELIMIT_ENABLE=True, RATELIMIT_RATE="3/30m", MIDDLEWARE=TEST_MIDDLEWARE)
     @patch("apps.emails.services.EmailService.send_template_email")
     def test_resend_confirmation_rate_limit(self, mock_send_email):
         user = self.create_user(verified=False)
