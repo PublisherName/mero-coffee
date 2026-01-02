@@ -10,6 +10,7 @@ from django.urls import reverse
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.decorators import role_required
+from apps.accounts.forms import ActivateEmailForm
 from apps.emails.services import EmailService
 
 from .forms import LoginForm, SignUpForm
@@ -222,3 +223,22 @@ def serve_kyc_document(request, kyc_id, field_name):
         return FileResponse(file_field.open(), content_type="image/jpeg")
     except FileNotFoundError:
         raise Http404("File not found on disk")
+
+
+@ratelimit(
+    key="ip", rate=lambda group, request: settings.RATELIMIT_RATE, method="POST", block=True
+)
+def activate_email_view(request):
+    if request.method == "POST":
+        form = ActivateEmailForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data.get("email")
+            try:
+                user = User.objects.get(email__iexact=email)
+                return redirect("accounts:resend_confirmation", user_id=user.id)
+            except User.DoesNotExist:
+                messages.error(request, "No account found with this email address.")
+    else:
+        form = ActivateEmailForm()
+
+    return render(request, "activate_email.html", {"form": form})

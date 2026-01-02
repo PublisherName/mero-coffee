@@ -85,3 +85,13 @@ class KYCSchema(BaseModel):
     @classmethod
     def normalize_id_number(cls, v):
         return v.strip().upper() if v else v
+
+
+class ActivateEmailSchema(BaseModel):
+    email: EmailStr
+
+    @field_validator("email")
+    @classmethod
+    def normalize_and_validate_email(cls, v):
+        email_lower = v.lower() if v else v
+        return email_lower

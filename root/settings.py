@@ -241,6 +241,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Email verification token settings
 TOKEN_SALT = env.str("TOKEN_SALT", default=get_random_secret_key(), validate=lambda n: len(n) > 49)
 TOKEN_EXPIRATION_HOURS = env.int("TOKEN_EXPIRATION_HOURS", default=48)
+PASSWORD_RESET_TIMEOUT = TOKEN_EXPIRATION_HOURS * 60 * 60
 
 # Email settings
 email_config = env.dj_email_url(

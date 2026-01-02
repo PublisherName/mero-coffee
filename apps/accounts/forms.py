@@ -5,7 +5,7 @@ from turnstile.fields import TurnstileField
 from root.forms.pydantic_mixins import PydanticValidationMixin
 
 from .models import KYC
-from .schemas import KYCSchema, LoginSchema, SignUpSchema
+from .schemas import ActivateEmailSchema, KYCSchema, LoginSchema, SignUpSchema
 
 User = get_user_model()
 
@@ -249,4 +249,28 @@ class KYCForm(PydanticValidationMixin, forms.ModelForm):
                 data[k] = v
 
         self.validate_with_pydantic(data)
+        return cleaned_data
+
+
+class ActivateEmailForm(PydanticValidationMixin, forms.Form):
+    pydantic_schema = ActivateEmailSchema
+
+    email = forms.EmailField(
+        required=True,
+        label="Email",
+        widget=forms.EmailInput(
+            attrs={
+                "placeholder": "Enter your email address",
+            }
+        ),
+    )
+    turnstile = TurnstileField()
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        return email.lower() if email else email
+
+    def clean(self):
+        cleaned_data = super().clean()
+        self.validate_with_pydantic()
         return cleaned_data
