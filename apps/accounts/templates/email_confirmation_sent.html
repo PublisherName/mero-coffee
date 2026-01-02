@@ -9,7 +9,6 @@
 {% block content %}
     <div class="auth-page-container">
         <div class="auth-card-centered-wide">
-            {% include "includes/messages.html" %}
             <h1 class="auth-title-xlarge">📧 Check Your Email</h1>
             <p class="auth-description">
                 A confirmation email has been sent to your inbox to verify your email address.
@@ -17,8 +16,7 @@
             </p>
             <p class="auth-text-secondary">
                 Didn't receive the email? Check your spam folder or you can request to
-                <a href="{% url 'accounts:resend_confirmation' user_id %}"
-                   class="auth-link-inline">resend the confirmation
+                <a href="{% url 'accounts:resend_confirmation' user_id %}" class="auth-link-inline">resend the confirmation
                     email</a>.
                 </p>
                 <a href="{% url 'accounts:login' %}" class="auth-btn-link">Go to Login</a>

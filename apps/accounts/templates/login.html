@@ -16,7 +16,6 @@
                 </div>
                 <h2 class="auth-title">Welcome Back</h2>
                 <p class="auth-subtitle">Login to your MeroCoffee account</p>
-                {% include "includes/messages.html" %}
                 {% include "includes/form_error.html" %}
                 <form method="post" class="auth-form" novalidate>
                     {% csrf_token %}

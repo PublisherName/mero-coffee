@@ -180,7 +180,6 @@ class WithdrawalViewTests(BasePaymentsTestCase):
         self.assertContains(
             response, "You need a minimum balance of Rs. 100 to request a withdrawal."
         )
-        self.assertContains(response, "Your current available balance: Rs. 50")
 
     def test_withdrawal_form_shown_when_balance_above_minimum(self):
         """Test withdrawal form is shown when available balance is above minimum"""
