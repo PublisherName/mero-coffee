@@ -1,14 +1,14 @@
 {% if messages %}
-    <div class="mb-6">
+    <div class="fixed top-20 right-4 z-50 max-w-sm">
         {% for message in messages %}
             {% if "error" in message.tags %}
-                {% with bg_color="bg-red-700/90" text_color="text-red-100" icon_path="M12 8v4m0 4h.01" %}
-                    <div class="flex items-center {{ bg_color }} {{ text_color }} rounded-md p-4 mb-3 shadow-md animate-fadeIn"
+                {% with bg_color="bg-red-50 border-red-200" border_color="border-l-red-500" text_color="text-red-800" icon_color="text-red-500" icon_path="M12 8v4m0 4h.01" %}
+                    <div class="flex items-start {{ bg_color }} {{ text_color }} border-l-4 {{ border_color }} rounded-lg p-4 mb-3 shadow-xl animate-slideIn"
                          role="alert"
                          aria-live="assertive"
                          aria-atomic="true">
                         <!-- Icon -->
-                        <svg class="w-6 h-6 mr-3 flex-shrink-0"
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0 {{ icon_color }}"
                              fill="none"
                              stroke="currentColor"
                              stroke-width="2"
@@ -16,16 +16,18 @@
                              stroke-linecap="round"
                              stroke-linejoin="round"
                              aria-hidden="true">
-                            ircle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fillll="none" />
+                            <circle cx="12" cy="12" r="10" />
                             <path d="{{ icon_path }}" />
                         </svg>
                         <!-- Message Text -->
-                        <p class="text-sm font-semibold">{{ message }}</p>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
                         <!-- Close Button -->
                         <button type="button"
                                 aria-label="Dismiss message"
-                                class="ml-auto {{ text_color }} hover:text-white focus:outline-none"
-                                onclick="this.parentElement.style.display='none';">
+                                class="ml-auto {{ text_color }} hover:text-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 rounded"
+                                onclick="this.parentElement.parentElement.remove();">
                             <svg class="w-5 h-5"
                                  fill="none"
                                  stroke="currentColor"
@@ -41,13 +43,13 @@
                     </div>
                 {% endwith %}
             {% elif "success" in message.tags %}
-                {% with bg_color="bg-green-700/90" text_color="text-green-100" icon_path="M5 13l4 4L19 7" %}
-                    <div class="flex items-center {{ bg_color }} {{ text_color }} rounded-md p-4 mb-3 shadow-md animate-fadeIn"
+                {% with bg_color="bg-green-50 border-green-200" border_color="border-l-green-500" text_color="text-green-800" icon_color="text-green-500" icon_path="M5 13l4 4L19 7" %}
+                    <div class="flex items-start {{ bg_color }} {{ text_color }} border-l-4 {{ border_color }} rounded-lg p-4 mb-3 shadow-xl animate-slideIn"
                          role="alert"
                          aria-live="assertive"
                          aria-atomic="true">
                         <!-- Icon -->
-                        <svg class="w-6 h-6 mr-3 flex-shrink-0"
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0 {{ icon_color }}"
                              fill="none"
                              stroke="currentColor"
                              stroke-width="2"
@@ -55,16 +57,18 @@
                              stroke-linecap="round"
                              stroke-linejoin="round"
                              aria-hidden="true">
-                            ircle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fillll="none" />
+                            <circle cx="12" cy="12" r="10" />
                             <path d="{{ icon_path }}" />
                         </svg>
                         <!-- Message Text -->
-                        <p class="text-sm font-semibold">{{ message }}</p>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
                         <!-- Close Button -->
                         <button type="button"
                                 aria-label="Dismiss message"
-                                class="ml-auto {{ text_color }} hover:text-white focus:outline-none"
-                                onclick="this.parentElement.style.display='none';">
+                                class="ml-auto {{ text_color }} hover:text-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 rounded"
+                                onclick="this.parentElement.parentElement.remove();">
                             <svg class="w-5 h-5"
                                  fill="none"
                                  stroke="currentColor"
@@ -80,13 +84,13 @@
                     </div>
                 {% endwith %}
             {% elif "warning" in message.tags %}
-                {% with bg_color="bg-yellow-600/90" text_color="text-yellow-100" icon_path="M12 9v2m0 4h.01" %}
-                    <div class="flex items-center {{ bg_color }} {{ text_color }} rounded-md p-4 mb-3 shadow-md animate-fadeIn"
+                {% with bg_color="bg-yellow-50 border-yellow-200" border_color="border-l-yellow-500" text_color="text-yellow-800" icon_color="text-yellow-500" icon_path="M12 9v2m0 4h.01" %}
+                    <div class="flex items-start {{ bg_color }} {{ text_color }} border-l-4 {{ border_color }} rounded-lg p-4 mb-3 shadow-xl animate-slideIn"
                          role="alert"
                          aria-live="assertive"
                          aria-atomic="true">
                         <!-- Icon -->
-                        <svg class="w-6 h-6 mr-3 flex-shrink-0"
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0 {{ icon_color }}"
                              fill="none"
                              stroke="currentColor"
                              stroke-width="2"
@@ -94,16 +98,18 @@
                              stroke-linecap="round"
                              stroke-linejoin="round"
                              aria-hidden="true">
-                            ircle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fillll="none" />
+                            <circle cx="12" cy="12" r="10" />
                             <path d="{{ icon_path }}" />
                         </svg>
                         <!-- Message Text -->
-                        <p class="text-sm font-semibold">{{ message }}</p>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
                         <!-- Close Button -->
                         <button type="button"
                                 aria-label="Dismiss message"
-                                class="ml-auto {{ text_color }} hover:text-white focus:outline-none"
-                                onclick="this.parentElement.style.display='none';">
+                                class="ml-auto {{ text_color }} hover:text-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 rounded"
+                                onclick="this.parentElement.parentElement.remove();">
                             <svg class="w-5 h-5"
                                  fill="none"
                                  stroke="currentColor"
@@ -119,13 +125,13 @@
                     </div>
                 {% endwith %}
             {% else %}
-                {% with bg_color="bg-blue-700/90" text_color="text-blue-100" icon_path="M13 16h-1v-4h-1m1-4h.01" %}
-                    <div class="flex items-center {{ bg_color }} {{ text_color }} rounded-md p-4 mb-3 shadow-md animate-fadeIn"
+                {% with bg_color="bg-blue-50 border-blue-200" border_color="border-l-blue-500" text_color="text-blue-800" icon_color="text-blue-500" icon_path="M13 16h-1v-4h-1m1-4h.01" %}
+                    <div class="flex items-start {{ bg_color }} {{ text_color }} border-l-4 {{ border_color }} rounded-lg p-4 mb-3 shadow-xl animate-slideIn"
                          role="alert"
                          aria-live="assertive"
                          aria-atomic="true">
                         <!-- Icon -->
-                        <svg class="w-6 h-6 mr-3 flex-shrink-0"
+                        <svg class="w-6 h-6 mr-3 flex-shrink-0 {{ icon_color }}"
                              fill="none"
                              stroke="currentColor"
                              stroke-width="2"
@@ -133,16 +139,18 @@
                              stroke-linecap="round"
                              stroke-linejoin="round"
                              aria-hidden="true">
-                            ircle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" fillll="none" />
+                            <circle cx="12" cy="12" r="10" />
                             <path d="{{ icon_path }}" />
                         </svg>
                         <!-- Message Text -->
-                        <p class="text-sm font-semibold">{{ message }}</p>
+                        <div class="flex-1">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
                         <!-- Close Button -->
                         <button type="button"
                                 aria-label="Dismiss message"
-                                class="ml-auto {{ text_color }} hover:text-white focus:outline-none"
-                                onclick="this.parentElement.style.display='none';">
+                                class="ml-auto {{ text_color }} hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                                onclick="this.parentElement.parentElement.remove();">
                             <svg class="w-5 h-5"
                                  fill="none"
                                  stroke="currentColor"
@@ -162,11 +170,11 @@
     </div>
 {% endif %}
 <style>
-  @keyframes fadeIn {
-    from {opacity: 0; transform: translateY(-10%);}
-    to {opacity: 1; transform: translateY(0);}
-  }
-  .animate-fadeIn {
-    animation: fadeIn 0.35s ease forwards;
+  @keyframes slideIn {
+     from {opacity: 0; transform: translateX(20px) scale(0.95);}
+     to {opacity: 1; transform: translateX(0) scale(1);}
+   }
+  .animate-slideIn {
+    animation: slideIn 0.4s ease-out forwards;
   }
 </style>
