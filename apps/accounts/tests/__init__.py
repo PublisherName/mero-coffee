@@ -1,3 +1,4 @@
+from .test_activate_email import ActivateEmailViewTests
 from .test_login import LoginViewTests
 from .test_logout import LogoutViewTests
 from .test_resend_confirmation import ResendConfirmationViewTests
@@ -12,4 +13,5 @@ __all__ = [
     "ServeKYCDocumentViewTests",
     "SignUpViewTests",
     "VerifyEmailViewTests",
+    "ActivateEmailViewTests",
 ]

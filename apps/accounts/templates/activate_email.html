@@ -2,7 +2,7 @@
 {% load static %}
 {% load viewcomponent_tags %}
 {% block title %}
-    Login - MeroCoffee
+    Activate Account - MeroCoffee
 {% endblock title %}
 {% block extra_css %}
     <link rel="stylesheet" href="{% static 'css/accounts/auth.css' %}">
@@ -12,24 +12,23 @@
         <div class="max-w-md w-full">
             <div class="auth-card">
                 <div class="auth-icon-container">
-                    <span class="text-4xl">✨</span>
+                    <span class="text-4xl">📧</span>
                 </div>
-                <h2 class="auth-title">Welcome Back</h2>
-                <p class="auth-subtitle">Login to your MeroCoffee account</p>
+                <h2 class="auth-title">Activate Your Account</h2>
+                <p class="auth-subtitle">Enter your email to receive a confirmation link</p>
                 {% include "includes/form_error.html" %}
                 <form method="post" class="auth-form" novalidate>
                     {% csrf_token %}
-                    {% component "text_input" field=form.username %} {% endcomponent %}
-                    {% component "password_input" field=form.password %} {% endcomponent %}
+                    {% component "email_input" field=form.email %} {% endcomponent %}
                     {% component "turnstile_input" field=form.turnstile %} {% endcomponent %}
-                    <button type="submit" class="auth-btn-primary">Login</button>
+                    <button type="submit" class="auth-btn-primary">Send Confirmation Email</button>
                 </form>
                 <div class="auth-footer-links">
                     <p class="auth-text-small">
                         Don't have an account? <a href="{% url 'accounts:signup' %}" class="auth-link-bold">Sign up</a>
                     </p>
                     <p class="auth-text-small">
-                        <a href="{% url 'accounts:password_reset' %}" class="auth-link">Forgot password?</a> | <a href="{% url 'accounts:activate_email' %}" class="auth-link">Activate account?</a>
+                        <a href="{% url 'accounts:password_reset' %}" class="auth-link">Forgot password?</a>
                     </p>
                 </div>
             </div>
