@@ -40,21 +40,31 @@
         </div>
     </div>
     {% include "includes/form_error.html" %}
-    <!-- Withdrawal Form -->
-    <div class="withdrawal-form-card">
-        <h2 class="withdrawal-form-title">Request Withdrawal</h2>
-        <p class="withdrawal-subtitle">Enter the amount you want to withdraw from your available earnings.</p>
-        <form method="post" novalidate class="withdrawal-form">
-            {% csrf_token %}
-            <div>
-                {% component "number_input" field=form.amount prefix="Rs." %} {% endcomponent %}
-                <p class="withdrawal-balance-hint">Maximum: Rs. {{ available_balance|default:"0" }}</p>
-            </div>
-            <div>{% component "select_button" field=form.payment_method %} {% endcomponent %}</div>
-            <div>{% component "text_input" field=form.account_details %} {% endcomponent %}</div>
-            <button type="submit" class="form-submit-btn">Request Withdrawal</button>
-        </form>
-    </div>
+    {% if show_withdrawal_form %}
+        <!-- Withdrawal Form -->
+        <div class="withdrawal-form-card">
+            <h2 class="withdrawal-form-title">Request Withdrawal</h2>
+            <p class="withdrawal-subtitle">Enter the amount you want to withdraw from your available earnings.</p>
+            <form method="post" novalidate class="withdrawal-form">
+                {% csrf_token %}
+                <div>
+                    {% component "number_input" field=form.amount prefix="Rs." %} {% endcomponent %}
+                    <p class="withdrawal-balance-hint">Maximum: Rs. {{ available_balance|default:"0" }}</p>
+                </div>
+                <div>{% component "select_button" field=form.payment_method %} {% endcomponent %}</div>
+                <div>{% component "text_input" field=form.account_details %} {% endcomponent %}</div>
+                <button type="submit" class="form-submit-btn">Request Withdrawal</button>
+            </form>
+        </div>
+    {% else %}
+        <!-- Insufficient Balance Message -->
+        <div class="withdrawal-form-card">
+            <h2 class="withdrawal-form-title">Request Withdrawal</h2>
+            <p class="withdrawal-subtitle-message">
+                You need a minimum balance of Rs. {{ min_withdrawal }} to request a withdrawal.
+            </p>
+        </div>
+    {% endif %}
     <!-- Previous Withdrawals Table -->
     <div class="withdrawal-history-card">
         <h2 class="withdrawal-history-title">Previous Withdrawals</h2>

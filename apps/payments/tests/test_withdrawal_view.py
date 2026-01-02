@@ -159,3 +159,35 @@ class WithdrawalViewTests(BasePaymentsTestCase):
         form = response.context["form"]
         self.assertIsInstance(form, type(form))
         self.assertEqual(form.creator_profile, self.creator_profile)
+
+    def test_withdrawal_form_hidden_when_balance_below_minimum(self):
+        """Test withdrawal form is hidden when available balance is below minimum"""
+        low_balance_user = self.create_user("lowbalance", "lowbalance@test.com")
+        low_balance_profile = self.create_creator_profile(low_balance_user)
+        self.create_support_transaction(low_balance_profile, amount=50)
+        self.client.force_login(low_balance_user)
+
+        response = self.client.get(self.withdrawal_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "withdrawal.html")
+
+        self.assertIn("form", response.context)
+        self.assertEqual(response.context["available_balance"], 50)
+        self.assertEqual(response.context["min_withdrawal"], 100)
+
+        self.assertNotContains(response, '<form method="post" novalidate class="withdrawal-form">')
+        self.assertContains(
+            response, "You need a minimum balance of Rs. 100 to request a withdrawal."
+        )
+        self.assertContains(response, "Your current available balance: Rs. 50")
+
+    def test_withdrawal_form_shown_when_balance_above_minimum(self):
+        """Test withdrawal form is shown when available balance is above minimum"""
+        response = self.client.get(self.withdrawal_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "withdrawal.html")
+
+        self.assertContains(response, '<form method="post" novalidate class="withdrawal-form">')
+        self.assertNotContains(response, "You need a minimum balance")
