@@ -74,6 +74,7 @@
                     <div class="kyc-form">
                         {% component "text_input" field=form.full_name required=True %} {% endcomponent %}
                         {% component "text_input" field=form.phone required=True %} {% endcomponent %}
+                        <div class="kyc-form-full-width">{% component "email_input" field=form.email %} {% endcomponent %}</div>
                     </div>
                 </div>
 
@@ -192,6 +193,10 @@
                         <div class="kyc-readonly-field">
                             <label class="kyc-readonly-label">Phone Number</label>
                             <p class="kyc-readonly-value">{{ kyc.phone|default:"—" }}</p>
+                        </div>
+                        <div class="kyc-readonly-field">
+                            <label class="kyc-readonly-label">Email Address</label>
+                            <p class="kyc-readonly-value">{{ kyc.user.email|default:"—" }}</p>
                         </div>
                         <div class="kyc-readonly-field">
                             <label class="kyc-readonly-label">ID Type</label>

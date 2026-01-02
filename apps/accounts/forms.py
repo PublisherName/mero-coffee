@@ -147,6 +147,17 @@ class SignUpForm(PydanticValidationMixin, forms.ModelForm):
 class KYCForm(PydanticValidationMixin, forms.ModelForm):
     pydantic_schema = KYCSchema
 
+    email = forms.EmailField(
+        disabled=True,
+        required=False,
+        widget=forms.EmailInput(
+            attrs={
+                "id": "email",
+                "placeholder": "Your email address",
+            }
+        ),
+    )
+
     class Meta:
         model = KYC
         fields = (
@@ -201,6 +212,8 @@ class KYCForm(PydanticValidationMixin, forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        if self.instance and self.instance.user:
+            self.fields["email"].initial = self.instance.user.email
         self.fields["region"].label_from_instance = lambda obj: obj.name
         self.fields["subregion"].label_from_instance = lambda obj: obj.name
         self.fields["city"].label_from_instance = lambda obj: obj.name

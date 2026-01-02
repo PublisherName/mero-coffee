@@ -14,6 +14,7 @@
            value="{{ value|default:'' }}"
            {% if attrs.minlength %}minlength="{{ attrs.minlength }}"{% endif %}
            {% if attrs.maxlength %}maxlength="{{ attrs.maxlength }}"{% endif %}
+           {% if disabled %}disabled{% endif %}
            {% if required %}required{% endif %}>
 
     {% if help_text %}<p class="email-input-help">{{ help_text }}</p>{% endif %}

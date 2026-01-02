@@ -14,15 +14,14 @@
     </div>
 
     {% include "includes/kyc_status_alert.html" %}
+    {% include "includes/messages.html" %}
+    {% include "includes/form_error.html" %}
 
     <div class="profile-settings-container">
-
-        {% include "includes/messages.html" %}
-        {% include "includes/form_error.html" %}
-
         <form method="post" novalidate class="profile-settings-form">
             {% csrf_token %}
             {% component "text_input" field=form.display_name %} {% endcomponent %}
+            {% component "email_input" field=form.email %} {% endcomponent %}
             {% component "textarea_input" field=form.bio rows=5 %} {% endcomponent %}
             {% component "text_input" field=form.avatar_url %} {% endcomponent %}
             {% component "number_input" field=form.coffee_price prefix="Rs." %} {% endcomponent %}

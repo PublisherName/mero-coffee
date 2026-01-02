@@ -39,11 +39,11 @@
             </div>
         </div>
     </div>
+    {% include "includes/form_error.html" %}
     <!-- Withdrawal Form -->
     <div class="withdrawal-form-card">
         <h2 class="withdrawal-form-title">Request Withdrawal</h2>
         <p class="withdrawal-subtitle">Enter the amount you want to withdraw from your available earnings.</p>
-        {% include "includes/form_error.html" %}
         <form method="post" novalidate class="withdrawal-form">
             {% csrf_token %}
             <div>
