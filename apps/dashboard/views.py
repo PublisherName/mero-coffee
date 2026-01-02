@@ -137,6 +137,7 @@ def withdrawal(request):
         form = WithdrawalForm(creator_profile=creator_profile)
 
     withdrawals = creator_profile.withdrawals.order_by("-requested_at")[:10]
+    show_withdrawal_form = creator_profile.available_balance >= settings.MIN_WITHDRAWAL_AMOUNT
 
     context = {
         "form": form,
@@ -145,6 +146,7 @@ def withdrawal(request):
         "pending_balance": creator_profile.pending_balance,
         "withdrawn_balance": creator_profile.withdrawn_balance,
         "min_withdrawal": settings.MIN_WITHDRAWAL_AMOUNT,
+        "show_withdrawal_form": show_withdrawal_form,
     }
     context.update(get_kyc_context(request.user))
 

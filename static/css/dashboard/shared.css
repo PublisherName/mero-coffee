@@ -469,6 +469,11 @@
     margin-bottom: 2rem;
 }
 
+.withdrawal-subtitle-message {
+    color: rgb(148 163 184);
+    margin-top: 1rem;
+}
+
 .withdrawal-form {
     display: flex;
     flex-direction: column;
