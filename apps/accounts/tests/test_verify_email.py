@@ -41,7 +41,7 @@ class VerifyEmailViewTests(BaseTestCase):
 
     @patch("apps.accounts.views.default_token_generator")
     def test_verify_email_invalid_token(self, mock_token_gen):
-        user = self.create_user(verified=False)
+        user = self.create_user(is_verified=False)
         uidb64 = user.pk
         token = "invalid-token"
 
@@ -75,8 +75,7 @@ class VerifyEmailViewTests(BaseTestCase):
 
     @patch("apps.accounts.views.default_token_generator")
     def test_verify_email_already_verified(self, mock_token_gen):
-        user = self.create_user(verified=True)
-        user.is_active = True
+        user = self.create_user(is_verified=True)
         user.save()
 
         uidb64 = user.pk
@@ -95,8 +94,7 @@ class VerifyEmailViewTests(BaseTestCase):
         self.assertRedirects(response, self.login_url)
 
     def test_verify_email_success(self):
-        user = self.create_user(verified=False)
-        user.is_active = False
+        user = self.create_user(is_verified=False)
         user.save()
 
         uidb64 = user.pk
@@ -109,8 +107,7 @@ class VerifyEmailViewTests(BaseTestCase):
         response = self.client.get(url)
 
         user.refresh_from_db()
-        self.assertTrue(user.is_active)
-        self.assertTrue(user.verified)
+        self.assertTrue(user.is_verified)
 
         messages = list(response.wsgi_request._messages)
         self.assertEqual(len(messages), 1)
@@ -126,7 +123,7 @@ class VerifyEmailViewTests(BaseTestCase):
         MIDDLEWARE=TEST_MIDDLEWARE,
     )
     def test_verify_email_rate_limit(self):
-        user = self.create_user(verified=False)
+        user = self.create_user(is_verified=False)
         uidb64 = user.pk
         token = default_token_generator.make_token(user)
 

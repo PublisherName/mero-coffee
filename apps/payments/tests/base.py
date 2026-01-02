@@ -16,15 +16,19 @@ class BasePaymentsTestCase(TestCase):
     user_password = "testpass123"
 
     def create_user(
-        self, username="testuser", email="test@example.com", verified=True, role=User.Roles.CREATOR
+        self,
+        username="testuser",
+        email="test@example.com",
+        is_verified=True,
+        role=User.Roles.CREATOR,
     ):
         user = User.objects.create_user(
             username=username, email=email, password=self.user_password
         )
         user.role = role
-        user.verified = verified
+        user.is_verified = is_verified
         user.save()
-        if verified:
+        if is_verified:
             KYC.objects.create(user=user, status=KYC.Status.APPROVED)
         return user
 

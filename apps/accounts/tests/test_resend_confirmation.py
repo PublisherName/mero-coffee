@@ -19,7 +19,7 @@ class ResendConfirmationViewTests(BaseTestCase):
 
     @patch("apps.emails.services.EmailService.send_template_email")
     def test_resend_confirmation_unverified_user(self, mock_send_email):
-        user = self.create_user(verified=False)
+        user = self.create_user(is_verified=False)
         resend_url = reverse("accounts:resend_confirmation", args=[user.id])
 
         response = self.client.post(resend_url)
@@ -38,7 +38,7 @@ class ResendConfirmationViewTests(BaseTestCase):
         )
 
     def test_resend_confirmation_verified_user(self):
-        user = self.create_user(verified=True)
+        user = self.create_user(is_verified=True)
         resend_url = reverse("accounts:resend_confirmation", args=[user.id])
 
         response = self.client.post(resend_url)
@@ -59,7 +59,7 @@ class ResendConfirmationViewTests(BaseTestCase):
     @override_settings(RATELIMIT_ENABLE=True, RATELIMIT_RATE="3/30m", MIDDLEWARE=TEST_MIDDLEWARE)
     @patch("apps.emails.services.EmailService.send_template_email")
     def test_resend_confirmation_rate_limit(self, mock_send_email):
-        user = self.create_user(verified=False)
+        user = self.create_user(is_verified=False)
         resend_url = reverse("accounts:resend_confirmation", args=[user.id])
 
         for _ in range(3):

@@ -46,7 +46,7 @@ class LoginViewTests(BaseTestCase):
     @patch("turnstile.fields.TurnstileField.validate")
     def test_login_unverified_user(self, mock_turnstile):
         mock_turnstile.return_value = True
-        self.user.verified = False
+        self.user.is_verified = False
         self.user.save()
         response = self.client.post(
             self.login_url,

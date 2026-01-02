@@ -39,8 +39,8 @@ class SignUpViewTests(BaseTestCase):
         self.assertEqual(self.user_model.objects.count(), 1)
         user = self.user_model.objects.first()
         self.assertEqual(user.username, self.base_signup_data["username"])
-        self.assertFalse(user.is_active)
-        self.assertFalse(user.verified)
+        self.assertTrue(user.is_active)
+        self.assertFalse(user.is_verified)
         mock_send_email.assert_called_once()
         call_args = mock_send_email.call_args
         self.assertEqual(call_args[1]["template_name"], "email_verification")

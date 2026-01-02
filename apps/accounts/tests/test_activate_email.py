@@ -28,7 +28,7 @@ class ActivateEmailViewTests(BaseTestCase):
     @patch("apps.emails.services.EmailService.send_template_email")
     def test_activate_email_valid_email(self, mock_send_email):
         """Test POST with valid email redirects to email confirmation sent page"""
-        user = self.create_user(verified=False)
+        user = self.create_user(is_verified=False)
         data = self.mock_turnstile_response({"email": user.email})
 
         response = self.client.post(self.activate_url, data, follow=True)
@@ -45,7 +45,7 @@ class ActivateEmailViewTests(BaseTestCase):
     @patch("apps.emails.services.EmailService.send_template_email")
     def test_activate_email_valid_email_case_insensitive(self, mock_send_email):
         """Test POST with valid email redirects to email confirmation sent page"""
-        user = self.create_user(verified=False, email="Test@Example.Com")
+        user = self.create_user(is_verified=False, email="Test@Example.Com")
         data = self.mock_turnstile_response({"email": "test@example.com"})
 
         response = self.client.post(self.activate_url, data, follow=True)
@@ -101,7 +101,7 @@ class ActivateEmailViewTests(BaseTestCase):
     )
     def test_activate_email_rate_limit(self):
         """Test rate limiting for activate email view"""
-        user = self.create_user(verified=False)
+        user = self.create_user(is_verified=False)
         data = self.mock_turnstile_response({"email": user.email})
 
         for _ in range(3):

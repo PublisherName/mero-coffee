@@ -7,19 +7,19 @@ class CreatorsListViewTests(BaseCreatorsTestCase):
     def setUp(self):
         self.creator1 = self.create_creator_profile(
             user=self.create_user(
-                username="creator1", email="creator1@example.com", verified=True
+                username="creator1", email="creator1@example.com", is_verified=True
             ),
             display_name="Creator One",
         )
         self.creator2 = self.create_creator_profile(
             user=self.create_user(
-                username="creator2", email="creator2@example.com", verified=True
+                username="creator2", email="creator2@example.com", is_verified=True
             ),
             display_name="Creator Two",
         )
         self.unverified_creator = self.create_creator_profile(
             user=self.create_user(
-                username="creator3", email="creator3@example.com", verified=False
+                username="creator3", email="creator3@example.com", is_verified=False
             ),
             display_name="Creator Three",
         )

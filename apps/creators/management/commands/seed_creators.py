@@ -25,7 +25,7 @@ class Command(BaseCommand):
                 password="testpass123",
                 first_name=fake.first_name(),
                 last_name=fake.last_name(),
-                verified=True,
+                is_verified=True,
             )
 
             KYC.objects.create(user=user, status="approved")

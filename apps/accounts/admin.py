@@ -64,7 +64,7 @@ class KYCAdmin(admin.ModelAdmin):
         qs = super().get_queryset(request)
         return qs.filter(
             user__is_staff=False,
-            user__verified=True,
+            user__is_verified=True,
         ).filter(status__in=[KYC.Status.PENDING])
 
     @staticmethod

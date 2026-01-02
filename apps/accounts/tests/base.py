@@ -12,14 +12,14 @@ class BaseTestCase(TestCase):
         cls.user_password = "testpass123"
         cls.user_model = User
 
-    def create_user(self, username="testuser", email="test@example.com", verified=True):
+    def create_user(self, username="testuser", email="test@example.com", is_verified=True):
         """Helper method to create a test user"""
         return User.objects.create_user(
             username=username,
             email=email,
             password=self.user_password,
             is_active=True,
-            verified=verified,
+            is_verified=is_verified,
         )
 
     @staticmethod

@@ -17,7 +17,7 @@ class ProfileViewTests(BaseCreatorsTestCase):
         )
         self.unverified_creator = self.create_creator_profile(
             user=self.create_user(
-                username="unverified", email="unverified@example.com", verified=False
+                username="unverified", email="unverified@example.com", is_verified=False
             ),
             display_name="Unverified Creator",
             bio="Unverified bio",
@@ -111,7 +111,9 @@ class ProfileViewTests(BaseCreatorsTestCase):
 
     def test_different_user_cannot_access_private_profile(self):
         """Different authenticated user should not access private profile"""
-        other_user = self.create_user(username="other", email="other@example.com", verified=True)
+        other_user = self.create_user(
+            username="other", email="other@example.com", is_verified=True
+        )
         self.client.force_login(other_user)
         url = reverse("creators:profile", args=[self.unverified_creator.user.username])
         response = self.client.get(url)
