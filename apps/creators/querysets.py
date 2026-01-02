@@ -126,4 +126,6 @@ class CreatorProfileQuerySet(models.QuerySet):
             return self.sort_recent()
         if key == "monthly":
             return self.sort_monthly()
-        return self.sort_display()
+        if key == "alphabetic":
+            return self.sort_display()
+        return self.sort_supporters()

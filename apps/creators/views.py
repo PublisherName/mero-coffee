@@ -82,8 +82,7 @@ def creators_list(request):
 
     if search_query:
         creators = creators.search(search_query)
-    if sort_by:
-        creators = creators.apply_sort(sort_by)
+    creators = creators.apply_sort(sort_by)
 
     paginator = Paginator(creators, 8)
     page_number = request.GET.get("page") or 1
@@ -106,6 +105,7 @@ def creators_list(request):
 
     sort_choices = [
         ("", "Default"),
+        ("alphabetic", "Alphabetic Order"),
         ("supporters", "Most Supporters"),
         ("recent", "Recently Added"),
         ("monthly", "Highest Monthly"),
