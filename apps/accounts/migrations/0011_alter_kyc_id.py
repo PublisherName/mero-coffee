@@ -4,6 +4,14 @@ import uuid
 from django.db import migrations, models
 
 
+def populate_uuid(apps, schema_editor):
+    """Populate new uuid field with unique UUIDs."""
+    KYC = apps.get_model('accounts', 'KYC')
+    for kyc in KYC.objects.all():
+        kyc.uuid = uuid.uuid4()
+        kyc.save(update_fields=['uuid'])
+
+
 class Migration(migrations.Migration):
 
     dependencies = [
@@ -11,9 +19,50 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        migrations.AddField(
+            model_name='kyc',
+            name='uuid',
+            field=models.UUIDField(
+                default=uuid.uuid4,
+                editable=False,
+                unique=True,
+                null=True
+            ),
+        ),
+
+        migrations.RunPython(
+            code=populate_uuid,
+            reverse_code=migrations.RunPython.noop,
+        ),
+
+        migrations.AlterField(
+            model_name='kyc',
+            name='uuid',
+            field=models.UUIDField(
+                default=uuid.uuid4,
+                editable=False,
+                unique=True
+            ),
+        ),
+
+        migrations.RemoveField(
+            model_name='kyc',
+            name='id',
+        ),
+
+        migrations.RenameField(
+            model_name='kyc',
+            old_name='uuid',
+            new_name='id',
+        ),
         migrations.AlterField(
             model_name='kyc',
             name='id',
-            field=models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False),
+            field=models.UUIDField(
+                default=uuid.uuid4,
+                editable=False,
+                primary_key=True,
+                serialize=False
+            ),
         ),
     ]
