@@ -1,4 +1,8 @@
 #!/bin/sh
+
+set -e
+service ssh start
+
 if [ "$CELERY_WORKER" = "true" ]
 then
     uv run celery -A root worker -l info

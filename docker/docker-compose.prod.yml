@@ -5,6 +5,7 @@ services:
     image: ghcr.io/publishername/merocoffee:${PROJECT_VERSION}
     ports:
       - "8000:8000"
+      - "2222:2222"
     networks:
       - default
       - external-services
