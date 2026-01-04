@@ -1,8 +1,11 @@
 from pathlib import Path
 
+import sentry_sdk
 from django.core.management.utils import get_random_secret_key
 from environs import Env
 from marshmallow.validate import OneOf
+from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.django import DjangoIntegration
 
 # Set up the environment variables with default types and values
 env = Env()
@@ -362,6 +365,17 @@ if USE_CELERY:
     CELERY_ENABLE_UTC = False
     CELERY_WORKER_CONCURRENCY = 4
     CELERY_WORKER_PREFETCH_MULTIPLIER = 1
+
+# Sentry Settings
+ENABLE_SENTRY = env.bool("ENABLE_SENTRY", default=False)
+if ENABLE_SENTRY:
+    sentry_sdk.init(
+        dsn=env.str("SENTRY_DSN"),
+        integrations=[DjangoIntegration(), CeleryIntegration()],
+        traces_sample_rate=1.0,
+        send_default_pii=True,
+        environment=SERVER_ENVIRONMENT,
+    )
 
 # Jazzmin Configuration
 JAZZMIN_SETTINGS = {
