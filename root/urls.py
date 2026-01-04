@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.http import JsonResponse
 from django.urls import include, path
 
 urlpatterns = (
@@ -17,6 +18,11 @@ urlpatterns = (
         path("", include("apps.payments.urls", namespace="payments")),
         path("dashboard/", include("apps.dashboard.urls", namespace="dashboard")),
         path("newsletter/", include("apps.newsletter.urls", namespace="newsletter")),
+        path(
+            "health/",
+            lambda request: JsonResponse({"status": "healthy"}, status=200),
+            name="health",
+        ),
     ]
     + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
