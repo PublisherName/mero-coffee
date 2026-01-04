@@ -184,7 +184,7 @@ def password_reset_view(request):
                 context = {
                     "username": user.username,
                     "password_reset_url": password_reset_url,
-                    "expiration_hours": 24,
+                    "expiration_hours": settings.TOKEN_EXPIRATION_HOURS,
                 }
 
                 EmailService.send_template_email(
