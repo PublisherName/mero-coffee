@@ -210,13 +210,20 @@
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
     border: 1px solid rgb(51 65 85 / 0.5);
     background: linear-gradient(to bottom right, rgb(30 41 59), rgb(15 23 42));
-    padding: 1.5rem;
+    padding: 2rem;
 }
 
 .supporters-table {
     width: 100%;
     text-align: left;
     border-collapse: collapse;
+}
+
+.supporters-table-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1.5rem;
 }
 
 .supporters-table-head {
@@ -271,6 +278,11 @@
 }
 
 .supporters-empty-state {
+    text-align: center;
+    color: rgb(148 163 184);
+}
+
+.supporters-empty {
     text-align: center;
     color: rgb(148 163 184);
 }
