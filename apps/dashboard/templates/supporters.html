@@ -12,8 +12,9 @@
         <h1 class="supporters-title">Supporters</h1>
         <p class="supporters-subtitle">See who has supported you recently.</p>
         {% include "includes/kyc_status_alert.html" %}
-        {% if supporters %}
-            <div class="supporters-table-card">
+        <div class="supporters-table-card">
+            <h2 class="supporters-table-title">Support List</h2>
+            {% if supporters %}
                 <table class="supporters-table">
                     <thead class="supporters-table-head">
                         <tr>
@@ -34,9 +35,9 @@
                         {% endfor %}
                     </tbody>
                 </table>
-            </div>
-        {% else %}
-            <p class="supporters-empty-state">You have no supporters yet.</p>
-        {% endif %}
+            {% else %}
+                <div class="supporters-empty">You have no supporters yet.</div>
+            {% endif %}
+        </div>
     </div>
 {% endblock main_content %}
