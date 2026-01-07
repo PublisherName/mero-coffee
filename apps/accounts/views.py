@@ -4,9 +4,12 @@ from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import PasswordResetForm
 from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.views import PasswordResetConfirmView
 from django.http import FileResponse, Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django_ratelimit.decorators import ratelimit
 
 from apps.accounts.decorators import role_required
@@ -80,7 +83,7 @@ def signup_view(request):
             user = form.save()
 
             token = default_token_generator.make_token(user)
-            uid = str(user.pk)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
 
             verify_url = settings.SITE_BASE_URL + reverse(
                 "accounts:verify_email", kwargs={"uidb64": uid, "token": token}
@@ -118,7 +121,7 @@ def resend_confirmation_view(request, user_id):
         return redirect("accounts:login")
 
     token = default_token_generator.make_token(user)
-    uid = str(user.pk)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
 
     verify_url = settings.SITE_BASE_URL + reverse(
         "accounts:verify_email", kwargs={"uidb64": uid, "token": token}
@@ -142,7 +145,7 @@ def resend_confirmation_view(request, user_id):
 @ratelimit(key="ip", rate=lambda group, request: settings.RATELIMIT_RATE, method="GET", block=True)
 def verify_email_view(request, uidb64, token):
     try:
-        uid = int(uidb64)
+        uid = urlsafe_base64_decode(uidb64)
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, User.DoesNotExist):
         messages.error(request, "Invalid verification link.")
@@ -175,7 +178,7 @@ def password_reset_view(request):
                 user = User.objects.get(email__iexact=email)
 
                 token = default_token_generator.make_token(user)
-                uid = str(user.pk)
+                uid = urlsafe_base64_encode(force_bytes(user.pk))
 
                 password_reset_url = settings.SITE_BASE_URL + reverse(
                     "accounts:password_reset_confirm", kwargs={"uidb64": uid, "token": token}
@@ -240,3 +243,25 @@ def activate_email_view(request):
         form = ActivateEmailForm()
 
     return render(request, "activate_email.html", {"form": form})
+
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    """Custom password reset confirm view that verifies user email on successful password reset"""
+
+    template_name = "password_reset_confirm.html"
+    success_url = "/password_reset_complete/"
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+
+        user = form.user
+        if not user.is_verified:
+            user.is_verified = True
+            user.save(update_fields=["is_verified"])
+            messages.success(
+                self.request,
+                "Your password has been reset and your email has been verified. "
+                "You can now log in.",
+            )
+
+        return response

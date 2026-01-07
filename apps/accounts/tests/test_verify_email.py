@@ -5,6 +5,8 @@ from django.contrib.auth.tokens import default_token_generator
 from django.core.cache import cache
 from django.test import override_settings
 from django.urls import reverse
+from django.utils.encoding import force_bytes
+from django.utils.http import urlsafe_base64_encode
 
 from .base import BaseTestCase
 
@@ -21,7 +23,7 @@ class VerifyEmailViewTests(BaseTestCase):
 
     @classmethod
     def _build_url(cls, user, token):
-        uidb64 = user.pk
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         return reverse(
             "accounts:verify_email",
             kwargs={"uidb64": uidb64, "token": token},
@@ -42,7 +44,7 @@ class VerifyEmailViewTests(BaseTestCase):
     @patch("apps.accounts.views.default_token_generator")
     def test_verify_email_invalid_token(self, mock_token_gen):
         user = self.create_user(is_verified=False)
-        uidb64 = user.pk
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         token = "invalid-token"
 
         mock_token_gen.check_token.return_value = False
@@ -59,7 +61,7 @@ class VerifyEmailViewTests(BaseTestCase):
         self.assertRedirects(response, self.login_url)
 
     def test_verify_email_user_not_found(self):
-        uidb64 = 99999
+        uidb64 = urlsafe_base64_encode(force_bytes(99999))
         token = "some-token"
 
         url = reverse(
@@ -78,7 +80,7 @@ class VerifyEmailViewTests(BaseTestCase):
         user = self.create_user(is_verified=True)
         user.save()
 
-        uidb64 = user.pk
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         token = "valid-token"
         mock_token_gen.check_token.return_value = True
 
@@ -97,7 +99,7 @@ class VerifyEmailViewTests(BaseTestCase):
         user = self.create_user(is_verified=False)
         user.save()
 
-        uidb64 = user.pk
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
 
         url = reverse(
@@ -124,7 +126,7 @@ class VerifyEmailViewTests(BaseTestCase):
     )
     def test_verify_email_rate_limit(self):
         user = self.create_user(is_verified=False)
-        uidb64 = user.pk
+        uidb64 = urlsafe_base64_encode(force_bytes(user.pk))
         token = default_token_generator.make_token(user)
 
         url = reverse(

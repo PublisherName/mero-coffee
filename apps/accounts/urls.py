@@ -2,6 +2,7 @@ from django.contrib.auth import views as auth_views
 from django.urls import path
 
 from apps.accounts.views import (
+    CustomPasswordResetConfirmView,
     activate_email_view,
     email_confirmation_sent_view,
     login_view,
@@ -48,10 +49,7 @@ urlpatterns = [
     ),
     path(
         "reset/<uidb64>/<token>/",
-        auth_views.PasswordResetConfirmView.as_view(
-            template_name="password_reset_confirm.html",
-            success_url="/password_reset_complete/",
-        ),
+        CustomPasswordResetConfirmView.as_view(),
         name="password_reset_confirm",
     ),
     path(
