@@ -39,6 +39,7 @@ module "vpc" {
 
   create_database_subnet_group       = true
   create_database_subnet_route_table = true
+  database_subnet_group_name         = "mc-db-subnet-group"
 
 
   # Resources Names
