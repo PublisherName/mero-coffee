@@ -11,9 +11,7 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apt-get update && apt-get install -y \
     curl \
     gcc \
-    postgresql-client \
-    dialog \
-    openssh-server && \
+    postgresql-client && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY --from=ghcr.io/astral-sh/uv:0.9.5 /uv /uvx /bin/
@@ -83,10 +81,6 @@ RUN uv sync --frozen --no-dev --extra production --no-install-project
 FROM base AS production
 
 WORKDIR $CODE_PATH
-
-COPY sshd_config /etc/ssh/
-
-RUN echo "root:Docker!" | chpasswd
 
 COPY --from=production-build-uv $VENV_PATH $VENV_PATH
 
