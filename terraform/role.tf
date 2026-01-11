@@ -1,14 +1,6 @@
-data "aws_secretsmanager_secret" "mc_app_secret" {
-  name = "mero-coffee-application-secret"
-}
-
-data "aws_secretsmanager_secret" "ghcr_token" {
-  name = "ghcr-credentials"
-}
-
 resource "aws_iam_policy" "mc_ecs_secrets" {
-  name        = "mc_ecs_secret_policy"
-  description = "Access RDS password + Application Secret + Ghcr.io secret"
+  name        = "${local.name_prefix}-ecs-secret-policy"
+  description = "Access RDS password + Application Secret + GHCR secret"
 
   policy = jsonencode({
     Version = "2012-10-17"
@@ -32,13 +24,14 @@ resource "aws_iam_policy" "mc_ecs_secrets" {
   })
 
   tags = {
-    Name = "mc_ecs_secret_policy"
+    Name = "${local.name_prefix}-ecs-secret-policy"
   }
 }
 
 resource "aws_iam_policy" "mc_ecs_log" {
-  name        = "mc_ecs_log"
+  name        = "${local.name_prefix}-ecs-log-policy"
   description = "Access log groups"
+
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -50,19 +43,20 @@ resource "aws_iam_policy" "mc_ecs_log" {
           "logs:PutLogEvents"
         ]
         Resource = [
-          "arn:aws:logs:ap-south-1:*:log-group:/ecs/*:*",
-          "arn:aws:logs:ap-south-1:*:log-group:/aws/ecs/*"
+          "arn:aws:logs:${var.aws_region}:*:log-group:/ecs/*:*",
+          "arn:aws:logs:${var.aws_region}:*:log-group:/aws/ecs/*"
         ]
       }
     ]
   })
+
   tags = {
-    Name : "mc-ecs-log"
+    Name = "${local.name_prefix}-ecs-log-policy"
   }
 }
 
 resource "aws_iam_role" "mc_ecs_task_execution_role" {
-  name = "mc-ecs-task-role"
+  name = "${local.name_prefix}-ecs-task-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -76,9 +70,8 @@ resource "aws_iam_role" "mc_ecs_task_execution_role" {
   })
 
   tags = {
-    Name = "MeroCoffeeEcsTask"
+    Name = "${local.name_prefix}-ecs-task-role"
   }
-
 }
 
 resource "aws_iam_role_policy_attachment" "mc_ecs_secret_policy" {
@@ -94,9 +87,4 @@ resource "aws_iam_role_policy_attachment" "mc_ecs_task_policy" {
 resource "aws_iam_role_policy_attachment" "mc_ecs_log_policy" {
   role       = aws_iam_role.mc_ecs_task_execution_role.name
   policy_arn = aws_iam_policy.mc_ecs_log.arn
-}
-
-output "ecs_task_execution_role_arn" {
-  description = "ECS Task Execution Role ARN"
-  value       = aws_iam_role.mc_ecs_task_execution_role.arn
 }

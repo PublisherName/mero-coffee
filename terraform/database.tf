@@ -2,14 +2,14 @@ module "db" {
   source  = "terraform-aws-modules/rds/aws"
   version = "~> 6.0"
 
-  identifier           = "merocoffeedb"
+  identifier           = "${local.name_prefix}db"
   engine               = "postgres"
   engine_version       = "17.2"
   family               = "postgres17"
   major_engine_version = "17.2"
 
-  instance_class    = "db.t3.micro"
-  allocated_storage = 20
+  instance_class    = var.db_instance_class
+  allocated_storage = var.db_allocated_storage
   storage_type      = "gp2"
   storage_encrypted = true
 
@@ -17,18 +17,14 @@ module "db" {
   username = "postgres"
   port     = 5432
 
-  # Networking
-  availability_zone      = "ap-south-1a"
+  availability_zone      = var.availability_zones[0]
   create_db_subnet_group = false
-  vpc_security_group_ids = [aws_security_group.mc-data-sg.id]
+  vpc_security_group_ids = [aws_security_group.mc_data_sg.id]
   db_subnet_group_name   = module.vpc.database_subnet_group_name
   publicly_accessible    = false
 
-  # Disable Auto Scale
   max_allocated_storage = 0
-
-  # Create db instance
-  create_db_instance = true
+  create_db_instance    = true
 
   manage_master_user_password                            = true
   master_user_password_rotation_automatically_after_days = 30
@@ -39,7 +35,7 @@ module "db" {
 
   monitoring_interval    = 30
   create_monitoring_role = true
-  monitoring_role_name   = "MeroCoffeeRdsMonitoringRole"
+  monitoring_role_name   = "${local.name_prefix}-rds-monitoring-role"
 
   multi_az                     = false
   deletion_protection          = false
@@ -47,14 +43,13 @@ module "db" {
   allow_major_version_upgrade  = false
   auto_minor_version_upgrade   = true
   performance_insights_enabled = true
+
   parameters = [
     { name = "log_connections", value = "1" },
     { name = "rds.log_retention_period", value = "1440" }
   ]
 
   tags = {
-    Name        = "MeroCoffeeDB"
-    Project     = "MeroCoffee"
-    Environment = "Prod"
+    Name = "${local.name_prefix}-db"
   }
 }

@@ -1,28 +1,28 @@
 resource "aws_cloudwatch_log_group" "mc_app" {
-  name              = "/ecs/mero-coffee-app"
-  retention_in_days = 7
+  name              = "/ecs/${local.name_prefix}-app"
+  retention_in_days = var.log_retention_days
 
   tags = {
-    Name = "MeroCoffeeAppLogs"
+    Name = "${local.name_prefix}-app-logs"
   }
 }
 
 resource "aws_ecs_task_definition" "mc_task_definition" {
-  family                   = "mero-coffee-task-definition"
+  family                   = "${local.name_prefix}-task-definition"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
-  cpu                      = "2048"
-  memory                   = "4096"
+  cpu                      = var.ecs_task_cpu
+  memory                   = var.ecs_task_memory
 
   execution_role_arn = aws_iam_role.mc_ecs_task_execution_role.arn
   task_role_arn      = aws_iam_role.mc_ecs_task_execution_role.arn
 
   container_definitions = jsonencode([{
-    name  = "mero-coffee-app"
-    image = "ghcr.io/publishername/merocoffee:develop"
+    name  = "${local.name_prefix}-app"
+    image = var.app_image
 
     repositoryCredentials = {
-      credentialsParameter = data.aws_secretsmanager_secret.ghcr_token.arn,
+      credentialsParameter = data.aws_secretsmanager_secret.ghcr_token.arn
     }
 
     essential = true
@@ -43,23 +43,17 @@ resource "aws_ecs_task_definition" "mc_task_definition" {
       { name = "DJANGO_SECRET_KEY", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:DJANGO_SECRET_KEY::" },
       { name = "DJANGO_ALLOWED_HOSTS", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:DJANGO_ALLOWED_HOSTS::" },
       { name = "SITE_BASE_URL", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:SITE_BASE_URL::" },
-
-      { name = "DATABASE_URL", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:DATABASE_URL::" }, #TODO: REMOVE THIS
-
       { name = "DB_HOST", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:DB_HOST::" },
       { name = "DB_PORT", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:DB_PORT::" },
       { name = "DB_NAME", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:DB_NAME::" },
-      { name = "DB_USER", valueFrom = "${module.db.db_instance_master_user_secret_arn}:username::" },
-      { name = "DB_PASSWORD", valueFrom = "${module.db.db_instance_master_user_secret_arn}:password::" },
-
+      { name = "DB_USER", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:DB_USER::" },
+      { name = "DB_PASSWORD", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:DB_PASSWORD::" },
       { name = "CACHE_URL", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:CACHE_URL::" },
       { name = "SMTP_URL", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:SMTP_URL::" },
       { name = "TOKEN_SALT", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:TOKEN_SALT::" },
-
       { name = "TURNSTILE_SITEKEY", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:TURNSTILE_SITEKEY::" },
       { name = "TURNSTILE_SECRET", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:TURNSTILE_SECRET::" },
       { name = "USE_CELERY", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:USE_CELERY::" },
-
       { name = "ENABLE_SENTRY", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:ENABLE_SENTRY::" },
       { name = "SENTRY_DSN", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:SENTRY_DSN::" },
     ]
@@ -68,7 +62,7 @@ resource "aws_ecs_task_definition" "mc_task_definition" {
       logDriver = "awslogs"
       options = {
         awslogs-group         = aws_cloudwatch_log_group.mc_app.name
-        awslogs-region        = "ap-south-1"
+        awslogs-region        = var.aws_region
         awslogs-stream-prefix = "django"
         awslogs-create-group  = "true"
       }
@@ -94,16 +88,8 @@ resource "aws_ecs_task_definition" "mc_task_definition" {
   }
 
   tags = {
-    Name = "MeroCoffeeDjangoTask"
+    Name = "${local.name_prefix}-django-task"
   }
-}
 
-output "ecs_task_definition_arn" {
-  description = "Django Task Definition ARN (use in ECS Service)"
-  value       = aws_ecs_task_definition.mc_task_definition.arn
-}
-
-output "ecs_task_definition_family" {
-  description = "Task Definition Family"
-  value       = aws_ecs_task_definition.mc_task_definition.family
+  depends_on = [aws_secretsmanager_secret_version.mc_app_secret_updated]
 }
