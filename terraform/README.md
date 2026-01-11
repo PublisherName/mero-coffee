@@ -26,8 +26,10 @@ terraform/
 ├── role.tf              # IAM roles and policies
 ├── cluster.tf           # ECS cluster
 ├── task.tf              # ECS task definition
+├── service.tf           # ECS service
 ├── alb.tf               # Application Load Balancer
 ├── tg.tf                # Target group
+├── secret_update.tf     # Auto-update secrets with DB credentials
 └── terraform.tfvars.example  # Example variables file
 ```
 
@@ -138,8 +140,8 @@ terraform destroy
 
 After infrastructure is deployed:
 
-1. Create an ECS service to run tasks
-2. Configure Route53 DNS records pointing to ALB
-3. Set up SSL/TLS certificate in ACM
-4. Configure HTTPS listener on ALB
-5. Set up CloudWatch alarms for monitoring
+1. Configure Route53 DNS records pointing to ALB
+2. Set up SSL/TLS certificate in ACM
+3. Configure HTTPS listener on ALB
+4. Set up CloudWatch alarms for monitoring
+5. Configure auto-scaling policies for ECS service
