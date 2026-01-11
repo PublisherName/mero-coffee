@@ -21,6 +21,5 @@ app_image       = "ghcr.io/publishername/merocoffee:develop"
 # Logging Configuration
 log_retention_days = 7
 
-# Secrets Configuration
-app_secrets_name      = "mero-coffee-application-secret"
-ghcr_credentials_name = "ghcr-credentials"
+# Domain and SSL Configuration
+domain_name = "coffee.subashghimire.info.np"

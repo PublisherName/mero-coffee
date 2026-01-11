@@ -17,7 +17,7 @@ resource "aws_ecs_service" "mc_service" {
     container_port   = 8000
   }
 
-  depends_on = [aws_lb_listener.mc_http_redirect]
+  depends_on = [aws_lb_listener.mc_http_redirect, aws_lb_listener.mc_https]
 
   tags = {
     Name = "${local.name_prefix}-service"

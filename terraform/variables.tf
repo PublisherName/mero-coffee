@@ -75,3 +75,15 @@ variable "ghcr_credentials_name" {
   type        = string
   default     = "ghcr-credentials"
 }
+
+variable "domain_name" {
+  description = "Domain name for the application"
+  type        = string
+  default     = ""
+}
+
+variable "ssl_policy" {
+  description = "SSL policy for HTTPS listener"
+  type        = string
+  default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
+}

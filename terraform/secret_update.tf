@@ -8,8 +8,8 @@ resource "aws_secretsmanager_secret_version" "mc_app_secret_updated" {
       DB_NAME              = module.db.db_instance_name
       DB_USER              = module.db.db_instance_username
       DB_PASSWORD          = jsondecode(data.aws_secretsmanager_secret_version.rds_master_password.secret_string)["password"]
-      DJANGO_ALLOWED_HOSTS = "${aws_lb.mc_alb.dns_name},10.0.0.0/16"
-      SITE_BASE_URL        = "http://${aws_lb.mc_alb.dns_name}"
+      DJANGO_ALLOWED_HOSTS = var.domain_name != "" ? "${var.domain_name},.${var.domain_name}" : "${aws_lb.mc_alb.dns_name}"
+      SITE_BASE_URL        = var.domain_name != "" ? "https://${var.domain_name}" : "http://${aws_lb.mc_alb.dns_name}"
     }
   ))
   depends_on = [module.db, aws_lb.mc_alb]
