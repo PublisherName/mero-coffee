@@ -29,6 +29,7 @@ dependencies = [
     "flower>=2.0.1",
     "django-celery-results>=2.6.0",
     "sentry-sdk[django]>=2.48.0",
+    "django-allow-cidr>=0.8.0",
 ]
 
 [project.optional-dependencies]

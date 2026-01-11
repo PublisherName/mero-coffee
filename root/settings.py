@@ -51,6 +51,7 @@ CSRF_TRUSTED_ORIGINS = [SITE_BASE_URL]
 DJANGO_ALLOWED_HOSTS = env.list("DJANGO_ALLOWED_HOSTS", default=[], subcast=str)
 if IS_SERVER_SECURE:
     ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS
+    ALLOWED_CIDR_NETS = env.list("ALLOWED_CIDR_NETS", default=[], subcast=str)
 else:
     LOCAL_ALLOWED_HOSTS = ["0.0.0.0", "localhost", "127.0.0.1"]
     ALLOWED_HOSTS = LOCAL_ALLOWED_HOSTS + DJANGO_ALLOWED_HOSTS
@@ -113,6 +114,7 @@ if DEBUG:
     ]
 
 MIDDLEWARE = [
+    "allow_cidr.middleware.AllowCIDRMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
