@@ -71,12 +71,12 @@ resource "aws_ecs_task_definition" "mc_task_definition" {
     healthCheck = {
       command = [
         "CMD-SHELL",
-        "curl -f http://localhost:8000/health/ || exit 1"
+        "curl -f http://127.0.0.1:8000/health/ || exit 1"
       ]
-      interval    = 40
-      timeout     = 30
+      interval    = 30
+      timeout     = 20
       retries     = 10
-      startPeriod = 60
+      startPeriod = 120
     }
 
     readonlyRootFilesystem = false

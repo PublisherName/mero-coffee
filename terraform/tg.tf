@@ -8,8 +8,8 @@ resource "aws_lb_target_group" "mc_app_tg" {
 
   health_check {
     enabled             = true
-    healthy_threshold   = 4
-    interval            = 30
+    healthy_threshold   = 2
+    interval            = 45
     matcher             = "200-299"
     path                = "/health/"
     port                = "traffic-port"
