@@ -140,8 +140,6 @@ terraform destroy
 
 After infrastructure is deployed:
 
-1. Configure Route53 DNS records pointing to ALB
-2. Set up SSL/TLS certificate in ACM
-3. Configure HTTPS listener on ALB
-4. Set up CloudWatch alarms for monitoring
-5. Configure auto-scaling policies for ECS service
+1. Set up CloudWatch alarms for monitoring
+2. Configure custom domain in Route53 (if not using auto-discovery)
+3. Review and adjust auto-scaling thresholds based on traffic patterns

@@ -87,3 +87,27 @@ variable "ssl_policy" {
   type        = string
   default     = "ELBSecurityPolicy-TLS13-1-2-2021-06"
 }
+
+variable "ecs_min_capacity" {
+  description = "Minimum number of ECS tasks"
+  type        = number
+  default     = 1
+}
+
+variable "ecs_max_capacity" {
+  description = "Maximum number of ECS tasks"
+  type        = number
+  default     = 4
+}
+
+variable "ecs_cpu_target" {
+  description = "Target CPU utilization for auto-scaling"
+  type        = number
+  default     = 70
+}
+
+variable "ecs_memory_target" {
+  description = "Target memory utilization for auto-scaling"
+  type        = number
+  default     = 80
+}

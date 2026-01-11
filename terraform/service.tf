@@ -2,7 +2,7 @@ resource "aws_ecs_service" "mc_service" {
   name            = "${local.name_prefix}-service"
   cluster         = aws_ecs_cluster.mc_ecs_cluster.id
   task_definition = aws_ecs_task_definition.mc_task_definition.arn
-  desired_count   = 1
+  desired_count   = var.ecs_min_capacity
   launch_type     = "FARGATE"
 
   network_configuration {
@@ -21,5 +21,9 @@ resource "aws_ecs_service" "mc_service" {
 
   tags = {
     Name = "${local.name_prefix}-service"
+  }
+
+  lifecycle {
+    ignore_changes = [desired_count]
   }
 }
