@@ -143,3 +143,10 @@ jobs:
             --cluster ${{ secrets.CLUSTER_NAME }} \
             --service ${{secrets.SERVICE_NAME }} \
             --force-new-deployment
+
+      - name: Force ECS deployment - Celery
+        run: |
+          aws ecs update-service \
+            --cluster ${{ secrets.CLUSTER_NAME }} \
+            --service ${{secrets.SERVICE_NAME_CELERY }} \
+            --force-new-deployment
