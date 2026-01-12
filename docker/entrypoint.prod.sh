@@ -2,7 +2,7 @@
 
 if [ "$CELERY_WORKER" = "true" ]
 then
-    uv run celery -A root worker -l info
+    exec gosu 1000:1000 uv run celery -A root worker -l info
 else
     ./manage.py collectstatic --no-input
     ./manage.py migrate --no-input

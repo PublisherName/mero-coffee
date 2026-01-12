@@ -11,6 +11,7 @@ ENV PYTHONUNBUFFERED=1 \
 RUN apt-get update && apt-get install -y \
     curl \
     gcc \
+    gosu \
     postgresql-client && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -87,6 +88,11 @@ COPY --from=production-build-uv $VENV_PATH $VENV_PATH
 COPY . $CODE_PATH
 
 COPY --from=builder $CODE_PATH/theme/static/css/dist/styles.css $CODE_PATH/theme/static/css/dist/styles.css
+
+RUN groupadd -r -g 1000 celery && \
+    useradd -r -u 1000 -g celery -d /home/celery -s /bin/sh celery && \
+    mkdir -p /home/celery && \
+    chown -R celery:celery $CODE_PATH /home/celery
 
 ENV PATH="$VENV_PATH/bin:$PATH"
 
