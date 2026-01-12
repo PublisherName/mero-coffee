@@ -47,6 +47,17 @@ resource "aws_ecs_task_definition" "mc_celery_task_definition" {
       { name = "SENTRY_DSN", valueFrom = "${data.aws_secretsmanager_secret.mc_app_secret.arn}:SENTRY_DSN::" },
     ]
 
+    healthCheck = {
+      command = [
+        "CMD-SHELL",
+        "exec gosu 1000:1000 uv run celery -A root inspect ping || exit 1"
+      ]
+      interval    = 30
+      timeout     = 10
+      retries     = 3
+      startPeriod = 90
+    }
+
     logConfiguration = {
       logDriver = "awslogs"
       options = {
