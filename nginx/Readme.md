@@ -98,3 +98,28 @@ Keep the branch up to date:
 git fetch origin
 git reset --hard origin/develop
 ```
+### Create celery worker
+```bash
+sudo nano /etc/systemd/system/merocoffee-celery.service
+```
+```text
+[Unit]
+Description=Celery service for MeroCoffee
+After=network.target
+
+[Service]
+User=ubuntu
+Group=www-data
+WorkingDirectory=/home/ubuntu/django/MeroCoffee
+ExecStart=/home/ubuntu/django/MeroCoffee/.venv/bin/celery -A root worker -l info
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+
+### Reload and start celery
+
+```bash
+sudo systemctl daemon-reload && sudo systemctl start merocoffee-celery && sudo systemctl enable merocoffee-celery
+```
