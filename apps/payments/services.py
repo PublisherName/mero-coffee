@@ -7,6 +7,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
 import requests
+import stripe
 from django.urls import reverse
 
 from apps.payments.models import PaymentGateway, PaymentLog, SupportTransaction
@@ -54,6 +55,8 @@ class PaymentFactory:
     def get_strategy(slug: str) -> PaymentStrategy:
         if slug == "esewa":
             return EsewaStrategy()
+        elif slug == "stripe":
+            return StripeStrategy()
         else:
             raise ValueError(f"Unknown payment gateway: {slug}")
 
@@ -322,3 +325,169 @@ class EsewaStrategy(PaymentStrategy):
                 return "payment_failed.html", {"error": "Transaction not found"}
         else:
             return "payment_failed.html", {"error": "Payment was cancelled or failed"}
+
+
+class StripeStrategy(PaymentStrategy):
+    """All Stripe payment logic encapsulated here"""
+
+    @classmethod
+    def get_payment_context(self, transaction: SupportTransaction, request=None) -> Dict[str, Any]:
+        gateway = PaymentGateway.objects.get(slug="stripe")
+        stripe.api_key = gateway.secret_key.strip()
+
+        if not transaction.transaction_id:
+            transaction.transaction_id = uuid.uuid4().hex
+            transaction.save()
+
+        if request:
+            success_url = request.build_absolute_uri(reverse("payments:stripe_success"))
+            cancel_url = (
+                f"{request.build_absolute_uri(reverse('payments:stripe_cancel'))}"
+                "?session_id={CHECKOUT_SESSION_ID}"
+            )
+        else:
+            success_url = gateway.success_url
+            cancel_url = gateway.failure_url
+
+        try:
+            session = stripe.checkout.Session.create(
+                payment_method_types=["card"],
+                line_items=[
+                    {
+                        "price_data": {
+                            "currency": "npr",
+                            "product_data": {
+                                "name": f"Support for {transaction.creator}",
+                                "description": transaction.message
+                                or "Thank you for your support!",
+                            },
+                            "unit_amount": transaction.amount * 100,
+                        },
+                        "quantity": 1,
+                    }
+                ],
+                mode="payment",
+                success_url=f"{success_url}?session_id={{CHECKOUT_SESSION_ID}}",
+                cancel_url=cancel_url,
+                metadata={
+                    "transaction_id": transaction.transaction_id,
+                },
+            )
+
+            PaymentLog.objects.create(
+                transaction=transaction,
+                gateway=PaymentLog.Gateways.STRIPE,
+                request_payload={
+                    "amount": transaction.amount,
+                    "currency": "npr",
+                    "transaction_id": transaction.transaction_id,
+                },
+                response_payload={"session_id": session.id},
+                status="session_created",
+            )
+
+            return {
+                "payment_url": session.url,
+                "method": "GET",
+            }
+        except stripe.error.StripeError as e:
+            PaymentLog.objects.create(
+                transaction=transaction,
+                gateway=PaymentLog.Gateways.STRIPE,
+                request_payload={
+                    "amount": transaction.amount,
+                    "transaction_id": transaction.transaction_id,
+                },
+                response_payload={"error": str(e)},
+                status="session_creation_failed",
+            )
+            raise ValueError(f"Stripe session creation failed: {str(e)}")
+
+    @staticmethod
+    def handle_success(session_id: str):
+        gateway = PaymentGateway.objects.get(slug="stripe")
+        stripe.api_key = gateway.secret_key.strip()
+
+        try:
+            session = stripe.checkout.Session.retrieve(session_id)
+            transaction_id = session.metadata.get("transaction_id")
+            transaction = SupportTransaction.objects.filter(transaction_id=transaction_id).first()
+            transaction = (
+                SupportTransaction.objects.select_for_update()
+                .filter(
+                    transaction_id=transaction_id,
+                    payment_status=SupportTransaction.Status.PENDING,
+                )
+                .first()
+            )
+
+            if not transaction:
+                return "payment_failed.html", {
+                    "error": "No pending transaction found or it may have already been completed."
+                }
+
+            if (
+                session.payment_status == "paid"
+                and session.payment_intent
+                and stripe.PaymentIntent.retrieve(session.payment_intent).status == "succeeded"
+            ):
+                transaction.payment_status = SupportTransaction.Status.COMPLETED
+                transaction.save()
+
+                PaymentLog.objects.create(
+                    transaction=transaction,
+                    gateway=PaymentLog.Gateways.STRIPE,
+                    request_payload={"session_id": session_id},
+                    response_payload={"session": session},
+                    status="completed",
+                )
+
+                return "payment_success.html", {
+                    "transaction": transaction,
+                    "gateway": gateway,
+                    "payment_data": {"session_id": session_id},
+                }
+            else:
+                transaction.payment_status = "failed"
+                transaction.save()
+
+                PaymentLog.objects.create(
+                    transaction=transaction,
+                    gateway=PaymentLog.Gateways.STRIPE,
+                    request_payload={"session_id": session_id},
+                    response_payload={"session": session},
+                    status="payment_not_completed",
+                )
+
+                return "payment_failed.html", {
+                    "error": "Payment was not completed",
+                    "transaction": transaction,
+                }
+        except stripe.error.StripeError as e:
+            return "payment_failed.html", {"error": f"Stripe verification failed: {str(e)}"}
+
+    @staticmethod
+    def handle_cancel(session_id: str):
+        gateway = PaymentGateway.objects.get(slug="stripe")
+        stripe.api_key = gateway.secret_key.strip()
+
+        context = {"error": "Payment was cancelled"}
+
+        session = stripe.checkout.Session.retrieve(session_id)
+        transaction_id = session.metadata.get("transaction_id")
+
+        if transaction_id:
+            transaction = SupportTransaction.objects.filter(transaction_id=transaction_id).first()
+            if transaction:
+                transaction.payment_status = SupportTransaction.Status.FAILED
+                transaction.save()
+                PaymentLog.objects.create(
+                    transaction=transaction,
+                    gateway=PaymentLog.Gateways.STRIPE,
+                    request_payload={"session_id": session_id},
+                    response_payload={"status": "cancelled"},
+                    status="cancelled",
+                )
+                context["transaction"] = transaction
+
+        return "payment_failed.html", context

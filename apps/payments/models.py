@@ -29,6 +29,7 @@ class SupportTransaction(models.Model):
     class Methods(models.TextChoices):
         ESEWA = "esewa", _("eSewa")
         KHALTI = "khalti", _("Khalti")
+        STRIPE = "stripe", _("Stripe")
 
     class Status(models.TextChoices):
         PENDING = "pending", _("Pending")
@@ -56,6 +57,7 @@ class PaymentLog(models.Model):
     class Gateways(models.TextChoices):
         ESEWA = "esewa", _("eSewa")
         KHALTI = "khalti", _("Khalti")
+        STRIPE = "stripe", _("Stripe")
 
     transaction = models.ForeignKey(
         SupportTransaction, on_delete=models.CASCADE, related_name="payment_logs"
@@ -75,6 +77,7 @@ class Withdrawal(models.Model):
         BANK = "bank", _("Bank Transfer")
         ESEWA = "esewa", _("eSewa")
         KHALTI = "khalti", _("Khalti")
+        STRIPE = "stripe", _("Stripe")
 
     class Status(models.TextChoices):
         PENDING = "pending", _("Pending")

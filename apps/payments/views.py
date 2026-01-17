@@ -69,5 +69,26 @@ def esewa_failure(request):
 
     strategy = EsewaStrategy()
     encoded_data = request.GET.get("data")
+
     template, context = strategy.handle_failure(encoded_data)
+    return render(request, template, context)
+
+
+def stripe_success(request):
+    from .services import StripeStrategy
+
+    strategy = StripeStrategy()
+    session_id = request.GET.get("session_id")
+
+    template, context = strategy.handle_success(session_id)
+    return render(request, template, context)
+
+
+def stripe_cancel(request):
+    from .services import StripeStrategy
+
+    strategy = StripeStrategy()
+    session_id = request.GET.get("session_id")
+
+    template, context = strategy.handle_cancel(session_id)
     return render(request, template, context)
