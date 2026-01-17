@@ -419,8 +419,10 @@ JAZZMIN_SETTINGS = {
         "django_celery_results.TaskResult": "fas fa-tasks",
         "django_celery_results.GroupResult": "fas fa-layer-group",
         "django_celery_results.ChordResult": "fas fa-project-diagram",
+        "emails.EmailTemplate": "fas fa-paper-plane",
     },
     "order_with_respect_to": [
+        "auth",
         "accounts",
         "creators",
         "payments",
