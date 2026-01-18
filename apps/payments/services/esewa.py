@@ -3,59 +3,13 @@ import hashlib
 import hmac
 import json
 import uuid
-from abc import ABC, abstractmethod
 from typing import Any, Dict, Optional
 
 import requests
 from django.urls import reverse
 
 from apps.payments.models import PaymentGateway, PaymentLog, SupportTransaction
-
-
-class PaymentStrategy(ABC):
-    """Abstract base class for payment strategies"""
-
-    @abstractmethod
-    def get_payment_context(self, transaction: SupportTransaction, request=None) -> Dict[str, Any]:
-        pass
-
-    @staticmethod
-    def get_transaction_and_gateway(data: dict, gateway: str):
-        transaction_uuid = data.get("transaction_uuid")
-
-        if not transaction_uuid:
-            return None, None, "Invalid payment response - missing transaction ID"
-
-        transaction = SupportTransaction.objects.filter(transaction_id=transaction_uuid).first()
-        gateway = PaymentGateway.objects.filter(slug=gateway).first()
-
-        if not transaction or not gateway:
-            return None, None, "Transaction or Gateway not found"
-
-        return transaction, gateway, None
-
-    @staticmethod
-    def base64_decode(encoded_data: Optional[str]):
-        if not encoded_data:
-            return None, "Invalid payment response - no data received"
-
-        try:
-            decoded_bytes = base64.b64decode(encoded_data)
-            decoded_str = decoded_bytes.decode("utf-8")
-            data = json.loads(decoded_str)
-            return data, None
-
-        except (base64.binascii.Error, json.JSONDecodeError, UnicodeDecodeError) as e:
-            return None, f"Invalid payment response format: {str(e)}"
-
-
-class PaymentFactory:
-    @staticmethod
-    def get_strategy(slug: str) -> PaymentStrategy:
-        if slug == "esewa":
-            return EsewaStrategy()
-        else:
-            raise ValueError(f"Unknown payment gateway: {slug}")
+from apps.payments.services.strategy import PaymentStrategy
 
 
 class EsewaStrategy(PaymentStrategy):
@@ -73,7 +27,7 @@ class EsewaStrategy(PaymentStrategy):
             message_parts.append(f"{field}={field_value}")
         message = ",".join(message_parts)
 
-        expected_signature = self._generate_signature(gateway.secret_key.strip(), message)
+        expected_signature = self._generate_signature(gateway.secret_key, message)
 
         if signature != expected_signature:
             transaction.payment_status = "failed"
@@ -84,7 +38,7 @@ class EsewaStrategy(PaymentStrategy):
                 gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
-                status="signature_mismatch",
+                status=PaymentLog.Status.SIGNATURE_MISMATCH,
             )
 
             return False
@@ -106,12 +60,18 @@ class EsewaStrategy(PaymentStrategy):
             response.raise_for_status()
             api_response = response.json()
             api_status = api_response.get("status")
+            status_map = {
+                "COMPLETE": PaymentLog.Status.API_COMPLETE,
+                "PENDING": PaymentLog.Status.API_PENDING,
+                "ERROR": PaymentLog.Status.API_ERROR,
+            }
+            status = status_map.get(api_status, PaymentLog.Status.API_UNKNOWN)
             PaymentLog.objects.create(
                 transaction=transaction,
                 gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={"action": "double_verification"},
                 response_payload=api_response,
-                status=f"api_{api_status.lower() if api_status else 'unknown'}",
+                status=status,
             )
             if api_status != "COMPLETE":
                 return None, f"Payment verification failed (Status: {api_status})"
@@ -122,7 +82,7 @@ class EsewaStrategy(PaymentStrategy):
                 gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={"action": "double_verification_failed"},
                 response_payload={"error": str(e)},
-                status="api_error",
+                status=PaymentLog.Status.API_ERROR,
             )
             return None, "Payment verification failed. Please contact support."
 
@@ -144,7 +104,7 @@ class EsewaStrategy(PaymentStrategy):
                 gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
-                status="success",
+                status=PaymentLog.Status.SUCCESS,
             )
             context = {
                 "transaction": transaction,
@@ -161,7 +121,7 @@ class EsewaStrategy(PaymentStrategy):
                 gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
-                status="pending",
+                status=PaymentLog.Status.PENDING,
             )
             return (
                 "payment_failed.html",
@@ -174,12 +134,17 @@ class EsewaStrategy(PaymentStrategy):
         if status in ["FULL_REFUND", "PARTIAL_REFUND"]:
             transaction.payment_status = "failed"
             transaction.save()
+            failure_status_map = {
+                "NOT_FOUND": PaymentLog.Status.NOT_FOUND,
+                "CANCELED": PaymentLog.Status.CANCELED,
+            }
+            log_status = failure_status_map.get(status, PaymentLog.Status.UNKNOWN_STATUS)
             PaymentLog.objects.create(
                 transaction=transaction,
                 gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
-                status=status.lower(),
+                status=log_status,
             )
             return (
                 "payment_failed.html",
@@ -195,7 +160,7 @@ class EsewaStrategy(PaymentStrategy):
                 gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
-                status="ambiguous",
+                status=PaymentLog.Status.AMBIGUOUS,
             )
             return (
                 "payment_failed.html",
@@ -208,12 +173,17 @@ class EsewaStrategy(PaymentStrategy):
         if status in ["NOT_FOUND", "CANCELED"]:
             transaction.payment_status = "failed"
             transaction.save()
+            refund_status_map = {
+                "FULL_REFUND": PaymentLog.Status.FULL_REFUND,
+                "PARTIAL_REFUND": PaymentLog.Status.PARTIAL_REFUND,
+            }
+            log_status = refund_status_map.get(status, PaymentLog.Status.UNKNOWN_STATUS)
             PaymentLog.objects.create(
                 transaction=transaction,
                 gateway=PaymentLog.Gateways.ESEWA,
                 request_payload={},
                 response_payload=data,
-                status=status.lower(),
+                status=log_status,
             )
             error_msg = (
                 "Payment session expired" if status == "NOT_FOUND" else "Payment was cancelled"
@@ -225,7 +195,7 @@ class EsewaStrategy(PaymentStrategy):
             gateway=PaymentLog.Gateways.ESEWA,
             request_payload={},
             response_payload=data,
-            status=f"unknown_status_{status.lower() if status else 'none'}",
+            status=PaymentLog.Status.UNKNOWN_STATUS,
         )
         return "payment_failed.html", {
             "error": f"Unknown payment status: {status}",
@@ -312,7 +282,7 @@ class EsewaStrategy(PaymentStrategy):
                     gateway=PaymentLog.Gateways.ESEWA,
                     request_payload={},
                     response_payload=data,
-                    status="failed",
+                    status=PaymentLog.Status.FAILED,
                 )
                 return "payment_failed.html", {
                     "transaction": transaction,

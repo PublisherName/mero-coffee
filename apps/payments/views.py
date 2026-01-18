@@ -1,7 +1,8 @@
 from django.shortcuts import get_object_or_404, render
 
+from apps.payments.services.factory import PaymentFactory
+
 from .models import PaymentGateway, SupportTransaction
-from .services import PaymentFactory
 
 
 def checkout(request, transaction_id):
@@ -20,7 +21,7 @@ def checkout(request, transaction_id):
 
 
 def esewa_success(request):
-    from .services import EsewaStrategy
+    from apps.payments.services.esewa import EsewaStrategy
 
     strategy = EsewaStrategy()
 
@@ -65,9 +66,30 @@ def esewa_success(request):
 
 
 def esewa_failure(request):
-    from .services import EsewaStrategy
+    from apps.payments.services.esewa import EsewaStrategy
 
     strategy = EsewaStrategy()
     encoded_data = request.GET.get("data")
+
     template, context = strategy.handle_failure(encoded_data)
+    return render(request, template, context)
+
+
+def stripe_success(request):
+    from apps.payments.services.stripe import StripeStrategy
+
+    strategy = StripeStrategy()
+    session_id = request.GET.get("session_id")
+
+    template, context = strategy.handle_success(session_id)
+    return render(request, template, context)
+
+
+def stripe_cancel(request):
+    from apps.payments.services.stripe import StripeStrategy
+
+    strategy = StripeStrategy()
+    session_id = request.GET.get("session_id")
+
+    template, context = strategy.handle_cancel(session_id)
     return render(request, template, context)

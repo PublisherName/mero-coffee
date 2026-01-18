@@ -4,7 +4,7 @@ from apps.payments.models import PaymentGateway
 
 
 class Command(BaseCommand):
-    help = "Seeds the database with default payment gateways (eSewa, Khalti)"
+    help = "Seeds the database with default payment gateways (eSewa, Khalti, Stripe)"
 
     def handle(self, *args, **options):
         gateways = [
@@ -32,6 +32,19 @@ class Command(BaseCommand):
                 "sandbox_url": "https://dev.khalti.com/api/v2/",
                 "description": "Pay with Khalti",
                 "brand_color": "#5c2d91",
+            },
+            {
+                "name": "Stripe",
+                "slug": "stripe",
+                "is_active": True,
+                "is_sandbox": True,
+                "base_url": "https://api.stripe.com/v1/",
+                "sandbox_url": "https://api.stripe.com/v1/",
+                "success_url": "http://127.0.0.1/stripe/success/",
+                "failure_url": "http://127.0.0.1/stripe/cancel/",
+                "description": "Pay with Stripe",
+                "brand_color": "#6772e5",
+                "secret_key": "sk_test_BQokikJOvBiI2HlWgH4olfQ2",
             },
         ]
 
