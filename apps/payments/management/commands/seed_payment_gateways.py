@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.management.base import BaseCommand
 
 from apps.payments.models import PaymentGateway
@@ -15,8 +16,8 @@ class Command(BaseCommand):
                 "is_sandbox": True,
                 "base_url": "https://epay.esewa.com.np/api/epay",
                 "sandbox_url": "https://rc-epay.esewa.com.np/api/epay",
-                "success_url": "http://127.0.0.1/esewa/success/",
-                "failure_url": "http://127.0.0.1/esewa/failure/",
+                "success_url": f"{settings.SITE_BASE_URL.rstrip('/')}/esewa/success/",
+                "failure_url": f"{settings.SITE_BASE_URL.rstrip('/')}/esewa/failure/",
                 "signature": "HMAC-SHA256",
                 "secret_key": "8gBm/:&EnhH.1/q",
                 "merchant_id": "EPAYTEST",
@@ -40,8 +41,8 @@ class Command(BaseCommand):
                 "is_sandbox": True,
                 "base_url": "https://api.stripe.com/v1/",
                 "sandbox_url": "https://api.stripe.com/v1/",
-                "success_url": "http://127.0.0.1/stripe/success/",
-                "failure_url": "http://127.0.0.1/stripe/cancel/",
+                "success_url": f"{settings.SITE_BASE_URL.rstrip('/')}/stripe/success/",
+                "failure_url": f"{settings.SITE_BASE_URL.rstrip('/')}/stripe/cancel/",
                 "description": "Pay with Stripe",
                 "brand_color": "#6772e5",
                 "secret_key": "sk_test_BQokikJOvBiI2HlWgH4olfQ2",
