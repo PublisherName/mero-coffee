@@ -6,8 +6,11 @@ import uuid
 from typing import Any, Dict, Optional
 
 import requests
+from django.conf import settings
 from django.urls import reverse
 
+from apps.emails.models import EmailTemplate
+from apps.emails.services import EmailService
 from apps.payments.models import PaymentGateway, PaymentLog, SupportTransaction
 from apps.payments.services.strategy import PaymentStrategy
 
@@ -106,6 +109,22 @@ class EsewaStrategy(PaymentStrategy):
                 response_payload=data,
                 status=PaymentLog.Status.SUCCESS,
             )
+
+            # Send email to creator
+            EmailService.send_template_email(
+                template_name=EmailTemplate.Type.PAYMENT_SUCCESS_CREATOR,
+                recipient=transaction.creator.user.email,
+                context={
+                    "creator_name": transaction.creator.display_name
+                    or transaction.creator.user.username,
+                    "supporter_name": transaction.supporter_name,
+                    "amount": transaction.amount,
+                    "message": transaction.message,
+                    "creator_dashboard_url": settings.SITE_BASE_URL.rstrip("/")
+                    + reverse("dashboard:dashboard"),
+                },
+            )
+
             context = {
                 "transaction": transaction,
                 "gateway": gateway,

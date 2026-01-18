@@ -4,8 +4,11 @@ from typing import Any, Dict
 
 import django.db.transaction as db_tx
 import stripe
+from django.conf import settings
 from django.urls import reverse
 
+from apps.emails.models import EmailTemplate
+from apps.emails.services import EmailService
 from apps.payments.models import PaymentGateway, PaymentLog, SupportTransaction
 from apps.payments.services.strategy import PaymentStrategy
 
@@ -123,7 +126,6 @@ class StripeStrategy(PaymentStrategy):
                         pass
                     else:
                         # TODO: Update this to webhooks (after access to stripe dashboard)
-                        # TODO: Send email to both contributor and supporter about the payment
 
                         transaction.payment_status = SupportTransaction.Status.COMPLETED
                         transaction.save()
@@ -140,6 +142,21 @@ class StripeStrategy(PaymentStrategy):
                             request_payload={"session_id": session_id},
                             response_payload=safe_payload,
                             status=PaymentLog.Status.COMPLETED,
+                        )
+
+                        # Send email to creator
+                        EmailService.send_template_email(
+                            template_name=EmailTemplate.Type.PAYMENT_SUCCESS_CREATOR,
+                            recipient=transaction.creator.user.email,
+                            context={
+                                "creator_name": transaction.creator.display_name
+                                or transaction.creator.user.username,
+                                "supporter_name": transaction.supporter_name,
+                                "amount": transaction.amount,
+                                "message": transaction.message,
+                                "creator_dashboard_url": settings.SITE_BASE_URL.rstrip("/")
+                                + reverse("dashboard:dashboard"),
+                            },
                         )
 
                     return "payment_success.html", {
