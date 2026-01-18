@@ -59,13 +59,37 @@ class PaymentLog(models.Model):
         KHALTI = "khalti", _("Khalti")
         STRIPE = "stripe", _("Stripe")
 
+    class Status(models.TextChoices):
+        # eSewa statuses
+        SUCCESS = "success", _("Success")
+        PENDING = "pending", _("Pending")
+        FAILED = "failed", _("Failed")
+        AMBIGUOUS = "ambiguous", _("Ambiguous")
+        NOT_FOUND = "not_found", _("Not Found")
+        CANCELED = "canceled", _("Canceled")
+        FULL_REFUND = "full_refund", _("Full Refund")
+        PARTIAL_REFUND = "partial_refund", _("Partial Refund")
+        SIGNATURE_MISMATCH = "signature_mismatch", _("Signature Mismatch")
+        API_COMPLETE = "api_complete", _("API Complete")
+        API_PENDING = "api_pending", _("API Pending")
+        API_ERROR = "api_error", _("API Error")
+        API_UNKNOWN = "api_unknown", _("API Unknown")
+        UNKNOWN_STATUS = "unknown_status", _("Unknown Status")
+
+        # Stripe statuses
+        SESSION_CREATED = "session_created", _("Session Created")
+        SESSION_CREATION_FAILED = "session_creation_failed", _("Session Creation Failed")
+        COMPLETED = "completed", _("Completed")
+        PAYMENT_NOT_COMPLETED = "payment_not_completed", _("Payment Not Completed")
+        CANCELLED = "cancelled", _("Cancelled")
+
     transaction = models.ForeignKey(
         SupportTransaction, on_delete=models.CASCADE, related_name="payment_logs"
     )
     gateway = models.CharField(max_length=20, choices=Gateways.choices)
     request_payload = models.JSONField()
     response_payload = models.JSONField()
-    status = models.CharField(max_length=50)
+    status = models.CharField(max_length=50, choices=Status.choices)
     timestamp = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
