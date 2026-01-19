@@ -13,6 +13,7 @@ class EmailTemplate(models.Model):
         PASSWORD_RESET = "password_reset", _("Password Reset")
         EMAIL_VERIFICATION = "email_verification", _("Email Verification")
         PAYMENT_SUCCESS_CREATOR = "payment_success_creator", _("Payment Success Creator")
+        PAYMENT_SUCCESS_SUPPORTER = "payment_success_supporter", _("Payment Success Supporter")
         CUSTOM = "custom", _("Custom")
 
     name = models.CharField(

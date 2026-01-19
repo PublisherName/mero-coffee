@@ -159,6 +159,20 @@ class StripeStrategy(PaymentStrategy):
                             },
                         )
 
+                        # Send email to supporter if email is available
+                        supporter_email = getattr(session.customer_details, "email", None)
+                        if supporter_email:
+                            EmailService.send_template_email(
+                                template_name=EmailTemplate.Type.PAYMENT_SUCCESS_SUPPORTER,
+                                recipient=supporter_email,
+                                context={
+                                    "creator_name": transaction.creator.display_name
+                                    or transaction.creator.user.username,
+                                    "amount": transaction.amount,
+                                    "message": transaction.message,
+                                },
+                            )
+
                     return "payment_success.html", {
                         "transaction": transaction,
                         "gateway": gateway,
