@@ -415,6 +415,219 @@ class Command(BaseCommand):
             "© 2025 {{ site_name }} Nepal. All rights reserved."
         )
 
+    @classmethod
+    def _get_payment_success_creator_html(cls):
+        """Generate payment success creator HTML content"""
+        return (
+            "<!DOCTYPE html>\n"
+            '<html lang="en">\n'
+            "    <head>\n"
+            '        <meta charset="UTF-8">\n'
+            '        <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+            "        <title>New Support Received - {{ site_name }}</title>\n"
+            "    </head>\n"
+            '    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; '
+            'background-color: #0f172a;">\n'
+            '        <table width="100%" cellpadding="0" cellspacing="0" '
+            'style="background-color: #0f172a; padding: 40px 20px;">\n'
+            "            <tr>\n"
+            '                <td align="center">\n'
+            '                    <table width="600" cellpadding="0" cellspacing="0" '
+            'style="background: linear-gradient(to bottom, #1e293b, #0f172a); '
+            "border-radius: 16px; overflow: hidden; "
+            'box-shadow: 0 20px 50px rgba(0,0,0,0.5)">\n'
+            "                        <tr>\n"
+            '                            <td style="padding: 40px; text-align: center; '
+            "background: linear-gradient(to right, #ef4444, #f97316); "
+            'border-bottom: 4px solid #dc2626">\n'
+            '                                <h1 style="margin: 0; color: #ffffff; '
+            'font-size: 32px; font-weight: bold;">🎉 {{ site_name }}</h1>\n'
+            "                            </td>\n"
+            "                        </tr>\n"
+            "                        <tr>\n"
+            '                            <td style="padding: 40px; color: #cbd5e1;">\n'
+            '                                <h2 style="color: #ffffff; margin-top: 0; '
+            'font-size: 28px;">You Received New Support!</h2>\n'
+            '                                <p style="font-size: 16px; line-height: 1.6; '
+            'margin: 20px 0;">\n'
+            "                                    Hi {{ creator_name }},<br>\n"
+            "                                    Great news! You've received a new donation of "
+            '<strong style="color: #f97316; font-size: 18px;">NPR {{ amount }}</strong> '
+            "from {{ supporter_name }}.\n"
+            "                                </p>\n"
+            '                                <div style="background-color: #334155; '
+            "padding: 20px; border-radius: 8px; margin: 20px 0; "
+            'border-left: 4px solid #f97316;">\n'
+            '                                    <p style="margin: 0; font-size: 16px; '
+            'color: #cbd5e1;">\n'
+            "                                        <strong>From:</strong> "
+            "{{ supporter_name }}<br>\n"
+            "                                        <strong>Amount:</strong> "
+            "NPR {{ amount }}<br>\n"
+            "                                        <strong>Message:</strong> {{ "
+            'message|default:"Thank you for your amazing work!" }}\n'
+            "                                    </p>\n"
+            "                                </div>\n"
+            '                                <p style="font-size: 16px; line-height: 1.6; '
+            'margin: 20px 0; color: #ffffff;">\n'
+            "                                    Keep creating amazing content! Your supporters "
+            "appreciate what you do.\n"
+            "                                </p>\n"
+            '                                <table width="100%" cellpadding="0" '
+            'cellspacing="0" style="margin: 30px 0;">\n'
+            "                                    <tr>\n"
+            '                                        <td align="center">\n'
+            '                                            <a href="{{ creator_dashboard_url }}" '
+            'style="display: inline-block; padding: 16px 40px; '
+            "background: linear-gradient(to right, #ef4444, #f97316); "
+            "color: #ffffff; text-decoration: none; border-radius: 8px; "
+            'font-weight: bold; font-size: 16px">View Dashboard</a>\n'
+            "                                        </td>\n"
+            "                                    </tr>\n"
+            "                                </table>\n"
+            '                                <p style="font-size: 14px; color: #94a3b8; '
+            'margin-top: 30px;">Made with ❤️ for Nepali creators</p>\n'
+            "                            </td>\n"
+            "                        </tr>\n"
+            "                        <tr>\n"
+            '                            <td style="padding: 30px; text-align: center; '
+            'background-color: #0f172a; border-top: 1px solid #334155">\n'
+            '                                <p style="margin: 0 0 10px 0; color: #64748b; '
+            'font-size: 14px;">© 2025 {{ site_name }} Nepal. All rights reserved.'
+            "</p>\n"
+            "                            </td>\n"
+            "                        </tr>\n"
+            "                    </table>\n"
+            "                </td>\n"
+            "            </tr>\n"
+            "        </table>\n"
+            "    </body>\n"
+            "</html>"
+        )
+
+    @classmethod
+    def _get_payment_success_creator_text(cls):
+        """Generate payment success creator text content"""
+        return (
+            "Hi {{ creator_name }},\n\n"
+            "Great news! You've received a new donation of NPR {{ amount }} "
+            "from {{ supporter_name }}.\n\n"
+            "From: {{ supporter_name }}\n"
+            "Amount: NPR {{ amount }}\n"
+            "Message: {{ message|default:'Thank you for your amazing work!' }}\n\n"
+            "Keep creating amazing content! Your supporters appreciate what you do.\n\n"
+            "View your dashboard: {{ creator_dashboard_url }}\n\n"
+            "Made with ❤️ for Nepali creators\n\n"
+            "© 2025 {{ site_name }} Nepal. All rights reserved."
+        )
+
+    @classmethod
+    def _get_payment_success_supporter_html(cls):
+        """Generate payment success supporter HTML content"""
+        return (
+            "<!DOCTYPE html>\n"
+            '<html lang="en">\n'
+            "    <head>\n"
+            '        <meta charset="UTF-8">\n'
+            '        <meta name="viewport" content="width=device-width, initial-scale=1.0">\n'
+            "        <title>Thank You for Your Support - {{ site_name }}</title>\n"
+            "    </head>\n"
+            '    <body style="margin: 0; padding: 0; font-family: Arial, sans-serif; '
+            'background-color: #0f172a;">\n'
+            '        <table width="100%" cellpadding="0" cellspacing="0" '
+            'style="background-color: #0f172a; padding: 40px 20px;">\n'
+            "            <tr>\n"
+            '                <td align="center">\n'
+            '                    <table width="600" cellpadding="0" cellspacing="0" '
+            'style="background: linear-gradient(to bottom, #1e293b, #0f172a); '
+            "border-radius: 16px; overflow: hidden; "
+            'box-shadow: 0 20px 50px rgba(0,0,0,0.5)">\n'
+            "                        <tr>\n"
+            '                            <td style="padding: 40px; text-align: center; '
+            "background: linear-gradient(to right, #ef4444, #f97316); "
+            'border-bottom: 4px solid #dc2626">\n'
+            '                                <h1 style="margin: 0; color: #ffffff; '
+            'font-size: 32px; font-weight: bold;">🎉 {{ site_name }}</h1>\n'
+            "                            </td>\n"
+            "                        </tr>\n"
+            "                        <tr>\n"
+            '                            <td style="padding: 40px; color: #cbd5e1;">\n'
+            '                                <h2 style="color: #ffffff; margin-top: 0; '
+            'font-size: 28px;">Thank You for Your Support!</h2>\n'
+            '                                <p style="font-size: 16px; line-height: 1.6; '
+            'margin: 20px 0;">\n'
+            "                                    Hi there,<br>\n"
+            "                                    Your contribution of "
+            '<strong style="color: #f97316; font-size: 18px;">NPR {{ amount }}</strong> '
+            "to {{ creator_name }} has been successfully received!\n"
+            "                                </p>\n"
+            '                                <div style="background-color: #334155; '
+            "padding: 20px; border-radius: 8px; margin: 20px 0; "
+            'border-left: 4px solid #f97316;">\n'
+            '                                    <p style="margin: 0; font-size: 16px; '
+            'color: #cbd5e1;">\n'
+            "                                        <strong>Creator:</strong> "
+            "{{ creator_name }}<br>\n"
+            "                                        <strong>Amount:</strong> "
+            "NPR {{ amount }}<br>\n"
+            "                                        <strong>Your Message:</strong> {{ "
+            'message|default:"Thank you for your amazing work!" }}\n'
+            "                                    </p>\n"
+            "                                </div>\n"
+            '                                <p style="font-size: 16px; line-height: 1.6; '
+            'margin: 20px 0; color: #ffffff;">\n'
+            "                                    Your support helps creators continue making "
+            "amazing content. Thank you for being part of the {{ site_name }} community!\n"
+            "                                </p>\n"
+            '                                <table width="100%" cellpadding="0" '
+            'cellspacing="0" style="margin: 30px 0;">\n'
+            "                                    <tr>\n"
+            '                                        <td align="center">\n'
+            '                                            <a href="{{ site_url }}" '
+            'style="display: inline-block; padding: 16px 40px; '
+            "background: linear-gradient(to right, #ef4444, #f97316); "
+            "color: #ffffff; text-decoration: none; border-radius: 8px; "
+            'font-weight: bold; font-size: 16px">Explore More Creators</a>\n'
+            "                                        </td>\n"
+            "                                    </tr>\n"
+            "                                </table>\n"
+            '                                <p style="font-size: 14px; color: #94a3b8; '
+            'margin-top: 30px;">Made with ❤️ for Nepali creators</p>\n'
+            "                            </td>\n"
+            "                        </tr>\n"
+            "                        <tr>\n"
+            '                            <td style="padding: 30px; text-align: center; '
+            'background-color: #0f172a; border-top: 1px solid #334155">\n'
+            '                                <p style="margin: 0 0 10px 0; color: #64748b; '
+            'font-size: 14px;">© 2025 {{ site_name }} Nepal. All rights reserved.'
+            "</p>\n"
+            "                            </td>\n"
+            "                        </tr>\n"
+            "                    </table>\n"
+            "                </td>\n"
+            "            </tr>\n"
+            "        </table>\n"
+            "    </body>\n"
+            "</html>"
+        )
+
+    @classmethod
+    def _get_payment_success_supporter_text(cls):
+        """Generate payment success supporter text content"""
+        return (
+            "Hi there,\n\n"
+            "Your contribution of NPR {{ amount }} to {{ creator_name }} "
+            "has been successfully received!\n\n"
+            "Creator: {{ creator_name }}\n"
+            "Amount: NPR {{ amount }}\n"
+            "Your Message: {{ message|default:'Thank you for your amazing work!' }}\n\n"
+            "Your support helps creators continue making amazing content. "
+            "Thank you for being part of the {{ site_name }} community!\n\n"
+            "Explore more creators: {{ site_url }}\n\n"
+            "Made with ❤️ for Nepali creators\n\n"
+            "© 2025 {{ site_name }} Nepal. All rights reserved."
+        )
+
     def handle(self, *args, **options):
         force = options.get("force", False)
 
@@ -449,6 +662,20 @@ class Command(BaseCommand):
                 "subject": "Reset your {{ site_name }} password",
                 "html_content": self._get_password_reset_html(),
                 "text_content": self._get_password_reset_text(),
+            },
+            {
+                "name": "payment_success_creator",
+                "template_type": "payment_success_creator",
+                "subject": "You received new support on {{ site_name }}!",
+                "html_content": self._get_payment_success_creator_html(),
+                "text_content": self._get_payment_success_creator_text(),
+            },
+            {
+                "name": "payment_success_supporter",
+                "template_type": "payment_success_supporter",
+                "subject": "Thank you for your support on {{ site_name }}!",
+                "html_content": self._get_payment_success_supporter_html(),
+                "text_content": self._get_payment_success_supporter_text(),
             },
         ]
 
