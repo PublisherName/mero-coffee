@@ -30,6 +30,7 @@ class SupportTransaction(models.Model):
         ESEWA = "esewa", _("eSewa")
         KHALTI = "khalti", _("Khalti")
         STRIPE = "stripe", _("Stripe")
+        PAYPAL = "paypal", _("PayPal")
 
     class Status(models.TextChoices):
         PENDING = "pending", _("Pending")
@@ -58,6 +59,7 @@ class PaymentLog(models.Model):
         ESEWA = "esewa", _("eSewa")
         KHALTI = "khalti", _("Khalti")
         STRIPE = "stripe", _("Stripe")
+        PAYPAL = "paypal", _("PayPal")
 
     class Status(models.TextChoices):
         # eSewa statuses
@@ -83,6 +85,18 @@ class PaymentLog(models.Model):
         PAYMENT_NOT_COMPLETED = "payment_not_completed", _("Payment Not Completed")
         CANCELLED = "cancelled", _("Cancelled")
 
+        # PayPal statuses
+        PAYPAL_ORDER_CREATED = "paypal_order_created", _("PayPal Order Created")
+        PAYPAL_ORDER_CREATION_FAILED = (
+            "paypal_order_creation_failed",
+            _("PayPal Order Creation Failed"),
+        )
+        PAYPAL_PAYMENT_CAPTURED = "paypal_payment_captured", _("PayPal Payment Captured")
+        PAYPAL_PAYMENT_NOT_CAPTURED = (
+            "paypal_payment_not_captured",
+            _("PayPal Payment Not Captured"),
+        )
+
     transaction = models.ForeignKey(
         SupportTransaction, on_delete=models.CASCADE, related_name="payment_logs"
     )
@@ -102,6 +116,7 @@ class Withdrawal(models.Model):
         ESEWA = "esewa", _("eSewa")
         KHALTI = "khalti", _("Khalti")
         STRIPE = "stripe", _("Stripe")
+        PAYPAL = "paypal", _("PayPal")
 
     class Status(models.TextChoices):
         PENDING = "pending", _("Pending")
