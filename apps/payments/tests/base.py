@@ -7,6 +7,7 @@ from django.utils import timezone
 
 from apps.accounts.models import KYC
 from apps.creators.models import CreatorProfile
+from apps.payments.enums import PaymentMethods, SupportTransactionStatus, WithdrawalStatus
 from apps.payments.models import SupportTransaction, Withdrawal
 
 User = get_user_model()
@@ -49,14 +50,14 @@ class BasePaymentsTestCase(TestCase):
         cls,
         creator_profile,
         amount=Decimal("100"),
-        payment_status=SupportTransaction.Status.COMPLETED,
+        payment_status=SupportTransactionStatus.COMPLETED,
     ):
         txn = SupportTransaction.objects.create(
             creator=creator_profile,
             supporter_name="Test Supporter",
             amount=amount,
             message="Test message",
-            payment_method=SupportTransaction.Methods.ESEWA,
+            payment_method=PaymentMethods.ESEWA,
             payment_status=payment_status,
             transaction_id=f"test_txn_{uuid4().hex[:8]}",
         )
@@ -67,8 +68,8 @@ class BasePaymentsTestCase(TestCase):
         cls,
         creator_profile,
         amount=Decimal("100"),
-        status=Withdrawal.Status.PENDING,
-        payment_method=Withdrawal.Methods.BANK,
+        status=WithdrawalStatus.PENDING,
+        payment_method=PaymentMethods.BANK,
     ):
         """Create test withdrawal with Decimal precision"""
         withdrawal = Withdrawal.objects.create(
@@ -78,7 +79,7 @@ class BasePaymentsTestCase(TestCase):
             account_details=f"Test {payment_method}: {uuid4().hex[:8]}",
             status=status,
         )
-        if status == Withdrawal.Status.PROCESSED:
+        if status == WithdrawalStatus.PROCESSED:
             withdrawal.processed_at = timezone.now()
             withdrawal.save(update_fields=["processed_at"])
         return withdrawal

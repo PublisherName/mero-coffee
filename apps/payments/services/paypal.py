@@ -24,6 +24,7 @@ from paypalserversdk.paypal_serversdk_client import PaypalServersdkClient
 
 from apps.emails.models import EmailTemplate
 from apps.emails.services import EmailService
+from apps.payments.enums import PaymentLogStatus, PaymentMethods, SupportTransactionStatus
 from apps.payments.models import PaymentGateway, PaymentLog, SupportTransaction
 from apps.payments.services.exceptions import (
     PayPalCaptureError,
@@ -166,7 +167,7 @@ class PayPalStrategy(PaymentStrategy):
     ) -> PaymentLog:
         return PaymentLog.objects.create(
             transaction=transaction,
-            gateway=PaymentLog.Gateways.PAYPAL,
+            payment_method=PaymentMethods.PAYPAL,
             request_payload=request_payload,
             response_payload=response_payload,
             status=status,
@@ -199,14 +200,14 @@ class PayPalStrategy(PaymentStrategy):
     def _mark_transaction_completed(
         transaction: SupportTransaction, token: str, order, capture_result
     ) -> None:
-        if transaction.payment_status == SupportTransaction.Status.COMPLETED:
+        if transaction.payment_status == SupportTransactionStatus.COMPLETED:
             logger.info(
                 f"Transaction {transaction.transaction_id} already completed",
                 extra={"transaction_id": transaction.transaction_id},
             )
             return
 
-        transaction.payment_status = SupportTransaction.Status.COMPLETED
+        transaction.payment_status = SupportTransactionStatus.COMPLETED
         transaction.save(update_fields=["payment_status"])
 
         capture_id, captured_amount = PayPalStrategy._extract_capture_details(capture_result)
@@ -219,13 +220,13 @@ class PayPalStrategy(PaymentStrategy):
         }
 
         existing_log = PaymentLog.objects.filter(
-            transaction=transaction, status=PaymentLog.Status.PAYPAL_PAYMENT_CAPTURED
+            transaction=transaction, status=PaymentLogStatus.PAYPAL_PAYMENT_CAPTURED
         ).exists()
 
         if not existing_log:
             PayPalStrategy._create_payment_log(
                 transaction=transaction,
-                status=PaymentLog.Status.PAYPAL_PAYMENT_CAPTURED,
+                status=PaymentLogStatus.PAYPAL_PAYMENT_CAPTURED,
                 request_payload={"token": token},
                 response_payload=safe_payload,
             )
@@ -244,14 +245,14 @@ class PayPalStrategy(PaymentStrategy):
         error_response,
         reason: str = "capture_failed",
     ) -> None:
-        if transaction.payment_status == SupportTransaction.Status.FAILED:
+        if transaction.payment_status == SupportTransactionStatus.FAILED:
             logger.info(
                 f"Transaction {transaction.transaction_id} already marked as failed",
                 extra={"transaction_id": transaction.transaction_id},
             )
             return
 
-        transaction.payment_status = SupportTransaction.Status.FAILED
+        transaction.payment_status = SupportTransactionStatus.FAILED
         transaction.save(update_fields=["payment_status"])
 
         safe_payload = {
@@ -264,9 +265,9 @@ class PayPalStrategy(PaymentStrategy):
         }
 
         status = (
-            PaymentLog.Status.PAYPAL_PAYMENT_NOT_CAPTURED
+            PaymentLogStatus.PAYPAL_PAYMENT_NOT_CAPTURED
             if reason == "capture_failed"
-            else PaymentLog.Status.CANCELLED
+            else PaymentLogStatus.CANCELLED
         )
 
         PayPalStrategy._create_payment_log(
@@ -284,7 +285,7 @@ class PayPalStrategy(PaymentStrategy):
         transaction: SupportTransaction,
         gateway: PaymentGateway,
     ) -> Tuple[str, Dict[str, Any]]:
-        if transaction.payment_status == SupportTransaction.Status.COMPLETED:
+        if transaction.payment_status == SupportTransactionStatus.COMPLETED:
             logger.info(
                 f"Transaction {transaction.transaction_id} already completed, skipping capture",
                 extra={"transaction_id": transaction.transaction_id, "token": token},
@@ -297,7 +298,7 @@ class PayPalStrategy(PaymentStrategy):
 
         order_status = order.status if hasattr(order, "status") else None
 
-        if order_status == "COMPLETED":
+        if order_status == SupportTransactionStatus.COMPLETED.upper():
             logger.info(
                 f"PayPal order {token} already captured, updating transaction status",
                 extra={"token": token, "transaction_id": transaction.transaction_id},
@@ -341,7 +342,10 @@ class PayPalStrategy(PaymentStrategy):
 
                 updated_order = PayPalStrategy._fetch_paypal_order(client, token)
 
-                if hasattr(updated_order, "status") and updated_order.status == "COMPLETED":
+                if (
+                    hasattr(updated_order, "status")
+                    and updated_order.status == SupportTransactionStatus.COMPLETED.upper()
+                ):
                     PayPalStrategy._mark_transaction_completed(
                         transaction, token, updated_order, updated_order
                     )
@@ -364,7 +368,7 @@ class PayPalStrategy(PaymentStrategy):
     @classmethod
     def get_payment_context(cls, transaction: SupportTransaction, request=None) -> Dict[str, Any]:
         try:
-            gateway = PaymentGateway.objects.get(slug="paypal")
+            gateway = PaymentGateway.objects.get(slug=PaymentMethods.PAYPAL)
         except PaymentGateway.DoesNotExist:
             logger.error("PayPal gateway not configured")
             return {
@@ -429,7 +433,7 @@ class PayPalStrategy(PaymentStrategy):
 
                 cls._create_payment_log(
                     transaction=transaction,
-                    status=PaymentLog.Status.PAYPAL_ORDER_CREATED,
+                    status=PaymentLogStatus.PAYPAL_ORDER_CREATED,
                     request_payload={
                         "amount": transaction.amount,
                         "currency": "USD",
@@ -455,7 +459,7 @@ class PayPalStrategy(PaymentStrategy):
 
                 cls._create_payment_log(
                     transaction=transaction,
-                    status=PaymentLog.Status.PAYPAL_ORDER_CREATION_FAILED,
+                    status=PaymentLogStatus.PAYPAL_ORDER_CREATION_FAILED,
                     request_payload={
                         "amount": transaction.amount,
                         "transaction_id": transaction.transaction_id,
@@ -479,7 +483,7 @@ class PayPalStrategy(PaymentStrategy):
 
             cls._create_payment_log(
                 transaction=transaction,
-                status=PaymentLog.Status.PAYPAL_ORDER_CREATION_FAILED,
+                status=PaymentLogStatus.PAYPAL_ORDER_CREATION_FAILED,
                 request_payload={
                     "amount": transaction.amount,
                     "transaction_id": transaction.transaction_id,
@@ -495,7 +499,7 @@ class PayPalStrategy(PaymentStrategy):
     @staticmethod
     def handle_success(token: str) -> Tuple[str, Dict[str, Any]]:
         try:
-            gateway = PaymentGateway.objects.get(slug="paypal")
+            gateway = PaymentGateway.objects.get(slug=PaymentMethods.PAYPAL)
         except PaymentGateway.DoesNotExist:
             logger.error("PayPal gateway not configured")
             return "payment_failed.html", {
@@ -538,7 +542,7 @@ class PayPalStrategy(PaymentStrategy):
         context = {"error": "Payment was cancelled"}
 
         try:
-            gateway = PaymentGateway.objects.get(slug="paypal")
+            gateway = PaymentGateway.objects.get(slug=PaymentMethods.PAYPAL)
         except PaymentGateway.DoesNotExist:
             logger.error("PayPal gateway not configured")
             return "payment_failed.html", context

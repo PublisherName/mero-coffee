@@ -12,6 +12,7 @@ from apps.accounts.decorators import role_required
 from apps.accounts.forms import KYCForm
 from apps.accounts.models import KYC
 from apps.creators.models import CreatorProfile
+from apps.payments.enums import SupportTransactionStatus, WithdrawalStatus
 from apps.payments.forms import WithdrawalForm
 from apps.payments.models import SupportTransaction, Withdrawal
 
@@ -67,7 +68,7 @@ def earnings(request):
     creator_profile = CreatorProfile.objects.get(user=request.user)
 
     completed_transactions = SupportTransaction.objects.filter(
-        creator=creator_profile, payment_status=SupportTransaction.Status.COMPLETED
+        creator=creator_profile, payment_status=SupportTransactionStatus.COMPLETED
     )
 
     total_earnings = completed_transactions.aggregate(total=models.Sum("amount"))["total"] or 0
@@ -83,7 +84,7 @@ def earnings(request):
 
     processed_withdrawals = (
         Withdrawal.objects.filter(
-            creator=creator_profile, status=Withdrawal.Status.PROCESSED
+            creator=creator_profile, status=WithdrawalStatus.PROCESSED
         ).aggregate(total=models.Sum("amount"))["total"]
         or 0
     )
@@ -158,7 +159,7 @@ def withdrawal(request):
 def supporters(request):
     creator_profile = CreatorProfile.objects.get(user=request.user)
     recent_supporters = SupportTransaction.objects.filter(
-        creator=creator_profile, payment_status=SupportTransaction.Status.COMPLETED
+        creator=creator_profile, payment_status=SupportTransactionStatus.COMPLETED
     ).order_by("-created_at")[:25]
 
     context = {

@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.payments.services.factory import PaymentFactory
 
+from .enums import PaymentMethods, SupportTransactionStatus
 from .models import PaymentGateway, SupportTransaction
 
 logger = logging.getLogger(__name__)
@@ -20,11 +21,11 @@ def checkout(request, transaction_id):
         )
         return redirect("core:homepage")
 
-    if transaction.payment_status == SupportTransaction.Status.COMPLETED:
+    if transaction.payment_status == SupportTransactionStatus.COMPLETED:
         messages.success(request, "This payment has already been completed.")
         return redirect("core:homepage")
 
-    if transaction.payment_status == SupportTransaction.Status.FAILED:
+    if transaction.payment_status == SupportTransactionStatus.FAILED:
         messages.warning(request, "This payment failed. Please try again with a new transaction.")
         return redirect("core:homepage")
 
@@ -82,7 +83,9 @@ def esewa_success(request):
             request, "payment_failed.html", {"error": f"eSewa Error: {data.get('error_message')}"}
         )
 
-    transaction, gateway, tx_error = strategy.get_transaction_and_gateway(data, gateway="esewa")
+    transaction, gateway, tx_error = strategy.get_transaction_and_gateway(
+        data, gateway=PaymentMethods.ESEWA
+    )
     if tx_error:
         return render(request, "payment_failed.html", {"error": tx_error})
 

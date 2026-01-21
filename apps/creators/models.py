@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.db.models import Sum
 
+from apps.payments.enums import SupportTransactionStatus, WithdrawalStatus
 from apps.payments.models import SupportTransaction, Withdrawal
 
 from .managers import CreatorProfileManager
@@ -48,19 +49,19 @@ class CreatorProfile(models.Model):
     @property
     def total_earnings(self):
         completed = SupportTransaction.objects.filter(
-            creator=self, payment_status=SupportTransaction.Status.COMPLETED
+            creator=self, payment_status=SupportTransactionStatus.COMPLETED
         )
         return completed.aggregate(total=Sum("amount"))["total"] or Decimal("0")
 
     @property
     def pending_balance(self):
-        pending_balance = Withdrawal.objects.filter(creator=self, status=Withdrawal.Status.PENDING)
+        pending_balance = Withdrawal.objects.filter(creator=self, status=WithdrawalStatus.PENDING)
         return pending_balance.aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
 
     @property
     def withdrawn_balance(self):
         withdrawn_balance = Withdrawal.objects.filter(
-            creator=self, status=Withdrawal.Status.PROCESSED
+            creator=self, status=WithdrawalStatus.PROCESSED
         )
         return withdrawn_balance.aggregate(total=models.Sum("amount"))["total"] or Decimal("0")
 

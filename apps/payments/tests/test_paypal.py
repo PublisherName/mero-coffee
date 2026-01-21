@@ -4,6 +4,7 @@ from unittest.mock import MagicMock, patch
 from django.test import RequestFactory
 
 from apps.emails.models import EmailTemplate
+from apps.payments.enums import PaymentLogStatus, PaymentMethods, SupportTransactionStatus
 from apps.payments.models import PaymentGateway, PaymentLog, SupportTransaction
 from apps.payments.services.exceptions import (
     PayPalCaptureError,
@@ -24,7 +25,7 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
         super().setUpClass()
         cls.gateway = PaymentGateway.objects.create(
             name="PayPal",
-            slug="paypal",
+            slug=PaymentMethods.PAYPAL,
             merchant_id="test_client_id",
             secret_key="test_client_secret",
             is_active=True,
@@ -47,8 +48,8 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
             "supporter_name": "Test Supporter",
             "amount": 100,
             "message": "Test message",
-            "payment_method": SupportTransaction.Methods.PAYPAL,
-            "payment_status": SupportTransaction.Status.PENDING,
+            "payment_method": PaymentMethods.PAYPAL,
+            "payment_status": SupportTransactionStatus.PENDING,
             "transaction_id": f"test_txn_{uuid.uuid4().hex[:8]}",
         }
         defaults.update(overrides)
@@ -218,14 +219,14 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
 
         log = PayPalStrategy._create_payment_log(
             transaction=transaction,
-            status=PaymentLog.Status.PAYPAL_ORDER_CREATED,
+            status=PaymentLogStatus.PAYPAL_ORDER_CREATED,
             request_payload=request_payload,
             response_payload=response_payload,
         )
 
         self.assertEqual(log.transaction, transaction)
-        self.assertEqual(log.gateway, PaymentLog.Gateways.PAYPAL)
-        self.assertEqual(log.status, PaymentLog.Status.PAYPAL_ORDER_CREATED)
+        self.assertEqual(log.payment_method, PaymentMethods.PAYPAL)
+        self.assertEqual(log.status, PaymentLogStatus.PAYPAL_ORDER_CREATED)
         self.assertEqual(log.request_payload, request_payload)
         self.assertEqual(log.response_payload, response_payload)
 
@@ -250,7 +251,7 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
 
     def test_mark_transaction_completed_already_completed(self):
         transaction = self.create_test_transaction(
-            payment_status=SupportTransaction.Status.COMPLETED
+            payment_status=SupportTransactionStatus.COMPLETED
         )
         mock_order = self.create_mock_paypal_order()
         mock_capture_result = self.create_mock_capture_result()
@@ -260,10 +261,10 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
         )
 
         transaction.refresh_from_db()
-        self.assertEqual(transaction.payment_status, SupportTransaction.Status.COMPLETED)
+        self.assertEqual(transaction.payment_status, SupportTransactionStatus.COMPLETED)
 
         logs_count = PaymentLog.objects.filter(
-            transaction=transaction, status=PaymentLog.Status.PAYPAL_PAYMENT_CAPTURED
+            transaction=transaction, status=PaymentLogStatus.PAYPAL_PAYMENT_CAPTURED
         ).count()
         self.assertEqual(logs_count, 0, "Should not create duplicate payment log")
 
@@ -281,11 +282,11 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
         )
 
         transaction.refresh_from_db()
-        self.assertEqual(transaction.payment_status, SupportTransaction.Status.COMPLETED)
+        self.assertEqual(transaction.payment_status, SupportTransactionStatus.COMPLETED)
 
         mock_create_log.assert_called_once()
         call_args = mock_create_log.call_args
-        self.assertEqual(call_args[1]["status"], PaymentLog.Status.PAYPAL_PAYMENT_CAPTURED)
+        self.assertEqual(call_args[1]["status"], PaymentLogStatus.PAYPAL_PAYMENT_CAPTURED)
         self.assertEqual(call_args[1]["request_payload"], {"token": "token"})
 
         response_payload = call_args[1]["response_payload"]
@@ -297,9 +298,9 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
 
     def test_mark_transaction_failed_scenarios(self):
         test_cases = [
-            ("already_failed", SupportTransaction.Status.FAILED, "FAILED", None, 0),
-            ("capture_failed", SupportTransaction.Status.PENDING, "FAILED", "capture_failed", 1),
-            ("cancelled", SupportTransaction.Status.PENDING, "CANCELLED", "cancelled", 1),
+            ("already_failed", SupportTransactionStatus.FAILED, "FAILED", None, 0),
+            ("capture_failed", SupportTransactionStatus.PENDING, "FAILED", "capture_failed", 1),
+            ("cancelled", SupportTransactionStatus.PENDING, "CANCELLED", "cancelled", 1),
         ]
 
         for name, initial_status, order_status, reason, expected_log_count in test_cases:
@@ -316,7 +317,7 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
                 transaction.refresh_from_db()
                 self.assertEqual(
                     transaction.payment_status,
-                    SupportTransaction.Status.FAILED,
+                    SupportTransactionStatus.FAILED,
                     f"Transaction should be marked as FAILED for scenario: {name}",
                 )
 
@@ -330,14 +331,14 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
                 if expected_log_count > 0:
                     log = PaymentLog.objects.get(transaction=transaction)
                     if reason == "cancelled":
-                        self.assertEqual(log.status, PaymentLog.Status.CANCELLED)
+                        self.assertEqual(log.status, PaymentLogStatus.CANCELLED)
                     elif reason == "capture_failed":
-                        self.assertEqual(log.status, PaymentLog.Status.PAYPAL_PAYMENT_NOT_CAPTURED)
+                        self.assertEqual(log.status, PaymentLogStatus.PAYPAL_PAYMENT_NOT_CAPTURED)
 
     @patch(f"{PAYPAL_STRATEGY_BASE}._mark_transaction_completed")
     def test_capture_payment_already_completed(self, mock_mark_completed):
         transaction = self.create_test_transaction(
-            payment_status=SupportTransaction.Status.COMPLETED
+            payment_status=SupportTransactionStatus.COMPLETED
         )
         mock_client = MagicMock()
         mock_order = self.create_mock_paypal_order()
@@ -480,7 +481,7 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
 
         mock_create_log.assert_called_once()
         call_args = mock_create_log.call_args
-        self.assertEqual(call_args[1]["status"], PaymentLog.Status.PAYPAL_ORDER_CREATED)
+        self.assertEqual(call_args[1]["status"], PaymentLogStatus.PAYPAL_ORDER_CREATED)
 
     @patch(f"{PAYPAL_STRATEGY_BASE}._get_client")
     @patch(f"{PAYPAL_STRATEGY_BASE}._create_payment_log")
@@ -503,7 +504,7 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
 
     @patch(f"{PAYPAL_STRATEGY_BASE}._get_client")
     def test_handle_success_gateway_not_found(self, mock_get_client):
-        PaymentGateway.objects.filter(slug="paypal").delete()
+        PaymentGateway.objects.filter(slug=PaymentMethods.PAYPAL).delete()
 
         result_template, context = PayPalStrategy.handle_success("test_token")
 
@@ -512,7 +513,7 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
 
         self.gateway = PaymentGateway.objects.create(
             name="PayPal",
-            slug="paypal",
+            slug=PaymentMethods.PAYPAL,
             merchant_id="test_client_id",
             secret_key="test_client_secret",
             is_active=True,
@@ -595,7 +596,7 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
 
     @patch(f"{PAYPAL_STRATEGY_BASE}._get_client")
     def test_handle_cancel_gateway_not_found(self, mock_get_client):
-        PaymentGateway.objects.filter(slug="paypal").delete()
+        PaymentGateway.objects.filter(slug=PaymentMethods.PAYPAL).delete()
 
         result_template, context = PayPalStrategy.handle_cancel("test_token")
 
@@ -604,7 +605,7 @@ class PayPalPaymentTestCase(BasePaymentsTestCase):
 
         self.gateway = PaymentGateway.objects.create(
             name="PayPal",
-            slug="paypal",
+            slug=PaymentMethods.PAYPAL,
             merchant_id="test_client_id",
             secret_key="test_client_secret",
             is_active=True,

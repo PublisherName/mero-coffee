@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.test import override_settings
 from django.urls import reverse
 
+from apps.payments.enums import PaymentMethods, WithdrawalStatus
 from apps.payments.models import Withdrawal
 
 from .base import BasePaymentsTestCase
@@ -37,10 +38,8 @@ class WithdrawalViewTests(BasePaymentsTestCase):
 
     def test_get_withdrawal_page_with_existing_withdrawals(self):
         """Test GET request shows existing withdrawals"""
-        self.create_withdrawal(self.creator_profile, amount=100, status=Withdrawal.Status.PENDING)
-        self.create_withdrawal(
-            self.creator_profile, amount=200, status=Withdrawal.Status.PROCESSED
-        )
+        self.create_withdrawal(self.creator_profile, amount=100, status=WithdrawalStatus.PENDING)
+        self.create_withdrawal(self.creator_profile, amount=200, status=WithdrawalStatus.PROCESSED)
 
         response = self.client.get(self.withdrawal_url)
 
@@ -56,7 +55,7 @@ class WithdrawalViewTests(BasePaymentsTestCase):
         """Test successful withdrawal submission"""
         form_data = {
             "amount": 200,
-            "payment_method": Withdrawal.Methods.BANK,
+            "payment_method": PaymentMethods.BANK,
             "account_details": "Bank account: 1234567890",
         }
 
@@ -68,15 +67,15 @@ class WithdrawalViewTests(BasePaymentsTestCase):
 
         withdrawal = Withdrawal.objects.get(creator=self.creator_profile)
         self.assertEqual(withdrawal.amount, 200)
-        self.assertEqual(withdrawal.payment_method, Withdrawal.Methods.BANK)
+        self.assertEqual(withdrawal.payment_method, PaymentMethods.BANK)
         self.assertEqual(withdrawal.account_details, "Bank account: 1234567890")
-        self.assertEqual(withdrawal.status, Withdrawal.Status.PENDING)
+        self.assertEqual(withdrawal.status, WithdrawalStatus.PENDING)
 
     def test_post_withdrawal_form_invalid(self):
         """Test withdrawal submission with invalid form data"""
         form_data = {
             "amount": 600,
-            "payment_method": Withdrawal.Methods.BANK,
+            "payment_method": PaymentMethods.BANK,
             "account_details": "Bank account: 1234567890",
         }
 
@@ -97,7 +96,7 @@ class WithdrawalViewTests(BasePaymentsTestCase):
 
         form_data = {
             "amount": 200,
-            "payment_method": Withdrawal.Methods.BANK,
+            "payment_method": PaymentMethods.BANK,
             "account_details": "Bank account: 1234567890",
         }
 
@@ -116,7 +115,7 @@ class WithdrawalViewTests(BasePaymentsTestCase):
 
         form_data = {
             "amount": 200,
-            "payment_method": Withdrawal.Methods.BANK,
+            "payment_method": PaymentMethods.BANK,
             "account_details": "Bank account: 1234567890",
         }
 

@@ -9,6 +9,7 @@ from django.shortcuts import redirect, render
 from apps.accounts.decorators import role_required
 from apps.accounts.models import User
 from apps.dashboard.views import get_kyc_context
+from apps.payments.enums import SupportTransactionStatus
 from apps.payments.models import PaymentGateway, SupportTransaction
 
 from .forms import BuyCoffeeForm, CreatorProfileForm
@@ -51,7 +52,7 @@ def profile(request, username):
     coffee_price = max(creator.coffee_price, settings.MINIMUM_DONATION_AMOUNT)
 
     recent_supporters = SupportTransaction.objects.filter(
-        creator=creator, payment_status=SupportTransaction.Status.COMPLETED
+        creator=creator, payment_status=SupportTransactionStatus.COMPLETED
     ).order_by("-created_at")[:5]
 
     context = {

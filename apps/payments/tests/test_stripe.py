@@ -1,6 +1,7 @@
 from unittest.mock import MagicMock, patch
 
 from apps.emails.models import EmailTemplate
+from apps.payments.enums import PaymentLogStatus, PaymentMethods, SupportTransactionStatus
 from apps.payments.models import PaymentGateway, PaymentLog, SupportTransaction
 from apps.payments.services.stripe import StripeStrategy
 from apps.payments.tests.base import BasePaymentsTestCase
@@ -30,8 +31,8 @@ class StripePaymentTestCase(BasePaymentsTestCase):
             supporter_name="Test Supporter",
             amount=100,
             message="Test message",
-            payment_method=SupportTransaction.Methods.STRIPE,
-            payment_status=SupportTransaction.Status.PENDING,
+            payment_method=PaymentMethods.STRIPE,
+            payment_status=SupportTransactionStatus.PENDING,
             transaction_id="test_txn_stripe_123",
         )
 
@@ -51,12 +52,12 @@ class StripePaymentTestCase(BasePaymentsTestCase):
         _result = StripeStrategy.handle_success("cs_test_123")
 
         transaction.refresh_from_db()
-        self.assertEqual(transaction.payment_status, SupportTransaction.Status.COMPLETED)
+        self.assertEqual(transaction.payment_status, SupportTransactionStatus.COMPLETED)
 
         payment_log = PaymentLog.objects.filter(
             transaction=transaction,
-            gateway=PaymentLog.Gateways.STRIPE,
-            status=PaymentLog.Status.COMPLETED,
+            payment_method=PaymentMethods.STRIPE,
+            status=PaymentLogStatus.COMPLETED,
         ).exists()
         self.assertTrue(payment_log)
 
@@ -103,8 +104,8 @@ class StripePaymentTestCase(BasePaymentsTestCase):
             supporter_name="Test Supporter",
             amount=100,
             message="Test message",
-            payment_method=SupportTransaction.Methods.STRIPE,
-            payment_status=SupportTransaction.Status.PENDING,
+            payment_method=PaymentMethods.STRIPE,
+            payment_status=SupportTransactionStatus.PENDING,
             transaction_id="test_txn_stripe_456",
         )
 

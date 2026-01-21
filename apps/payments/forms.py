@@ -1,6 +1,7 @@
 from django import forms
 from django.conf import settings
 
+from apps.payments.enums import WithdrawalStatus
 from apps.payments.models import Withdrawal
 from apps.payments.schemas import WithdrawalSchema
 from root.forms.pydantic_mixins import PydanticValidationMixin
@@ -63,7 +64,7 @@ class WithdrawalForm(PydanticValidationMixin, forms.ModelForm):
 
     def _has_pending_transaction(self):
         pending_count = self.creator_profile.withdrawals.filter(
-            status=Withdrawal.Status.PENDING
+            status=WithdrawalStatus.PENDING
         ).count()
         if pending_count > 0:
             raise forms.ValidationError(
@@ -99,6 +100,6 @@ class WithdrawalForm(PydanticValidationMixin, forms.ModelForm):
             amount=self.cleaned_data["amount"],
             account_details=self.cleaned_data["account_details"],
             payment_method=self.cleaned_data["payment_method"],
-            status="pending",
+            status=WithdrawalStatus.PENDING,
         )
         return withdrawal

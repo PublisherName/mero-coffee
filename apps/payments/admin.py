@@ -2,6 +2,7 @@ from time import timezone
 
 from django.contrib import admin
 
+from apps.payments.enums import WithdrawalStatus
 from apps.payments.models import (
     Membership,
     PaymentGateway,
@@ -41,8 +42,8 @@ class SupportTransactionAdmin(admin.ModelAdmin):
 
 @admin.register(PaymentLog)
 class PaymentLogAdmin(admin.ModelAdmin):
-    list_display = ("transaction", "gateway", "status", "timestamp")
-    list_filter = ("gateway", "status", "timestamp")
+    list_display = ("transaction", "payment_method", "status", "timestamp")
+    list_filter = ("payment_method", "status", "timestamp")
     search_fields = ("transaction__transaction_id",)
 
 
@@ -85,12 +86,12 @@ class WithdrawalAdmin(admin.ModelAdmin):
 
     @admin.action(description="Mark selected withdrawals as processed")
     def mark_processed(self, request, queryset):
-        updated = queryset.update(status=Withdrawal.Status.PROCESSED, processed_at=timezone.now())
+        updated = queryset.update(status=WithdrawalStatus.PROCESSED, processed_at=timezone.now())
         self.message_user(request, f"{updated} withdrawal(s) marked as processed.")
 
     @admin.action(description="Mark selected withdrawals as rejected")
     def mark_rejected(self, request, queryset):
-        updated = queryset.update(status=Withdrawal.Status.REJECTED)
+        updated = queryset.update(status=WithdrawalStatus.REJECTED)
         self.message_user(request, f"{updated} withdrawal(s) marked as rejected.")
 
 

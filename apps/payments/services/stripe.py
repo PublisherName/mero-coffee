@@ -9,6 +9,7 @@ from django.urls import reverse
 
 from apps.emails.models import EmailTemplate
 from apps.emails.services import EmailService
+from apps.payments.enums import PaymentLogStatus, PaymentMethods, SupportTransactionStatus
 from apps.payments.models import PaymentGateway, PaymentLog, SupportTransaction
 from apps.payments.services.strategy import PaymentStrategy
 
@@ -61,14 +62,14 @@ class StripeStrategy(PaymentStrategy):
 
             PaymentLog.objects.create(
                 transaction=transaction,
-                gateway=PaymentLog.Gateways.STRIPE,
+                payment_method=PaymentMethods.STRIPE,
                 request_payload={
                     "amount": transaction.amount,
                     "currency": "npr",
                     "transaction_id": transaction.transaction_id,
                 },
                 response_payload={"session_id": session.id},
-                status=PaymentLog.Status.SESSION_CREATED,
+                status=PaymentLogStatus.SESSION_CREATED,
             )
 
             return {
@@ -83,13 +84,13 @@ class StripeStrategy(PaymentStrategy):
 
             PaymentLog.objects.create(
                 transaction=transaction,
-                gateway=PaymentLog.Gateways.STRIPE,
+                payment_method=PaymentMethods.STRIPE,
                 request_payload={
                     "amount": transaction.amount,
                     "transaction_id": transaction.transaction_id,
                 },
                 response_payload={"error": str(e)},
-                status=PaymentLog.Status.SESSION_CREATION_FAILED,
+                status=PaymentLogStatus.SESSION_CREATION_FAILED,
             )
 
             return {
@@ -122,12 +123,12 @@ class StripeStrategy(PaymentStrategy):
                     and session.payment_intent
                     and stripe.PaymentIntent.retrieve(session.payment_intent).status == "succeeded"
                 ):
-                    if transaction.payment_status == transaction.Status.COMPLETED:
+                    if transaction.payment_status == SupportTransactionStatus.COMPLETED:
                         pass
                     else:
                         # TODO: Update this to webhooks (after access to stripe dashboard)
 
-                        transaction.payment_status = SupportTransaction.Status.COMPLETED
+                        transaction.payment_status = SupportTransactionStatus.COMPLETED
                         transaction.save()
 
                         safe_payload = {
@@ -138,10 +139,10 @@ class StripeStrategy(PaymentStrategy):
 
                         PaymentLog.objects.create(
                             transaction=transaction,
-                            gateway=PaymentLog.Gateways.STRIPE,
+                            payment_method=PaymentMethods.STRIPE,
                             request_payload={"session_id": session_id},
                             response_payload=safe_payload,
-                            status=PaymentLog.Status.COMPLETED,
+                            status=PaymentLogStatus.COMPLETED,
                         )
 
                         # Send email to creator
@@ -179,8 +180,8 @@ class StripeStrategy(PaymentStrategy):
                         "payment_data": {"session_id": session_id},
                     }
                 else:
-                    if transaction.payment_status != transaction.Status.FAILED:
-                        transaction.payment_status = transaction.Status.FAILED
+                    if transaction.payment_status != SupportTransactionStatus.FAILED:
+                        transaction.payment_status = SupportTransactionStatus.FAILED
                         transaction.save()
 
                         safe_payload = {
@@ -191,10 +192,10 @@ class StripeStrategy(PaymentStrategy):
 
                         PaymentLog.objects.create(
                             transaction=transaction,
-                            gateway=PaymentLog.Gateways.STRIPE,
+                            payment_method=PaymentMethods.STRIPE,
                             request_payload={"session_id": session_id},
                             response_payload=safe_payload,
-                            status=PaymentLog.Status.PAYMENT_NOT_COMPLETED,
+                            status=PaymentLogStatus.PAYMENT_NOT_COMPLETED,
                         )
 
                     return "payment_failed.html", {
@@ -238,9 +239,9 @@ class StripeStrategy(PaymentStrategy):
 
                     if (
                         transaction
-                        and transaction.payment_status != SupportTransaction.Status.FAILED
+                        and transaction.payment_status != SupportTransactionStatus.FAILED
                     ):
-                        transaction.payment_status = SupportTransaction.Status.FAILED
+                        transaction.payment_status = SupportTransactionStatus.FAILED
                         transaction.save()
 
                         safe_payload = {
@@ -251,10 +252,10 @@ class StripeStrategy(PaymentStrategy):
 
                         PaymentLog.objects.create(
                             transaction=transaction,
-                            gateway=PaymentLog.Gateways.STRIPE,
+                            payment_method=PaymentMethods.STRIPE,
                             request_payload={"session_id": session_id},
                             response_payload=safe_payload,
-                            status=PaymentLog.Status.CANCELLED,
+                            status=PaymentLogStatus.CANCELLED,
                         )
 
                         context["transaction"] = transaction
