@@ -53,6 +53,13 @@ class SupportTransaction(models.Model):
     def __str__(self):
         return f"{self.supporter_name} -> {self.creator} - Rs.{self.amount}"
 
+    class Meta:
+        indexes = [
+            models.Index(fields=["payment_status", "created_at"]),
+            models.Index(fields=["payment_status", "supporter_name"]),
+            models.Index(fields=["creator", "payment_status"]),
+        ]
+
 
 class PaymentLog(models.Model):
     class Gateways(models.TextChoices):
