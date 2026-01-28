@@ -9,5 +9,6 @@ else
     uv run manage.py loaddata fixtures/nepal_cities_light.json
     uv run manage.py seed_payment_gateways
     uv run manage.py seed_email_templates
+    uv run manage.py setup_roles
     uv run manage.py tailwind dev
 fi

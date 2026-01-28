@@ -20,6 +20,7 @@ class BaseTestCase(TestCase):
             password=self.user_password,
             is_active=True,
             is_verified=is_verified,
+            role=User.Roles.CREATOR,
         )
 
     @staticmethod

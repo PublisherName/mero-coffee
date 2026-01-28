@@ -1,8 +1,50 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .models import KYC
+from .models import KYC, User
+
+
+@admin.register(User)
+class UserAdmin(BaseUserAdmin):
+    list_display = ("username", "email", "role", "is_verified", "is_active", "date_joined")
+    list_filter = ("role", "is_verified", "is_active", "is_staff", "date_joined")
+    search_fields = ("username", "email", "first_name", "last_name")
+    ordering = ("-date_joined",)
+
+    fieldsets = BaseUserAdmin.fieldsets + (
+        ("Additional Info", {"fields": ("role", "is_verified")}),
+    )
+
+    add_fieldsets = (
+        (None, {"fields": ("username", "usable_password", "password1", "password2")}),
+        ("Personal Information", {"fields": ("email", "first_name", "last_name")}),
+        (
+            "Permission",
+            {
+                "fields": (
+                    "role",
+                    "is_verified",
+                    "is_active",
+                )
+            },
+        ),
+    )
+
+    def save_model(self, request, obj, form, change):
+        """Ensure role permissions are properly assigned when user is saved via admin."""
+        from apps.accounts.signals.roles import assign_user_group, get_expected_flags
+
+        super().save_model(request, obj, form, change)
+
+        expected_staff, expected_superuser = get_expected_flags(obj.role)
+        if obj.is_staff != expected_staff or obj.is_superuser != expected_superuser:
+            obj.is_staff = expected_staff
+            obj.is_superuser = expected_superuser
+            super().save_model(request, obj, form, change)
+
+        assign_user_group(obj)
 
 
 @admin.register(KYC)

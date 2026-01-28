@@ -10,7 +10,7 @@ def role_required(*roles):
         def wrapper(request, *args, **kwargs):
             if not request.user.is_authenticated:
                 return redirect("accounts:login")
-            if request.user.role not in roles:
+            if not request.user.is_superuser and request.user.role not in roles:
                 messages.error(request, "You don't have permission to access this page.")
                 return redirect("core:homepage")
             return view_func(request, *args, **kwargs)

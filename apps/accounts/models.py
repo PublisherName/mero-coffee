@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+from apps.accounts.managers import UserManager
 from root.storage import PrivateMediaStorage
 
 from .enums import VerificationDocumentType
@@ -11,9 +12,14 @@ from .enums import VerificationDocumentType
 
 class User(AbstractUser):
     class Roles(models.TextChoices):
+        SUPER_ADMIN = "super_admin", _("Super Admin")
+        ADMIN = "admin", _("Admin")
+
+        MERCHANT = "merchant", _("Merchant")
+        SUPPORT = "support", _("Support")
+
         CREATOR = "creator", _("Creator")
         SUPPORTER = "supporter", _("Supporter")
-        ADMIN = "admin", _("Admin")
 
     email = models.EmailField(_("email address"), unique=True)
     role = models.CharField(max_length=20, choices=Roles.choices, default=Roles.CREATOR)
@@ -37,6 +43,8 @@ class User(AbstractUser):
         verbose_name=_("user permissions"),
     )
 
+    objects = UserManager()
+
     def save(self, *args, **kwargs):
         if self.username:
             self.username = self.username.lower()
@@ -47,9 +55,6 @@ class User(AbstractUser):
         if self.last_name:
             self.last_name = self.last_name.strip().title()
 
-        if self.is_superuser and self.role != self.Roles.ADMIN:
-            self.role = self.Roles.ADMIN
-            self.is_verified = True
         super().save(*args, **kwargs)
 
     def __str__(self):
