@@ -55,6 +55,24 @@ class User(AbstractUser):
         if self.last_name:
             self.last_name = self.last_name.strip().title()
 
+        # Handle role and group synchronization only if not being saved from admin
+        if self.pk and not getattr(self, "_admin_save", False):
+            old_user = User.objects.get(pk=self.pk)
+            if old_user.role != self.role:
+                from apps.accounts.signals.roles import get_expected_flags
+
+                expected_staff, expected_superuser = get_expected_flags(self.role)
+                self.is_staff = expected_staff
+                self.is_superuser = expected_superuser
+                super().save(*args, **kwargs)
+                try:
+                    role_group = Group.objects.get(name=self.role)
+                    self.groups.clear()
+                    self.groups.add(role_group)
+                except Group.DoesNotExist:
+                    self.groups.clear()
+                return
+
         super().save(*args, **kwargs)
 
     def __str__(self):

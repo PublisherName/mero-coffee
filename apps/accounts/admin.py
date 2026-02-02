@@ -8,7 +8,15 @@ from .models import KYC, User
 
 @admin.register(User)
 class UserAdmin(BaseUserAdmin):
-    list_display = ("username", "email", "role", "is_verified", "is_active", "date_joined")
+    list_display = (
+        "username",
+        "email",
+        "role",
+        "get_groups",
+        "is_verified",
+        "is_active",
+        "date_joined",
+    )
     list_filter = ("role", "is_verified", "is_active", "is_staff", "date_joined")
     search_fields = ("username", "email", "first_name", "last_name")
     ordering = ("-date_joined",)
@@ -32,19 +40,60 @@ class UserAdmin(BaseUserAdmin):
         ),
     )
 
+    @admin.display(description="groups")
+    @classmethod
+    def get_groups(cls, obj):
+        return ", ".join(g.name for g in obj.groups.all())
+
     def save_model(self, request, obj, form, change):
-        """Ensure role permissions are properly assigned when user is saved via admin."""
-        from apps.accounts.signals.roles import assign_user_group, get_expected_flags
+        """Ensure role permissions and group are properly assigned when user is saved via admin."""
+        from django.contrib.auth.models import Group
+        from django.core.exceptions import PermissionDenied
+        from django.db import transaction
+
+        from apps.accounts.signals.roles import get_expected_flags
+
+        # Prevent super users from downgrading themselves
+        if (
+            change
+            and "role" in form.changed_data
+            and request.user == obj
+            and request.user.is_superuser
+            and obj.role != User.Roles.SUPER_ADMIN
+        ):
+            raise PermissionDenied("Super users cannot downgrade their own role.")
+
+        # Prevent users from changing their own role
+        if change and "role" in form.changed_data and request.user == obj:
+            raise PermissionDenied("You cannot change your own role.")
+
+        obj._admin_save = True
+
+        if change and "role" in form.changed_data:
+            expected_staff, expected_superuser = get_expected_flags(obj.role)
+            obj.is_staff = expected_staff
+            obj.is_superuser = expected_superuser
 
         super().save_model(request, obj, form, change)
 
-        expected_staff, expected_superuser = get_expected_flags(obj.role)
-        if obj.is_staff != expected_staff or obj.is_superuser != expected_superuser:
-            obj.is_staff = expected_staff
-            obj.is_superuser = expected_superuser
-            super().save_model(request, obj, form, change)
+        def assign_role_group():
+            if change and "role" in form.changed_data:
+                try:
+                    role_group = Group.objects.get(name=obj.role)
+                    obj.groups.clear()
+                    obj.groups.add(role_group)
+                except Group.DoesNotExist:
+                    obj.groups.clear()
+            elif not obj.groups.exists():
+                try:
+                    role_group = Group.objects.get(name=obj.role)
+                    obj.groups.add(role_group)
+                except Group.DoesNotExist:
+                    pass
+            if hasattr(obj, "_admin_save"):
+                del obj._admin_save
 
-        assign_user_group(obj)
+        transaction.on_commit(assign_role_group)
 
 
 @admin.register(KYC)

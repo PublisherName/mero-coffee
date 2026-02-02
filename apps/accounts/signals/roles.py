@@ -17,12 +17,12 @@ def get_expected_flags(role):
 
 
 def assign_user_group(instance):
-    """Assign user to the appropriate group based on role."""
+    """Assign user to the appropriate group based on role.
+    If no groups assigned, use role group as fallback."""
     try:
-        group = Group.objects.get(name=instance.role)
-        if instance.groups.count() != 1 or instance.groups.first().id != group.id:
-            instance.groups.clear()
-            instance.groups.add(group)
+        if not instance.groups.exists():
+            role_group = Group.objects.get(name=instance.role)
+            instance.groups.add(role_group)
     except Group.DoesNotExist:
         pass
 
@@ -30,7 +30,7 @@ def assign_user_group(instance):
 @receiver(post_save, sender=User)
 def assign_role_permissions(sender, instance, created, **kwargs):
     """Assign staff/superuser status and group based on user role."""
-    if hasattr(instance, "_signal_processing"):
+    if hasattr(instance, "_signal_processing") or getattr(instance, "_admin_save", False):
         return
 
     expected_staff, expected_superuser = get_expected_flags(instance.role)
