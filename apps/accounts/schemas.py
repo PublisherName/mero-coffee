@@ -55,8 +55,7 @@ class KYCSchema(BaseModel):
     phone: str = Field(min_length=10, max_length=20)
     address: str = Field(min_length=5, max_length=500)
     country: int
-    region: int
-    subregion: int
+    state: int
     city: int
     id_type: str
     id_number: str = Field(min_length=1, max_length=100)

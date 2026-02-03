@@ -32,6 +32,7 @@ class LoginForm(PydanticValidationMixin, forms.Form):
             }
         ),
     )
+
     turnstile = TurnstileField()
 
     def clean_username(self):
@@ -66,6 +67,7 @@ class SignUpForm(PydanticValidationMixin, forms.ModelForm):
         ),
         strip=False,
     )
+
     turnstile = TurnstileField()
 
     class Meta:
@@ -165,8 +167,7 @@ class KYCForm(PydanticValidationMixin, forms.ModelForm):
             "phone",
             "address",
             "country",
-            "region",
-            "subregion",
+            "state",
             "city",
             "id_type",
             "id_number",
@@ -187,11 +188,8 @@ class KYCForm(PydanticValidationMixin, forms.ModelForm):
             "country": forms.Select(
                 attrs={"placeholder": "Select Country"},
             ),
-            "region": forms.Select(
-                attrs={"placeholder": "Select Region"},
-            ),
-            "subregion": forms.Select(
-                attrs={"placeholder": "Select Sub Region"},
+            "state": forms.Select(
+                attrs={"placeholder": "Select State"},
             ),
             "city": forms.Select(
                 attrs={"placeholder": "Select City"},
@@ -214,8 +212,7 @@ class KYCForm(PydanticValidationMixin, forms.ModelForm):
         super().__init__(*args, **kwargs)
         if self.instance and self.instance.user:
             self.fields["email"].initial = self.instance.user.email
-        self.fields["region"].label_from_instance = lambda obj: obj.name
-        self.fields["subregion"].label_from_instance = lambda obj: obj.name
+        self.fields["state"].label_from_instance = lambda obj: obj.name
         self.fields["city"].label_from_instance = lambda obj: obj.name
         self.fields["front_image"].required = True
         self.fields["back_image"].required = True
@@ -243,7 +240,7 @@ class KYCForm(PydanticValidationMixin, forms.ModelForm):
             if k in ["front_image", "back_image", "selfie_with_document"]:
                 continue
 
-            if k in ["country", "region", "subregion", "city"] and v:
+            if k in ["country", "state", "city"] and v:
                 data[k] = v.id
             else:
                 data[k] = v

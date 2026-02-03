@@ -69,21 +69,14 @@ class KYC(models.Model):
     full_name = models.CharField(max_length=255, blank=True)
     phone = models.CharField(max_length=20, blank=True)
     address = models.TextField(blank=True)
-    city = models.ForeignKey(
-        "cities_light.City",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="city",
-    )
-    region = models.ForeignKey(
+    state = models.ForeignKey(
         "cities_light.Region",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
-        related_name="region",
+        related_name="state",
     )
-    subregion = models.ForeignKey(
+    city = models.ForeignKey(
         "cities_light.Subregion",
         on_delete=models.SET_NULL,
         null=True,
