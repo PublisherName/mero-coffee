@@ -338,6 +338,7 @@ LOGGING = {
 }
 
 CITIES_LIGHT_INCLUDE_COUNTRIES = ["NP"]
+CITIES_LIGHT_INCLUDE_CITY_TYPES = []
 
 # Payment Configuration
 MINIMUM_DONATION_AMOUNT = env.int("MINIMUM_DONATION_AMOUNT", default=100)
@@ -410,8 +411,7 @@ JAZZMIN_SETTINGS = {
         "admin_honeypot.LoginAttempt": "fas fa-bug",
         "cities_light.Country": "fas fa-globe",
         "cities_light.Region": "fas fa-map",
-        "cities_light.City": "fas fa-city",
-        "cities_light.Subregion": "fas fa-map-marker-alt",
+        "cities_light.Subregion": "fas fa-city",
         "payments.Withdrawal": "fas fa-money-bill-wave",
         "payments.Membership": "fas fa-crown",
         "payments.Subscription": "fas fa-calendar-check",
@@ -431,4 +431,5 @@ JAZZMIN_SETTINGS = {
         "admin_honeypot",
         "cities_light",
     ],
+    "hide_models": ["cities_light.City"],
 }

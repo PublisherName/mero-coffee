@@ -7,9 +7,10 @@ from .models import KYC
 
 @admin.register(KYC)
 class KYCAdmin(admin.ModelAdmin):
-    list_display = ("user", "full_name", "country", "region", "city", "status", "created_at")
+    list_display = ("user", "full_name", "country", "state", "city", "status", "created_at")
     list_filter = ("status", "country", "created_at")
     readonly_fields = (
+        "user",
         "created_at",
         "updated_at",
         "preview_front_image",
@@ -18,25 +19,23 @@ class KYCAdmin(admin.ModelAdmin):
         "full_name",
         "phone",
         "country_name",
-        "region_name",
-        "subregion_name",
+        "state_name",
         "city_name",
         "address",
         "id_type",
         "id_number",
     )
-    autocomplete_fields = ["country", "region", "subregion", "city"]
+    autocomplete_fields = ["country", "state", "city"]
     fieldsets = (
-        ("User Info", {"fields": ("user",)}),
         (
             "Personal Details",
             {
                 "fields": (
+                    "user",
                     "full_name",
                     "phone",
                     "country_name",
-                    "region_name",
-                    "subregion_name",
+                    "state_name",
                     "city_name",
                     "address",
                 )
@@ -65,7 +64,7 @@ class KYCAdmin(admin.ModelAdmin):
         return qs.filter(
             user__is_staff=False,
             user__is_verified=True,
-        ).filter(status__in=[KYC.Status.PENDING])
+        )
 
     @staticmethod
     def country_name(obj):
@@ -74,16 +73,10 @@ class KYCAdmin(admin.ModelAdmin):
     country_name.short_description = "Country"
 
     @staticmethod
-    def region_name(obj):
-        return obj.region.name if obj.region else "-"
+    def state_name(obj):
+        return obj.state.name if obj.state else "-"
 
-    region_name.short_description = "Region"
-
-    @staticmethod
-    def subregion_name(obj):
-        return obj.subregion.name if obj.subregion else "-"
-
-    subregion_name.short_description = "Subregion"
+    state_name.short_description = "State"
 
     @staticmethod
     def city_name(obj):
