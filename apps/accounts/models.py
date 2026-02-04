@@ -11,9 +11,31 @@ from .enums import VerificationDocumentType
 
 class User(AbstractUser):
     class Roles(models.TextChoices):
+        SUPER_ADMIN = "super_admin", _("Super Admin")
+        ADMIN = "admin", _("Admin")
+
+        MANAGER = "manager", _("Manager")
+        MERCHANT = "merchant", _("Merchant")
+        SUPPORT = "support", _("Support")
+
         CREATOR = "creator", _("Creator")
         SUPPORTER = "supporter", _("Supporter")
-        ADMIN = "admin", _("Admin")
+
+        @classmethod
+        def get_role_hierarchy(cls):
+            return [
+                cls.SUPPORTER,
+                cls.CREATOR,
+                cls.SUPPORT,
+                cls.MERCHANT,
+                cls.MANAGER,
+                cls.ADMIN,
+                cls.SUPER_ADMIN,
+            ]
+
+        @classmethod
+        def get_privilege_level(cls, role):
+            return cls.get_role_hierarchy().index(role)
 
     email = models.EmailField(_("email address"), unique=True)
     role = models.CharField(max_length=20, choices=Roles.choices, default=Roles.CREATOR)
@@ -37,6 +59,28 @@ class User(AbstractUser):
         verbose_name=_("user permissions"),
     )
 
+    def clean(self):
+        super().clean()
+
+        # Set status based on role
+        if self.role == self.Roles.SUPER_ADMIN:
+            self.is_superuser = self.is_staff = self.is_verified = True
+        elif self.role in [
+            self.Roles.ADMIN,
+            self.Roles.MANAGER,
+            self.Roles.MERCHANT,
+            self.Roles.SUPPORT,
+        ]:
+            self.is_staff = True
+            self.is_superuser = False
+        else:
+            self.is_staff = self.is_superuser = False
+
+        # Handle superuser flag changes
+        if self.is_superuser and self.role != self.Roles.SUPER_ADMIN:
+            self.role = self.Roles.SUPER_ADMIN
+            self.is_verified = True
+
     def save(self, *args, **kwargs):
         if self.username:
             self.username = self.username.lower()
@@ -47,9 +91,7 @@ class User(AbstractUser):
         if self.last_name:
             self.last_name = self.last_name.strip().title()
 
-        if self.is_superuser and self.role != self.Roles.ADMIN:
-            self.role = self.Roles.ADMIN
-            self.is_verified = True
+        self.full_clean()
         super().save(*args, **kwargs)
 
     def __str__(self):
