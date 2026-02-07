@@ -1,4 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
+from django.contrib.auth.models import Group
+from django.db import transaction
 
 
 class UserManager(BaseUserManager):
@@ -24,3 +26,14 @@ class UserManager(BaseUserManager):
             raise ValueError("Superuser must have is_superuser=True.")
 
         return self.create_user(username, password, **extra_fields)
+
+    @classmethod
+    @transaction.atomic
+    def _assign_role_group(cls, user):
+        """Assign user to group matching their role."""
+        if hasattr(user, "role") and user.role:
+            try:
+                group = Group.objects.get(name=user.role)
+                user.groups.set([group])
+            except Group.DoesNotExist:
+                pass

@@ -51,28 +51,14 @@ class UserAdmin(BaseAdmin):
                     "email",
                     "password",
                     "role",
+                    "is_active",
+                    "is_verified",
                 )
             },
         ),
         (
             "Permissions",
-            {
-                "fields": (
-                    "groups",
-                    "user_permissions",
-                )
-            },
-        ),
-        (
-            "Status",
-            {
-                "fields": (
-                    "is_superuser",
-                    "is_staff",
-                    "is_active",
-                    "is_verified",
-                )
-            },
+            {"fields": ("user_permissions",)},
         ),
         (
             "Important dates",
@@ -97,28 +83,14 @@ class UserAdmin(BaseAdmin):
                     "password1",
                     "password2",
                     "role",
+                    "is_active",
+                    "is_verified",
                 ),
             },
         ),
         (
             "Permissions",
-            {
-                "fields": (
-                    "groups",
-                    "user_permissions",
-                )
-            },
-        ),
-        (
-            "Status",
-            {
-                "fields": (
-                    "is_superuser",
-                    "is_staff",
-                    "is_active",
-                    "is_verified",
-                )
-            },
+            {"fields": ("user_permissions",)},
         ),
     )
 

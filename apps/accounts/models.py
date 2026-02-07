@@ -78,11 +78,6 @@ class User(AbstractUser):
         else:
             self.is_staff = self.is_superuser = False
 
-        # Handle superuser flag changes
-        if self.is_superuser and self.role != self.Roles.SUPER_ADMIN:
-            self.role = self.Roles.SUPER_ADMIN
-            self.is_verified = True
-
     def save(self, *args, **kwargs):
         if self.username:
             self.username = self.username.lower()
@@ -95,6 +90,7 @@ class User(AbstractUser):
 
         self.full_clean()
         super().save(*args, **kwargs)
+        User.objects._assign_role_group(self)
 
     def __str__(self):
         return self.username
