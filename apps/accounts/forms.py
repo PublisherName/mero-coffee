@@ -294,3 +294,12 @@ class CustomAdminUserCreationForm(AdminUserCreationForm):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request", getattr(self, "request", None))
         super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        role = cleaned_data.get("role")
+
+        if role:
+            validate_user_role_change(self.instance, role, self.request)
+
+        return cleaned_data

@@ -10,11 +10,6 @@ def _has_user_instance_and_request(user_instance, request):
         raise ValidationError(
             "User instance required for role validation.", code="missing_user_instance"
         )
-    if not user_instance.pk:
-        raise ValidationError(
-            "Cannot validate role for unsaved/new users.",
-            code="user_unsaved",
-        )
     if not request:
         raise ValidationError(
             "Role changes require authenticated user context.",
@@ -25,16 +20,20 @@ def _has_user_instance_and_request(user_instance, request):
 def _get_role_info(user_instance, new_role, request):
     """Get role information for validation checks."""
     try:
-        current_user_role = user_instance.role
-        current_user_role_index = user_instance.Roles.get_privilege_level(current_user_role)
-
         new_role_index = user_instance.Roles.get_privilege_level(new_role)
-
         request_user_role = request.user.role
         request_user_role_index = user_instance.Roles.get_privilege_level(request_user_role)
-
         is_self_update = user_instance.pk == request.user.pk
-        has_role_update = current_user_role != new_role
+
+        if user_instance.pk:
+            current_user_role = user_instance.role
+            current_user_role_index = user_instance.Roles.get_privilege_level(current_user_role)
+            has_role_update = current_user_role != new_role
+        else:
+            current_user_role = None
+            current_user_role_index = None
+            has_role_update = True
+
         return {
             "current_user_role": current_user_role,
             "current_user_role_index": current_user_role_index,
@@ -128,10 +127,22 @@ def validate_user_role_change(user_instance, new_role, request=None):
     info = _get_role_info(user_instance, new_role, request)
 
     if request.user.is_superuser:
-        _validate_super_admin_self_update(info)
+        # For new users, skip self-update check since there's no existing user
+        if user_instance.pk:
+            _validate_super_admin_self_update(info)
         return
 
     _validate_non_super_assigning_super_admin(info)
-    _validate_self_upgrade(info)
-    _validate_self_downgrade(info)
-    _validate_non_super_assigning_higher_or_equal_role(info)
+
+    if user_instance.pk:
+        _validate_self_upgrade(info)
+        _validate_self_downgrade(info)
+        _validate_non_super_assigning_higher_or_equal_role(info)
+    else:
+        if info["new_role_index"] >= info["request_user_role_index"]:
+            raise ValidationError(
+                {
+                    "role": f"Role '{info['new_role']}' exceeds your permission level.",
+                },
+                code="insufficient_privileges",
+            )

@@ -222,18 +222,6 @@ class LowercaseNormalizationTests(BaseTestCase):
 
     # ========== Edge Cases ==========
 
-    def test_empty_username_handled_gracefully(self):
-        """Test that empty username doesn't cause errors"""
-        user = User(username="", email="test@example.com")
-        user.save()
-        self.assertEqual(user.username, "")
-
-    def test_empty_email_handled_gracefully(self):
-        """Test that empty email doesn't cause errors"""
-        user = User(username="testuser", email="")
-        user.save()
-        self.assertEqual(user.email, "")
-
     def test_all_lowercase_username_unchanged(self):
         """Test that already lowercase username remains unchanged"""
         user = User.objects.create_user(

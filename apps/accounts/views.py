@@ -205,7 +205,7 @@ def password_reset_view(request):
 
 
 @login_required
-@role_required(User.Roles.CREATOR, User.Roles.ADMIN)
+@role_required(User.Roles.CREATOR, User.Roles.SUPER_ADMIN)
 def serve_kyc_document(request, kyc_id, field_name):
     kyc = get_object_or_404(KYC, id=kyc_id)
 
