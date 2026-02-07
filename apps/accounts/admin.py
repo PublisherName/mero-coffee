@@ -17,6 +17,7 @@ class UserAdmin(BaseAdmin):
         "username",
         "email",
         "role",
+        "get_groups",
         "is_staff",
         "is_superuser",
         "is_active",
@@ -120,6 +121,12 @@ class UserAdmin(BaseAdmin):
             },
         ),
     )
+
+    @admin.display(description="Groups")
+    @classmethod
+    def get_groups(cls, obj):
+        """Return a comma-separated list of groups the user belongs to."""
+        return ", ".join([group.name for group in obj.groups.all()])
 
     def get_form(self, request, obj=None, **kwargs):
         form_class = super().get_form(request, obj, **kwargs)
