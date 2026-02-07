@@ -1,11 +1,13 @@
 from django import forms
 from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AdminUserCreationForm, UserChangeForm
 from turnstile.fields import TurnstileField
 
 from root.forms.pydantic_mixins import PydanticValidationMixin
 
 from .models import KYC
 from .schemas import ActivateEmailSchema, KYCSchema, LoginSchema, SignUpSchema
+from .utills.roles import validate_user_role_change
 
 User = get_user_model()
 
@@ -271,3 +273,24 @@ class ActivateEmailForm(PydanticValidationMixin, forms.Form):
         cleaned_data = super().clean()
         self.validate_with_pydantic()
         return cleaned_data
+
+
+class CustomUserChangeForm(UserChangeForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", getattr(self, "request", None))
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        role = cleaned_data.get("role")
+
+        if role:
+            validate_user_role_change(self.instance, role, self.request)
+
+        return cleaned_data
+
+
+class CustomAdminUserCreationForm(AdminUserCreationForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request", getattr(self, "request", None))
+        super().__init__(*args, **kwargs)

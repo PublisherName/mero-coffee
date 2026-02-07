@@ -1,8 +1,138 @@
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin as BaseAdmin
+from django.db import transaction
 from django.urls import reverse
 from django.utils.html import format_html
 
-from .models import KYC
+from .forms import CustomAdminUserCreationForm, CustomUserChangeForm
+from .models import KYC, User
+
+
+@admin.register(User)
+class UserAdmin(BaseAdmin):
+    form = CustomUserChangeForm
+    add_form = CustomAdminUserCreationForm
+
+    list_display = (
+        "username",
+        "email",
+        "role",
+        "is_staff",
+        "is_superuser",
+        "is_active",
+        "is_verified",
+        "date_joined",
+    )
+
+    list_filter = (
+        "role",
+        "is_verified",
+        "is_active",
+        "is_staff",
+        "date_joined",
+    )
+
+    search_fields = (
+        "username",
+        "email",
+        "first_name",
+        "last_name",
+    )
+
+    ordering = ("-date_joined",)
+
+    fieldsets = (
+        (
+            None,
+            {
+                "fields": (
+                    "username",
+                    "email",
+                    "password",
+                    "role",
+                )
+            },
+        ),
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "groups",
+                    "user_permissions",
+                )
+            },
+        ),
+        (
+            "Status",
+            {
+                "fields": (
+                    "is_superuser",
+                    "is_staff",
+                    "is_active",
+                    "is_verified",
+                )
+            },
+        ),
+        (
+            "Important dates",
+            {
+                "fields": (
+                    "last_login",
+                    "date_joined",
+                )
+            },
+        ),
+    )
+
+    add_fieldsets = (
+        (
+            None,
+            {
+                "classes": ("wide",),
+                "fields": (
+                    "username",
+                    "email",
+                    "usable_password",
+                    "password1",
+                    "password2",
+                    "role",
+                ),
+            },
+        ),
+        (
+            "Permissions",
+            {
+                "fields": (
+                    "groups",
+                    "user_permissions",
+                )
+            },
+        ),
+        (
+            "Status",
+            {
+                "fields": (
+                    "is_superuser",
+                    "is_staff",
+                    "is_active",
+                    "is_verified",
+                )
+            },
+        ),
+    )
+
+    def get_form(self, request, obj=None, **kwargs):
+        form_class = super().get_form(request, obj, **kwargs)
+
+        def form_wrapper(*args, **form_kwargs):
+            form_kwargs["request"] = request
+            return form_class(*args, **form_kwargs)
+
+        return form_wrapper
+
+    def save_model(self, request, obj, form, change):
+        with transaction.atomic():
+            super().save_model(request, obj, form, change)
 
 
 @admin.register(KYC)
