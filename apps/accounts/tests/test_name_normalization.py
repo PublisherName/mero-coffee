@@ -239,14 +239,16 @@ class NameFieldNormalizationTests(BaseTestCase):
 
     def test_empty_first_name_handled(self):
         """Test that empty first_name doesn't cause errors"""
-        user = User(username="testuser", email="test@example.com", first_name="")
-        user.save()
+        user = User.objects.create_user(
+            username="testuser", email="test@example.com", first_name="", password="testpass123"
+        )
         self.assertEqual(user.first_name, "")
 
     def test_empty_last_name_handled(self):
         """Test that empty last_name doesn't cause errors"""
-        user = User(username="testuser", email="test@example.com", last_name="")
-        user.save()
+        user = User.objects.create_user(
+            username="testuser", email="test@example.com", last_name="", password="testpass123"
+        )
         self.assertEqual(user.last_name, "")
 
     def test_empty_kyc_fields_handled(self):

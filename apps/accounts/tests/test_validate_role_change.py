@@ -132,3 +132,73 @@ class ValidateRoleChangeTestCase(TestCase):
         self.assertIn(
             "You don't have permission to downgrade users with higher roles", str(cm.exception)
         )
+
+    def test_super_admin_can_create_user_with_any_role(self):
+        """Test that super admin can create a new user with any role"""
+        request = Mock()
+        request.user = self.super_admin
+        request.user.is_superuser = True
+
+        new_user = User(
+            username="newuser",
+            email="newuser@test.com",
+            role=User.Roles.SUPER_ADMIN,
+        )
+
+        # Should not raise any exception for new user
+        validate_user_role_change(new_user, User.Roles.SUPER_ADMIN, request)
+        validate_user_role_change(new_user, User.Roles.ADMIN, request)
+        validate_user_role_change(new_user, User.Roles.CREATOR, request)
+
+    def test_non_super_admin_cannot_create_user_with_higher_or_equal_role(self):
+        """Test that non-super admin cannot create a user with higher or equal role"""
+        request = Mock()
+        request.user = self.admin
+        request.user.is_superuser = False
+
+        new_user = User(
+            username="newuser",
+            email="newuser@test.com",
+        )
+
+        with self.assertRaises(ValidationError) as cm:
+            validate_user_role_change(new_user, User.Roles.SUPER_ADMIN, request)
+        self.assertIn("Only Super Admins can assign Super Admin role", str(cm.exception))
+
+        with self.assertRaises(ValidationError) as cm:
+            validate_user_role_change(new_user, User.Roles.ADMIN, request)
+        self.assertIn("exceeds your permission level", str(cm.exception))
+
+    def test_admin_can_create_user_with_lower_role(self):
+        """Test that admin can create a new user with lower roles"""
+        request = Mock()
+        request.user = self.admin
+        request.user.is_superuser = False
+
+        new_user = User(
+            username="newuser",
+            email="newuser@test.com",
+        )
+
+        validate_user_role_change(new_user, User.Roles.SUPPORT, request)
+        validate_user_role_change(new_user, User.Roles.MERCHANT, request)
+        validate_user_role_change(new_user, User.Roles.CREATOR, request)
+        validate_user_role_change(new_user, User.Roles.SUPPORTER, request)
+
+    def test_support_can_create_user_with_lower_role(self):
+        """Test that support user can create a new user with lower roles"""
+        request = Mock()
+        request.user = self.support
+        request.user.is_superuser = False
+
+        new_user = User(
+            username="newuser",
+            email="newuser@test.com",
+        )
+
+        validate_user_role_change(new_user, User.Roles.CREATOR, request)
+        validate_user_role_change(new_user, User.Roles.SUPPORTER, request)
+
+        with self.assertRaises(ValidationError) as cm:
+            validate_user_role_change(new_user, User.Roles.SUPPORT, request)
+        self.assertIn("exceeds your permission level", str(cm.exception))

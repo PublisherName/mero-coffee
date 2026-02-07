@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 from root.storage import PrivateMediaStorage
 
 from .enums import VerificationDocumentType
+from .manager import UserManager
 
 
 class User(AbstractUser):
@@ -37,6 +38,7 @@ class User(AbstractUser):
         def get_privilege_level(cls, role):
             return cls.get_role_hierarchy().index(role)
 
+    objects = UserManager()
     email = models.EmailField(_("email address"), unique=True)
     role = models.CharField(max_length=20, choices=Roles.choices, default=Roles.CREATOR)
     is_verified = models.BooleanField(default=False)
