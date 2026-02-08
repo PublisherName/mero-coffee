@@ -17,6 +17,7 @@ class UserAdmin(BaseAdmin):
         "username",
         "email",
         "role",
+        "get_groups",
         "is_staff",
         "is_superuser",
         "is_active",
@@ -50,28 +51,14 @@ class UserAdmin(BaseAdmin):
                     "email",
                     "password",
                     "role",
+                    "is_active",
+                    "is_verified",
                 )
             },
         ),
         (
             "Permissions",
-            {
-                "fields": (
-                    "groups",
-                    "user_permissions",
-                )
-            },
-        ),
-        (
-            "Status",
-            {
-                "fields": (
-                    "is_superuser",
-                    "is_staff",
-                    "is_active",
-                    "is_verified",
-                )
-            },
+            {"fields": ("user_permissions",)},
         ),
         (
             "Important dates",
@@ -96,30 +83,22 @@ class UserAdmin(BaseAdmin):
                     "password1",
                     "password2",
                     "role",
+                    "is_active",
+                    "is_verified",
                 ),
             },
         ),
         (
             "Permissions",
-            {
-                "fields": (
-                    "groups",
-                    "user_permissions",
-                )
-            },
-        ),
-        (
-            "Status",
-            {
-                "fields": (
-                    "is_superuser",
-                    "is_staff",
-                    "is_active",
-                    "is_verified",
-                )
-            },
+            {"fields": ("user_permissions",)},
         ),
     )
+
+    @admin.display(description="Groups")
+    @classmethod
+    def get_groups(cls, obj):
+        """Return a comma-separated list of groups the user belongs to."""
+        return ", ".join([group.name for group in obj.groups.all()])
 
     def get_form(self, request, obj=None, **kwargs):
         form_class = super().get_form(request, obj, **kwargs)

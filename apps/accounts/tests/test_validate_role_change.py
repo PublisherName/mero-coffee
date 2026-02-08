@@ -1,6 +1,7 @@
 from unittest.mock import Mock
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.core.exceptions import ValidationError
 from django.test import TestCase
 
@@ -10,6 +11,21 @@ User = get_user_model()
 
 
 class ValidateRoleChangeTestCase(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        # Create groups that match role names
+        role_groups = [
+            "super_admin",
+            "admin",
+            "manager",
+            "merchant",
+            "support",
+            "creator",
+            "supporter",
+        ]
+        for role_name in role_groups:
+            Group.objects.get_or_create(name=role_name)
+
     def setUp(self):
         self.super_admin = User.objects.create_user(
             username="superadmin",

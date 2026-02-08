@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.test import TestCase
 
 User = get_user_model()
@@ -11,6 +12,19 @@ class BaseTestCase(TestCase):
     def setUpTestData(cls):
         cls.user_password = "testpass123"
         cls.user_model = User
+
+        # Create groups that match role names for all tests
+        role_groups = [
+            "super_admin",
+            "admin",
+            "manager",
+            "merchant",
+            "support",
+            "creator",
+            "supporter",
+        ]
+        for role_name in role_groups:
+            Group.objects.get_or_create(name=role_name)
 
     def create_user(self, username="testuser", email="test@example.com", is_verified=True):
         """Helper method to create a test user"""
