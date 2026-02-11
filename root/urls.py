@@ -1,8 +1,11 @@
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
 from django.http import JsonResponse
 from django.urls import include, path
+
+from root.sitemaps import sitemaps
 
 urlpatterns = (
     [
@@ -18,6 +21,12 @@ urlpatterns = (
         path("", include("apps.payments.urls", namespace="payments")),
         path("dashboard/", include("apps.dashboard.urls", namespace="dashboard")),
         path("newsletter/", include("apps.newsletter.urls", namespace="newsletter")),
+        path(
+            "sitemap.xml",
+            sitemap,
+            {"sitemaps": sitemaps},
+            name="django.contrib.sitemaps.views.sitemap",
+        ),
         path(
             "health/",
             lambda request: JsonResponse({"status": "healthy"}, status=200),

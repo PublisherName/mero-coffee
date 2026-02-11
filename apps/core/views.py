@@ -1,4 +1,7 @@
+from django.conf import settings
+from django.http import HttpResponse
 from django.shortcuts import render
+from django.template import TemplateDoesNotExist, loader
 
 
 def homepage(request):
@@ -109,3 +112,23 @@ def pricing(request):
 
 def ratelimit_lockout_view(request, exception=None):
     return render(request, "ratelimit_lockout.html", status=429)
+
+
+def robots_txt(request):
+    """Serve robots.txt file for SEO purposes."""
+    sitemap_url = f"{settings.SITE_BASE_URL.rstrip('/')}/sitemap.xml"
+    try:
+        template = loader.get_template("robots.txt")
+        content = template.render({"sitemap_url": sitemap_url})
+        return HttpResponse(content, content_type="text/plain")
+    except TemplateDoesNotExist:
+        default_robots = f"""User-agent: *
+Allow: /
+
+Sitemap: {sitemap_url}
+
+Disallow: /dashboard/
+Disallow: /admin/
+Disallow: /newsletter/
+"""
+        return HttpResponse(default_robots, content_type="text/plain")
