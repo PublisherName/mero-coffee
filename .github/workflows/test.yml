@@ -1,0 +1,76 @@
+name: Test
+
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [develop]
+  workflow_run:
+    workflows: ["Lint"]
+    types:
+      - completed
+
+jobs:
+  test-django:
+    name: Run Django Tests
+    runs-on: ubuntu-latest
+    env:
+      NPM_BIN_PATH: /usr/local/bin/npm
+
+    strategy:
+      matrix:
+        node-version: [25.x]
+        uv-version: [0.9.5]
+        python-version: [3.13]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix['python-version'] }}
+
+      - name: Use Node.js ${{ matrix['node-version'] }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix['node-version'] }}
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: ${{ matrix['uv-version'] }}
+          enable-cache: true
+
+      - name: Cache uv dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/uv
+            .venv
+          key: ${{ runner.os }}-uv-${{ hashFiles('uv.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-uv-
+
+      - name: Install dependencies
+        run: uv sync --frozen --extra development --no-install-project
+
+      - name: Copy env example to env
+        run: cp .env.test.example .env
+
+      - name: Install tailwind
+        run: uv run manage.py tailwind install
+
+      - name: Run migrations
+        run: uv run python manage.py migrate --no-input
+
+      - name: Seed payment gateways, cities, groups, email templates
+        run: |
+          uv run python manage.py seed_payment_gateways
+          uv run manage.py loaddata fixtures/nepal_cities_light.json
+          uv run manage.py seed_groups
+          uv run manage.py seed_email_templates
+
+      - name: Run tests
+        run: uv run python manage.py test --verbosity=2
