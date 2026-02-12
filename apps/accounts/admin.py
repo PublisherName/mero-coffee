@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseAdmin
 from django.db import transaction
+from django.db.models import Q
 from django.urls import reverse
 from django.utils.html import format_html
 
@@ -109,9 +110,59 @@ class UserAdmin(BaseAdmin):
 
         return form_wrapper
 
+    def get_queryset(self, request):
+        """Show: self + users with roles BELOW current level"""
+        qs = super().get_queryset(request)
+        if request.user.is_superuser:
+            return qs
+        current_level = User.Roles.get_privilege_level(request.user.role)
+        return qs.filter(
+            Q(pk=request.user.pk) | Q(role__in=User.Roles.get_role_hierarchy()[:current_level])
+        )
+
     def save_model(self, request, obj, form, change):
         with transaction.atomic():
             super().save_model(request, obj, form, change)
+
+    def has_change_permission(self, request, obj=None):  # noqa: PLR6301
+        """Allow change permission if user's role is higher than the target user's role."""
+        if hasattr(request, "user"):
+            request_user = request.user
+        else:
+            request_user = request
+
+        if obj == request_user:
+            return True
+
+        if not request_user.is_staff:
+            return False
+
+        if request_user.is_superuser or obj is None:
+            return True
+
+        requester_level = User.Roles.get_privilege_level(request_user.role)
+        target_level = User.Roles.get_privilege_level(obj.role)
+        return requester_level > target_level
+
+    def has_delete_permission(self, request, obj=None):  # noqa: PLR6301
+        """Allow delete permission if user's role is higher than the target user's role."""
+        if hasattr(request, "user"):
+            request_user = request.user
+        else:
+            request_user = request
+
+        if not request_user.is_staff:
+            return False
+
+        if request_user.is_superuser:
+            return True
+
+        if obj is None or obj == request_user:
+            return False
+
+        requester_level = User.Roles.get_privilege_level(request_user.role)
+        target_level = User.Roles.get_privilege_level(obj.role)
+        return requester_level > target_level
 
 
 @admin.register(KYC)
