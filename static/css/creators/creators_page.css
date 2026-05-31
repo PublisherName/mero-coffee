@@ -14,44 +14,70 @@
 
 /* --- Privacy Notice --- */
 .privacy-notice {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 1rem;
-  background: rgb(30 41 59 / 0.2);
+  background: rgb(30 41 59 / 0.25);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgb(250 204 21 / 0.15);
+  border: 1px solid rgb(96 165 250 / 0.12);
   border-radius: 1rem;
   padding: 1.25rem 1.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  overflow: hidden;
+  transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.privacy-notice:hover {
+  border-color: rgb(96 165 250 / 0.25);
+}
+
+.privacy-notice-glow {
+  position: absolute;
+  top: -50%;
+  left: -20%;
+  width: 8rem;
+  height: 8rem;
+  background: radial-gradient(circle, rgb(96 165 250 / 0.06), transparent 60%);
+  pointer-events: none;
+  border-radius: 50%;
 }
 
 .privacy-notice-icon {
+  position: relative;
+  z-index: 1;
   width: 2.5rem;
   height: 2.5rem;
   border-radius: 0.75rem;
-  background: rgb(250 204 21 / 0.1);
-  color: rgb(250 204 21);
+  background: rgb(96 165 250 / 0.1);
+  color: rgb(96 165 250);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.privacy-notice-content { flex: 1; }
+.privacy-notice:hover .privacy-notice-icon {
+  transform: scale(1.06);
+}
+
+.privacy-notice-body { flex: 1; position: relative; z-index: 1; }
 
 .privacy-notice-title {
-  font-size: 0.875rem;
+  font-size: 0.9375rem;
   font-weight: 700;
-  color: rgb(250 204 21);
+  color: rgb(191 219 254);
   margin: 0 0 0.25rem;
+  letter-spacing: -0.01em;
 }
 
 .privacy-notice-message {
   font-size: 0.8125rem;
-  color: rgb(253 224 71);
+  color: rgb(148 163 184);
   margin: 0;
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
 /* --- Creator Header --- */

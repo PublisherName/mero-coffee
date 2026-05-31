@@ -121,6 +121,7 @@
 
     <!-- Features Section -->
     <section class="features-section" id="features">
+        <div class="features-glow"></div>
         <div class="section-container">
             <div class="section-header">
                 <span class="section-label">Why MeroCoffee</span>
@@ -133,11 +134,13 @@
             </div>
             <div class="features-grid">
                 {% for feature in features %}
-                    <div class="feature-card" style="--card-index: {{ forloop.counter0 }}">
+                    <div class="feature-card feature-card--{% cycle 'red' 'orange' 'blue' 'green' %}"
+                         style="--card-index: {{ forloop.counter0 }}">
+                        <span class="feature-number">0{{ forloop.counter }}</span>
                         <div class="feature-icon-wrap">
                             {% if forloop.first %}
-                                <svg width="24"
-                                     height="24"
+                                <svg width="22"
+                                     height="22"
                                      viewBox="0 0 24 24"
                                      fill="none"
                                      stroke="currentColor"
@@ -148,8 +151,8 @@
                                     <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
                                 </svg>
                             {% elif forloop.counter == 2 %}
-                                <svg width="24"
-                                     height="24"
+                                <svg width="22"
+                                     height="22"
                                      viewBox="0 0 24 24"
                                      fill="none"
                                      stroke="currentColor"
@@ -159,8 +162,8 @@
                                     <rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" />
                                 </svg>
                             {% else %}
-                                <svg width="24"
-                                     height="24"
+                                <svg width="22"
+                                     height="22"
                                      viewBox="0 0 24 24"
                                      fill="none"
                                      stroke="currentColor"
@@ -181,7 +184,7 @@
 
     <!-- How It Works Section -->
     <section class="steps-section" id="how-it-works">
-        <div class="steps-bg-line"></div>
+        <div class="steps-glow"></div>
         <div class="section-container">
             <div class="section-header">
                 <span class="section-label">How It Works</span>
@@ -194,27 +197,53 @@
             <div class="steps-track">
                 {% for step in how_it_works %}
                     <div class="step-item" style="--step-index: {{ forloop.counter0 }}">
-                        <div class="step-circle">
-                            <span class="step-number">{{ step.step }}</span>
-                            {% if forloop.last %}
-                                <span class="step-check">
+                        <div class="step-circle-wrap">
+                            <div class="step-circle step-circle--{% cycle 'red' 'orange' 'green' %}">
+                                <span class="step-number">{{ step.step }}</span>
+                            </div>
+                            {% if not forloop.last %}<div class="step-line"></div>{% endif %}
+                        </div>
+                        <div class="step-card">
+                            <div class="step-card-icon step-card-icon--{% cycle 'red' 'orange' 'green' %}">
+                                {% if forloop.first %}
                                     <svg width="18"
                                          height="18"
                                          viewBox="0 0 24 24"
                                          fill="none"
                                          stroke="currentColor"
-                                         stroke-width="3"
+                                         stroke-width="1.5"
                                          stroke-linecap="round"
                                          stroke-linejoin="round">
-                                        <polyline points="20 6 9 17 4 12" />
+                                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                        <circle cx="8.5" cy="7" r="4" /><line x1="20" y1="8" x2="20" y2="14" /><line x1="23" y1="11" x2="17" y2="11" />
                                     </svg>
-                                </span>
-                            {% endif %}
-                        </div>
-                        {% if not forloop.last %}<div class="step-line"></div>{% endif %}
-                        <div class="step-content">
-                            <h3 class="step-title">{{ step.title }}</h3>
-                            <p class="step-desc">{{ step.description }}</p>
+                                {% elif forloop.counter == 2 %}
+                                    <svg width="18"
+                                         height="18"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                    </svg>
+                                {% else %}
+                                    <svg width="18"
+                                         height="18"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="1.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+                                    </svg>
+                                {% endif %}
+                            </div>
+                            <h3 class="step-card-title">{{ step.title }}</h3>
+                            <p class="step-card-desc">{{ step.description }}</p>
                         </div>
                     </div>
                 {% endfor %}
