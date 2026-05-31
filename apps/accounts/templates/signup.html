@@ -9,29 +9,50 @@
 {% endblock extra_css %}
 {% block content %}
     <div class="auth-page-container">
-        <div class="auth-card-wide">
-            <div class="auth-icon-container-large">
-                <span class="text-5xl">✨</span>
-            </div>
-            <h2 class="auth-title-large">Create Your Account</h2>
-            <p class="auth-subtitle-large">Join MeroCoffee and start earning today</p>
-            {% include "includes/form_error.html" %}
-            <form method="post" novalidate class="auth-form-large">
-                {% csrf_token %}
-                <div class="auth-form-grid">
-                    {% component "text_input" field=form.first_name %} {% endcomponent %}
-                    {% component "text_input" field=form.last_name %} {% endcomponent %}
-                    <div class="auth-form-grid-full">{% component "email_input" field=form.email %} {% endcomponent %}</div>
-                    <div class="auth-form-grid-full">{% component "text_input" field=form.username %} {% endcomponent %}</div>
-                    {% component "password_input" field=form.password1 %} {% endcomponent %}
-                    {% component "password_input" field=form.password2 %} {% endcomponent %}
+        <div class="auth-bg-grid"></div>
+        <div class="auth-bg-glow"></div>
+        <div class="max-w-lg w-full auth-card-wrapper">
+            <div class="auth-card-wide">
+                <div class="auth-icon-container-large auth-card-stagger" style="animation-delay: 0s;">
+                    <svg width="56"
+                         height="56"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.75"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                        <line x1="6" y1="1" x2="6" y2="4" />
+                        <line x1="10" y1="1" x2="10" y2="4" />
+                        <line x1="14" y1="1" x2="14" y2="4" />
+                    </svg>
                 </div>
-                {% component "turnstile_input" field=form.turnstile %} {% endcomponent %}
-                <button type="submit" class="auth-btn-primary">Sign Up</button>
-            </form>
-            <p class="auth-text-small-large">
-                Already have an account? <a href="{% url 'accounts:login' %}" class="auth-link-bold">Log in</a>
-            </p>
+                <h2 class="auth-title-large auth-card-stagger" style="animation-delay: 0.08s">Create Your Account</h2>
+                <p class="auth-subtitle-large auth-card-stagger" style="animation-delay: 0.14s">
+                    Join MeroCoffee and start earning today
+                </p>
+                <div class="auth-card-stagger" style="animation-delay: 0.2s">{% include "includes/form_error.html" %}</div>
+                <form method="post" novalidate class="auth-form-large auth-card-stagger" style="animation-delay: 0.26s">
+                    {% csrf_token %}
+                    <div class="auth-form-grid">
+                        {% component "text_input" field=form.first_name %} {% endcomponent %}
+                        {% component "text_input" field=form.last_name %} {% endcomponent %}
+                        <div class="auth-form-grid-full">{% component "email_input" field=form.email %} {% endcomponent %}</div>
+                        <div class="auth-form-grid-full">{% component "text_input" field=form.username %} {% endcomponent %}</div>
+                        {% component "password_input" field=form.password1 %} {% endcomponent %}
+                        {% component "password_input" field=form.password2 %} {% endcomponent %}
+                    </div>
+                    {% component "turnstile_input" field=form.turnstile %} {% endcomponent %}
+                    <button type="submit" class="auth-btn-primary">Sign Up</button>
+                </form>
+                <div class="auth-footer-links auth-card-stagger" style="animation-delay: 0.34s">
+                    <p class="auth-text-small">
+                        Already have an account? <a href="{% url 'accounts:login' %}" class="auth-link-bold">Log in</a>
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock content %}

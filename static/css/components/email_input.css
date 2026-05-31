@@ -1,5 +1,9 @@
 /* Email Input Component Styles */
 
+.email-input-field {
+    box-sizing: border-box;
+}
+
 .email-input-container {
     display: flex;
     flex-direction: column;
