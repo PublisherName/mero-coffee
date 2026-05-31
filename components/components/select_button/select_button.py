@@ -51,7 +51,7 @@ class SelectButton(component.Component):
         disabled=False,
         placeholder="Select an option",
         help_text=None,
-        error_class="border-red-500",
+        error_class="border-accent",
         select_class="",
         container_class="",
         **kwargs,
@@ -74,16 +74,16 @@ class SelectButton(component.Component):
     def get_context_data(self):
         """Prepare context data for the template"""
         base_select_classes = (
-            "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 "
-            "rounded-lg text-white placeholder-slate-500 focus:outline-none "
-            "focus:border-slate-600 focus:ring-2 focus:ring-slate-500/30 "
+            "w-full px-4 py-3 bg-page/50 border border-surface "
+            "rounded-lg text-white placeholder-subtle focus:outline-none "
+            "focus:border-surface-muted focus:ring-2 focus:ring-surface/50 "
             "transition-all duration-300 appearance-none cursor-pointer "
-            "hover:border-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
+            "hover:border-surface-muted disabled:opacity-50 disabled:cursor-not-allowed"
         )
 
         # Add error styling if there are errors
         if self.errors:
-            base_select_classes += f" {self.error_class} focus:border-red-500"
+            base_select_classes += f" {self.error_class} focus:border-accent"
 
         # Add custom classes
         if self.select_class:

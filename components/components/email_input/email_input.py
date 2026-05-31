@@ -34,16 +34,16 @@ class EmailInput(component.Component):
 
     def get_context_data(self):
         base_input_classes = (
-            "w-full px-4 py-3 bg-slate-900/50 border "
-            "rounded-lg text-white placeholder-slate-500 focus:outline-none "
+            "w-full px-4 py-3 bg-page/50 border "
+            "rounded-lg text-white placeholder-subtle focus:outline-none "
             "focus:ring-2 transition-all duration-300"
         )
 
         if self.errors:
-            base_input_classes += " border-red-500 focus:border-red-500 focus:ring-red-500/50"
+            base_input_classes += " border-accent focus:border-accent focus:ring-accent/50"
         else:
             base_input_classes += (
-                " border-slate-700 focus:border-slate-600 focus:ring-slate-500/30"
+                " border-surface focus:border-surface-muted focus:ring-surface/50"
             )
 
         if self.input_class:

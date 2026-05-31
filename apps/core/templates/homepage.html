@@ -4,119 +4,429 @@
     <link rel="stylesheet" href="{% static 'css/core/homepage.css' %}">
 {% endblock extra_css %}
 {% block content %}
+
     <!-- Hero Section -->
     <section class="hero-section">
-        <div class="hero-bg">
-            <div class="hero-blob-1"></div>
-            <div class="hero-blob-2"></div>
-        </div>
-        <div class="hero-container">
-            <h1 class="hero-title">Support Nepali Creators</h1>
-            <p class="hero-subtitle">The easiest way to receive support from your fans using eSewa & Khalti</p>
-            <div class="hero-cta-buttons">
-                <a href="{% url 'accounts:signup' %}" class="hero-cta-primary">Start My Page</a>
-                <a href="#how-it-works" class="hero-cta-secondary">See How It Works</a>
+        <div class="hero-bg-grid"></div>
+        <div class="hero-blob"></div>
+        <div class="hero-inner">
+            <div class="hero-content">
+                <span class="hero-badge">For Nepali creators</span>
+                <h1 class="hero-title">
+                    Receive support
+                    <br>
+                    <span class="hero-title-em">your way</span>
+                </h1>
+                <p class="hero-subtitle">
+                    The easiest way to get paid by your fans using eSewa and Khalti.
+                    No bank account required. No international fees.
+                </p>
+                <div class="hero-actions">
+                    <a href="{% url 'accounts:signup' %}" class="hero-btn-primary">
+                        Start My Page
+                        <svg width="18"
+                             height="18"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                        </svg>
+                    </a>
+                    <a href="#how-it-works" class="hero-btn-secondary">See How It Works</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <span class="hero-stat-value">Rs. 2.4M+</span>
+                        <span class="hero-stat-label">paid to creators</span>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value">1,200+</span>
+                        <span class="hero-stat-label">active creators</span>
+                    </div>
+                    <div class="hero-stat-divider"></div>
+                    <div class="hero-stat">
+                        <span class="hero-stat-value">Rs. 0</span>
+                        <span class="hero-stat-label">setup fee</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="hero-card-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-avatar" style="background: {{ featured_creators.0.avatar_color }};">
+                            <svg width="28"
+                                 height="28"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                            </svg>
+                        </div>
+                        <div class="mockup-user-info">
+                            <span class="mockup-name">{{ featured_creators.0.name }}</span>
+                            <span class="mockup-handle">@{{ featured_creators.0.name|slugify }}</span>
+                        </div>
+                        <div class="mockup-status-dot"></div>
+                    </div>
+                    <div class="mockup-body">
+                        <p class="mockup-bio">Creating content for Nepal. Your support helps me keep making what you love.</p>
+                        <div class="mockup-support-row">
+                            <span class="mockup-support-label">Buy me a coffee</span>
+                            <span class="mockup-support-value">Rs. 150</span>
+                        </div>
+                        <div class="mockup-support-row">
+                            <span class="mockup-support-label">Monthly membership</span>
+                            <span class="mockup-support-value">Rs. 1,500</span>
+                        </div>
+                    </div>
+                    <div class="mockup-footer">
+                        <div class="mockup-metrics">
+                            <span>{{ featured_creators.0.supporters }} supporters</span>
+                            <span>·</span>
+                            <span>{{ featured_creators.0.monthly }}/month</span>
+                        </div>
+                    </div>
+                </div>
+                {% if featured_creators %}
+                    <div class="hero-float-badge">
+                        <span class="float-badge-icon">
+                            <svg width="16"
+                                 height="16"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2.5"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                            </svg>
+                        </span>
+                        <div class="float-badge-text">
+                            <span class="float-badge-label">New supporter</span>
+                            <span class="float-badge-name">New from Kathmandu</span>
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </section>
+
     <!-- Features Section -->
-    <section class="features-section">
+    <section class="features-section" id="features">
         <div class="section-container">
-            <h2 class="section-title">Why Choose MeroCoffee?</h2>
-            <p class="section-subtitle">Everything you need to get paid for your creative work</p>
+            <div class="section-header">
+                <span class="section-label">Why MeroCoffee</span>
+                <h2 class="section-title">
+                    Built for the Nepali
+                    <br>
+                    creator economy
+                </h2>
+                <p class="section-desc">Everything you need to monetise your craft, from day one.</p>
+            </div>
             <div class="features-grid">
                 {% for feature in features %}
-                    <div class="feature-card">
-                        <div class="feature-icon">{{ feature.icon }}</div>
-                        <h3 class="feature-title">{{ feature.title }}</h3>
-                        <p class="feature-description">{{ feature.description }}</p>
-                    </div>
-                {% endfor %}
-            </div>
-        </div>
-    </section>
-    <!-- How It Works Section -->
-    <section id="how-it-works" class="how-it-works-section">
-        <div class="section-container">
-            <h2 class="section-title">How It Works</h2>
-            <p class="section-subtitle">Get started in just 3 simple steps</p>
-            <div class="steps-grid">
-                {% for step in how_it_works %}
-                    <div class="step-wrapper">
-                        <div class="step-card">
-                            <div class="step-number">{{ step.step }}</div>
-                            <h3 class="step-title">{{ step.title }}</h3>
-                            <p class="step-description">{{ step.description }}</p>
+                    <div class="feature-card" style="--card-index: {{ forloop.counter0 }}">
+                        <div class="feature-icon-wrap">
+                            {% if forloop.first %}
+                                <svg width="24"
+                                     height="24"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M12 20h9" />
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
+                            {% elif forloop.counter == 2 %}
+                                <svg width="24"
+                                     height="24"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" /><line x1="1" y1="10" x2="23" y2="10" />
+                                </svg>
+                            {% else %}
+                                <svg width="24"
+                                     height="24"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+                                </svg>
+                            {% endif %}
                         </div>
-                        {% if step.step < 3 %}<div class="step-connector"></div>{% endif %}
+                        <h3 class="feature-title">{{ feature.title }}</h3>
+                        <p class="feature-desc">{{ feature.description }}</p>
                     </div>
                 {% endfor %}
             </div>
         </div>
     </section>
-    <!-- Featured Creators Section -->
-    <section class="featured-creators-section">
+
+    <!-- How It Works Section -->
+    <section class="steps-section" id="how-it-works">
+        <div class="steps-bg-line"></div>
         <div class="section-container">
-            <h2 class="section-title">Featured Creators</h2>
-            <p class="section-subtitle">Join creators already earning through MeroCoffee</p>
+            <div class="section-header">
+                <span class="section-label">How It Works</span>
+                <h2 class="section-title">
+                    Three steps to start
+                    <br>
+                    earning
+                </h2>
+            </div>
+            <div class="steps-track">
+                {% for step in how_it_works %}
+                    <div class="step-item" style="--step-index: {{ forloop.counter0 }}">
+                        <div class="step-circle">
+                            <span class="step-number">{{ step.step }}</span>
+                            {% if forloop.last %}
+                                <span class="step-check">
+                                    <svg width="18"
+                                         height="18"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="3"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                </span>
+                            {% endif %}
+                        </div>
+                        {% if not forloop.last %}<div class="step-line"></div>{% endif %}
+                        <div class="step-content">
+                            <h3 class="step-title">{{ step.title }}</h3>
+                            <p class="step-desc">{{ step.description }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Creators Section -->
+    <section class="creators-section">
+        <div class="creators-glow"></div>
+        <div class="section-container">
+            <div class="section-header section-header--between">
+                <div>
+                    <span class="section-label">Featured Creators</span>
+                    <h2 class="section-title">
+                        Trusted by Nepal's
+                        <br>
+                        top creators
+                    </h2>
+                    <p class="section-desc">Join 1,200+ creators already growing their income on MeroCoffee.</p>
+                </div>
+                <a href="{% url 'creators:creators_list' %}" class="creators-view-all">
+                    View all
+                    <svg width="16"
+                         height="16"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                    </svg>
+                </a>
+            </div>
             <div class="creators-grid">
                 {% for creator in featured_creators %}
-                    <div class="creator-card">
-                        <div class="creator-avatar"
-                             style="background: linear-gradient(135deg, {{ creator.avatar_color }} 0%, {{ creator.avatar_color }}dd 100%)">
-                            {{ creator.name|slice:":1" }}
+                    <div class="creator-card"
+                         style="--accent: {{ creator.avatar_color }};
+                                --creator-index: {{ forloop.counter0 }}">
+                        <div class="creator-card-bg"
+                             style="background: radial-gradient(ellipse at 50% 0%, {{ creator.avatar_color }}15, transparent 70%)">
                         </div>
-                        <h4 class="creator-name">{{ creator.name }}</h4>
-                        <p class="creator-category">{{ creator.category }}</p>
-                        <p class="creator-supporters">{{ creator.supporters }} Supporters</p>
-                        <p class="creator-monthly">{{ creator.monthly }}/month</p>
+                        <div class="creator-card-top">
+                            <div class="creator-card-avatar">
+                                <img src="https://picsum.photos/seed/{{ creator.name|slugify }}/120/120"
+                                     alt="{{ creator.name }}"
+                                     width="120"
+                                     height="120"
+                                     loading="lazy">
+                            </div>
+                            <div class="creator-card-info">
+                                <h4 class="creator-card-name">{{ creator.name }}</h4>
+                                <p class="creator-card-category">
+                                    {% if creator.category %}
+                                        {{ creator.category }}
+                                    {% else %}
+                                        Creator
+                                    {% endif %}
+                                </p>
+                            </div>
+                            <div class="creator-card-earn">
+                                <span class="creator-card-earn-value">{{ creator.monthly }}</span>
+                                <span class="creator-card-earn-label">/ month</span>
+                            </div>
+                        </div>
+                        <div class="creator-card-stats">
+                            <div class="creator-card-stat">
+                                <svg width="14"
+                                     height="14"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                </svg>
+                                <span class="creator-card-stat-value">{{ creator.supporters }}</span>
+                                <span class="creator-card-stat-label">supporters</span>
+                            </div>
+                            <div class="creator-card-stat">
+                                <svg width="14"
+                                     height="14"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+                                </svg>
+                                <span class="creator-card-stat-value">{{ creator.monthly }}</span>
+                                <span class="creator-card-stat-label">this month</span>
+                            </div>
+                        </div>
+                        <a href="{% url 'creators:profile' creator.username %}" class="creator-card-action">
+                            Support
+                            <svg width="14"
+                                 height="14"
+                                 viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke="currentColor"
+                                 stroke-width="2"
+                                 stroke-linecap="round"
+                                 stroke-linejoin="round">
+                                <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                            </svg>
+                        </a>
                     </div>
                 {% endfor %}
             </div>
         </div>
     </section>
+
     <!-- Pricing Comparison Section -->
-    <section class="pricing-section">
+    <section class="compare-section">
         <div class="section-container">
-            <h2 class="section-title">Why We're Better</h2>
-            <p class="section-subtitle">Designed for Nepali creators, by Nepali creators</p>
-            <div class="pricing-table-wrapper">
-                <table class="pricing-table">
-                    <thead class="pricing-table-head">
+            <div class="section-header">
+                <span class="section-label">Compare</span>
+                <h2 class="section-title">
+                    Built for Nepal,
+                    <br>
+                    not bolted on
+                </h2>
+                <p class="section-desc">Global platforms charge international fees and only pay in USD. MeroCoffee keeps it local.</p>
+            </div>
+            <div class="compare-table-wrap">
+                <table class="compare-table">
+                    <thead>
                         <tr>
-                            <th class="pricing-table-header-cell">Platform</th>
-                            <th class="pricing-table-header-cell">Fee Structure</th>
-                            <th class="pricing-table-header-cell">Payment Methods</th>
-                            <th class="pricing-table-header-cell">Currency</th>
-                            <th class="pricing-table-header-cell">Withdrawal</th>
+                            <th class="compare-th compare-th--blank"></th>
+                            <th class="compare-th compare-th--highlight">
+                                <span class="compare-th-name">{{ pricing_comparison.nepal_platform.name }}</span>
+                                <span class="compare-th-badge">Best for Nepal</span>
+                            </th>
+                            <th class="compare-th">
+                                <span class="compare-th-name">{{ pricing_comparison.buy_me_coffee.name }}</span>
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="pricing-table-row-primary">
-                            <td class="pricing-table-cell pricing-table-cell-name">{{ pricing_comparison.nepal_platform.name }}</td>
-                            <td class="pricing-table-cell pricing-table-cell-primary">{{ pricing_comparison.nepal_platform.fee_structure }}</td>
-                            <td class="pricing-table-cell pricing-table-cell-primary">{{ pricing_comparison.nepal_platform.payment_methods }}</td>
-                            <td class="pricing-table-cell pricing-table-cell-primary">{{ pricing_comparison.nepal_platform.currency }}</td>
-                            <td class="pricing-table-cell pricing-table-cell-primary">{{ pricing_comparison.nepal_platform.withdrawal }}</td>
+                        <tr class="compare-tr">
+                            <td class="compare-td compare-td--label">Fee structure</td>
+                            <td class="compare-td compare-td--highlight">{{ pricing_comparison.nepal_platform.fee_structure }}</td>
+                            <td class="compare-td">{{ pricing_comparison.buy_me_coffee.fee_structure }}</td>
                         </tr>
-                        <tr class="pricing-table-row-secondary">
-                            <td class="pricing-table-cell pricing-table-cell-name">{{ pricing_comparison.buy_me_coffee.name }}</td>
-                            <td class="pricing-table-cell pricing-table-cell-secondary">{{ pricing_comparison.buy_me_coffee.fee_structure }}</td>
-                            <td class="pricing-table-cell pricing-table-cell-secondary">{{ pricing_comparison.buy_me_coffee.payment_methods }}</td>
-                            <td class="pricing-table-cell pricing-table-cell-secondary">{{ pricing_comparison.buy_me_coffee.currency }}</td>
-                            <td class="pricing-table-cell pricing-table-cell-secondary">{{ pricing_comparison.buy_me_coffee.withdrawal }}</td>
+                        <tr class="compare-tr">
+                            <td class="compare-td compare-td--label">Payment methods</td>
+                            <td class="compare-td compare-td--highlight">{{ pricing_comparison.nepal_platform.payment_methods }}</td>
+                            <td class="compare-td">{{ pricing_comparison.buy_me_coffee.payment_methods }}</td>
+                        </tr>
+                        <tr class="compare-tr">
+                            <td class="compare-td compare-td--label">Currency</td>
+                            <td class="compare-td compare-td--highlight">{{ pricing_comparison.nepal_platform.currency }}</td>
+                            <td class="compare-td">{{ pricing_comparison.buy_me_coffee.currency }}</td>
+                        </tr>
+                        <tr class="compare-tr">
+                            <td class="compare-td compare-td--label">Withdrawal</td>
+                            <td class="compare-td compare-td--highlight">{{ pricing_comparison.nepal_platform.withdrawal }}</td>
+                            <td class="compare-td">{{ pricing_comparison.buy_me_coffee.withdrawal }}</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
     </section>
+
     <!-- CTA Section -->
     <section class="cta-section">
-        <div class="cta-container">
-            <h2 class="cta-title">Ready to Get Started?</h2>
-            <p class="cta-subtitle">Join hundreds of Nepali creators already earning through MeroCoffee</p>
-            <a href="{% url 'accounts:signup' %}" class="cta-button">Create Your Free Page Today</a>
+        <div class="cta-glow"></div>
+        <div class="cta-inner">
+            <h2 class="cta-title">
+                Ready to turn your
+                <br>
+                passion into income?
+            </h2>
+            <p class="cta-desc">Join 1,200+ Nepali creators. Free to start. No monthly fees.</p>
+            <a href="{% url 'accounts:signup' %}" class="cta-btn">
+                Create your free page
+                <svg width="18"
+                     height="18"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                </svg>
+            </a>
         </div>
     </section>
+
 {% endblock content %}
+
+{% block extra_js %}
+    <script>
+(function() {
+  var revealElements = document.querySelectorAll('.feature-card, .step-item, .creator-card, .compare-tr');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  revealElements.forEach(function(el) { observer.observe(el); });
+})();
+    </script>
+{% endblock extra_js %}

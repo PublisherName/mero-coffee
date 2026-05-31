@@ -22,8 +22,8 @@
 
     {% include "includes/kyc_status_alert.html" %}
     {% if kyc_status == 'approved' %}
-        <div class="kyc-status-alert kyc-status-approved flex items-start gap-4 p-5 bg-green-500/5 border border-green-500/20 rounded-2xl">
-            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400">
+        <div class="kyc-status-alert kyc-status-approved flex items-start gap-4 p-5 bg-success/5 border border-success/20 rounded-2xl">
+            <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center text-success">
                 <svg xmlns="http://www.w3.org/2000/svg"
                      fill="none"
                      viewBox="0 0 24 24"
@@ -35,11 +35,11 @@
             </div>
             <div class="flex-1">
                 <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-1">Verification Complete</h3>
-                <p class="text-green-100/70 text-sm leading-relaxed mb-2">
+                <p class="text-success-light text-sm leading-relaxed mb-2">
                     Your identity has been successfully verified. You now have access to all account features.
                 </p>
                 {% if kyc.updated_at %}
-                    <p class="text-green-400/60 text-xs font-medium">Verified on {{ kyc.updated_at|date:"F d, Y" }}</p>
+                    <p class="text-success-light text-xs font-medium">Verified on {{ kyc.updated_at|date:"F d, Y" }}</p>
                 {% endif %}
             </div>
         </div>
@@ -144,7 +144,7 @@
                     </div>
                 </div>
 
-                <div class="kyc-form-full-width border-t border-slate-800 pt-8 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div class="kyc-form-full-width border-t border-card pt-8 mt-4 flex flex-col md:flex-row md:items-center justify-between gap-6">
                     <div class="flex-1">
                         <p class="kyc-info-text !mt-0">
                             <strong>Note:</strong> Files should be in JPG, PNG or PDF format and less than 5MB.
@@ -165,7 +165,7 @@
             <div class="kyc-readonly-layout">
                 <div class="kyc-section">
                     <div class="kyc-section-header">
-                        <div class="kyc-section-icon bg-slate-700">
+                        <div class="kyc-section-icon bg-surface">
                             <svg xmlns="http://www.w3.org/2000/svg"
                                  fill="none"
                                  viewBox="0 0 24 24"
@@ -228,7 +228,7 @@
                     <!-- Documents Preview Section -->
                     <div class="kyc-section mt-10">
                         <div class="kyc-section-header">
-                            <div class="kyc-section-icon bg-slate-700">
+                            <div class="kyc-section-icon bg-surface">
                                 <svg xmlns="http://www.w3.org/2000/svg"
                                      fill="none"
                                      viewBox="0 0 24 24"
@@ -248,7 +248,7 @@
                             {% if kyc.front_image %}
                                 <div class="space-y-3">
                                     <label class="kyc-readonly-label">Front Side</label>
-                                    <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-slate-900/50 shadow-inner group">
+                                    <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-page/50 shadow-inner group">
                                         <img src="{% url 'accounts:serve_kyc_document' kyc.id 'front_image' %}"
                                              alt="Front Side"
                                              width="600"
@@ -261,7 +261,7 @@
                             {% if kyc.back_image %}
                                 <div class="space-y-3">
                                     <label class="kyc-readonly-label">Back Side</label>
-                                    <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-slate-900/50 shadow-inner group">
+                                    <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-page/50 shadow-inner group">
                                         <img src="{% url 'accounts:serve_kyc_document' kyc.id 'back_image' %}"
                                              alt="Back Side"
                                              width="600"
@@ -274,7 +274,7 @@
                             {% if kyc.selfie_with_document %}
                                 <div class="space-y-3">
                                     <label class="kyc-readonly-label">Selfie with ID</label>
-                                    <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-slate-900/50 shadow-inner group">
+                                    <div class="aspect-[4/3] rounded-2xl overflow-hidden border border-white/10 bg-page/50 shadow-inner group">
                                         <img src="{% url 'accounts:serve_kyc_document' kyc.id 'selfie_with_document' %}"
                                              alt="Selfie"
                                              width="600"
@@ -286,15 +286,15 @@
                         </div>
                     </div>
                     {% if kyc.status == 'pending' %}
-                        <div class="mt-8 p-6 bg-slate-900/50 rounded-xl border border-blue-500/20 flex gap-4 items-start">
-                            <div class="text-blue-400 mt-1">
+                        <div class="mt-8 p-6 bg-page/50 rounded-xl border border-info/20 flex gap-4 items-start">
+                            <div class="text-info mt-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
                                     <path fill-rule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clip-rule="evenodd" />
                                 </svg>
                             </div>
                             <div>
                                 <h4 class="font-bold text-white mb-1">Under Review</h4>
-                                <p class="text-slate-400 text-sm">
+                                <p class="text-muted text-sm">
                                     Your verification is currently being processed. This typically
                                     takes 24-48 hours. You will receive an email once the review is complete.
                                 </p>

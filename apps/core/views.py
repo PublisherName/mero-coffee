@@ -3,22 +3,20 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import TemplateDoesNotExist, loader
 
+from apps.creators.models import CreatorProfile
+
 
 def homepage(request):
-    # Dummy data for demonstration
     features = [
         {
-            "icon": "⚡",
             "title": "Simple Setup",
             "description": "Create your page in minutes with our easy-to-use interface",
         },
         {
-            "icon": "💳",
             "title": "Local Payments",
             "description": "Accept payments through eSewa and Khalti",
         },
         {
-            "icon": "💰",
             "title": "Keep More",
             "description": "First Rs. 5,000/month free, then only 3-5% fee",
         },
@@ -42,36 +40,20 @@ def homepage(request):
         },
     ]
 
-    featured_creators = [
-        {
-            "name": "Aashish Shrestha",
-            "category": "Digital Artist",
-            "supporters": 234,
-            "monthly": "Rs. 15,600",
-            "avatar_color": "#FF6B6B",
-        },
-        {
-            "name": "Samjhana Tamang",
-            "category": "Music Creator",
-            "supporters": 156,
-            "monthly": "Rs. 8,900",
-            "avatar_color": "#4ECDC4",
-        },
-        {
-            "name": "Rohan KC",
-            "category": "Tech Educator",
-            "supporters": 89,
-            "monthly": "Rs. 6,200",
-            "avatar_color": "#95E1D3",
-        },
-        {
-            "name": "Priya Maharjan",
-            "category": "Writer",
-            "supporters": 67,
-            "monthly": "Rs. 4,800",
-            "avatar_color": "#F38181",
-        },
-    ]
+    creators_qs = CreatorProfile.objects.active_creators_with_stats().select_related("user")[:4]
+    featured_creators = []
+    for c in creators_qs:
+        name = c.display_name or c.user.get_full_name() or c.user.username
+        monthly = c.monthly_income or 0
+        featured_creators.append(
+            {
+                "name": name,
+                "username": c.user.username,
+                "supporters": c.supporter_count,
+                "monthly": f"Rs. {monthly:,}",
+                "avatar_color": c.avatar_color,
+            }
+        )
 
     pricing_comparison = {
         "nepal_platform": {

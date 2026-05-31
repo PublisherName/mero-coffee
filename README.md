@@ -6,7 +6,6 @@
 
 [![Python](https://img.shields.io/badge/Python-3.13+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![Django](https://img.shields.io/badge/Django-5.2+-092E20?style=flat&logo=django&logoColor=white)](https://www.djangoproject.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](license)
 
 </div>
@@ -68,7 +67,6 @@
 - **Secure File Storage** - Private media storage for KYC documents
 
 ### 🎨 UI/UX
-- **Responsive Design** - Mobile-first approach with Tailwind CSS
 - **Interactive Components** - Dynamic charts, dropdowns, mobile menus
 - **Component Architecture** - Reusable Django View Components
 - **Modern Admin Interface** - Customized with Django Jazzmin
@@ -97,7 +95,6 @@
 
 ### Frontend
 - **Django Templates** - Server-side rendering
-- **Tailwind CSS** - Utility-first CSS framework
 - **Chart.js** - Interactive data visualizations
 - **Django View Component** - Component-based architecture
 - **JavaScript** - Interactive UI behaviors
@@ -127,7 +124,6 @@
 
 ### Prerequisites
 - Python 3.13+
-- Node.js (for Tailwind CSS)
 - Redis (for caching and Celery)
 - PostgreSQL (optional, SQLite used by default)
 
@@ -168,30 +164,24 @@
    uv run python manage.py seed_email_templates
    ```
 
-7. **Setup Tailwind CSS**
-   ```bash
-   uv run python manage.py tailwind install
-   uv run python manage.py tailwind build
-   ```
-
-8. **Install and start Redis** (Linux - Arch-based)
+7. **Install and start Redis** (Linux - Arch-based)
    ```bash
    sudo pacman -S redis
    sudo systemctl start redis
    ```
    For other systems, see [Redis installation guide](https://redis.io/docs/getting-started/installation/)
 
-9. **Create a superuser** (optional)
+8. **Create a superuser** (optional)
    ```bash
    uv run python manage.py createsuperuser
    ```
 
-10. **Start the development server**
+9. **Start the development server**
     ```bash
-    uv run python manage.py tailwind dev
+    uv run python manage.py runserver
     ```
 
-11. **Access the application**
+10. **Access the application**
     - Application: `http://localhost:8000`
     - Admin Panel: `http://localhost:8000/dashboardx/`
 
@@ -288,25 +278,6 @@ docker compose down -v
 
 ---
 
-## 🎨 Tailwind CSS
-
-### Development Workflow
-
-```bash
-# Install Tailwind dependencies
-uv run python manage.py tailwind install
-
-# Start Django + Tailwind in development mode (with hot reload)
-uv run python manage.py tailwind dev
-
-# Or start only Tailwind watcher (in separate terminal)
-uv run python manage.py tailwind start
-
-# Build for production (minified)
-uv run python manage.py tailwind build
-```
-
----
 
 ## 📁 Project Structure
 
@@ -340,7 +311,6 @@ MeroCoffee/
 ├── public/                # Public media files
 ├── private/               # Private media files (KYC docs)
 │
-├── theme/                 # Tailwind theme app
 ├── docker/                # Docker configuration files
 ├── nginx/                 # Nginx configuration
 ├── terraform/             # Infrastructure as Code
@@ -617,7 +587,6 @@ Contributions are welcome! Please follow these guidelines:
 
 - Celery worker must be running for email sending
 - Some payment gateways require specific IP whitelisting
-- Tailwind hot reload may occasionally require manual restart
 
 See [Issues](https://github.com/PublisherName/MeroCoffee/issues) for more details.
 

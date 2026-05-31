@@ -1,5 +1,4 @@
 {% load static %}
-{% load static tailwind_tags %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,13 +15,13 @@
                 MeroCoffee - Support Nepali Creators
             {% endblock title %}
         </title>
-        {% tailwind_css %}
         <link rel="stylesheet" href="{% static 'css/components/shared.css' %}">
+        <link rel="stylesheet" href="{% static 'css/utilities.css' %}">
         {% block extra_css %}
         {% endblock extra_css %}
     </head>
 
-    <body class="bg-slate-900 text-slate-100">
+    <body class="bg-page text-heading">
         {% include "includes/navbar.html" %}
         {% include "includes/messages.html" %}
         {% block content %}

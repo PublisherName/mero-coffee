@@ -74,8 +74,6 @@ DJANGO_CORE_APPS = [
 
 # Third-Party Apps
 THIRD_PARTY_APPS = [
-    "tailwind",
-    "theme",
     "defender",
     "admin_honeypot",
     "django_ratelimit",
@@ -101,18 +99,8 @@ PROJECT_APPS = [
 # Combining all app groups
 INSTALLED_APPS = ADMIN_APPS + DJANGO_CORE_APPS + THIRD_PARTY_APPS + PROJECT_APPS
 
-# Django-tailwind config
-TAILWIND_APP_NAME = "theme"
-
-NPM_BIN_PATH = env.str("NPM_BIN_PATH", default="/usr/bin/npm")
-
 if DEBUG:
-    INSTALLED_APPS += ["django_browser_reload", "debug_toolbar"]
-    # Required for django-browser-reload to work
-    INTERNAL_IPS = [
-        "127.0.0.1",
-        "localhost",
-    ]
+    INSTALLED_APPS += ["debug_toolbar"]
 
 MIDDLEWARE = [
     "allow_cidr.middleware.AllowCIDRMiddleware",
@@ -132,12 +120,9 @@ MIDDLEWARE = [
 if IS_SERVER_SECURE:
     MIDDLEWARE.insert(-1, "django_ratelimit.middleware.RatelimitMiddleware")
 
-# Django-tailwind hotreload
+# Django debug toolbar
 if DEBUG:
     MIDDLEWARE.insert(1, "debug_toolbar.middleware.DebugToolbarMiddleware")
-    MIDDLEWARE += [
-        "django_browser_reload.middleware.BrowserReloadMiddleware",
-    ]
 
 ROOT_URLCONF = "root.urls"
 

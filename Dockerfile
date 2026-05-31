@@ -18,16 +18,8 @@ RUN apt-get update && apt-get install -y \
 COPY --from=ghcr.io/astral-sh/uv:0.9.5 /uv /uvx /bin/
 
 
-# Base for development, testing and tailwind build
-FROM base AS node-base
-
-RUN curl -fsSL https://deb.nodesource.com/setup_25.x | bash - && \
-    apt-get install -y nodejs &&  \
-    apt-get clean && rm -rf /var/lib/apt/lists/*
-
-
 # Base for builder
-FROM node-base AS builder
+FROM base AS builder
 
 WORKDIR $CODE_PATH
 
@@ -39,31 +31,23 @@ COPY . $CODE_PATH
 
 COPY .env.test.example $CODE_PATH/.env
 
-RUN uv run manage.py tailwind install
-
-RUN uv run manage.py tailwind build
-
 
 # Development stage
-FROM node-base AS development
+FROM base AS development
 
 WORKDIR $CODE_PATH
 
 COPY . $CODE_PATH
-
-COPY --from=builder $CODE_PATH/theme/static_src/node_modules $CODE_PATH/theme/static_src/node_modules
 
 ENTRYPOINT ["/code/docker/entrypoint.dev.sh"]
 
 
 # Testing stage
-FROM node-base AS testing
+FROM base AS testing
 
 WORKDIR $CODE_PATH
 
 COPY . $CODE_PATH
-
-COPY --from=builder $CODE_PATH/theme/static_src/node_modules $CODE_PATH/theme/static_src/node_modules
 
 ENTRYPOINT ["/code/docker/entrypoint.test.sh"]
 
@@ -86,8 +70,6 @@ WORKDIR $CODE_PATH
 COPY --from=production-build-uv $VENV_PATH $VENV_PATH
 
 COPY . $CODE_PATH
-
-COPY --from=builder $CODE_PATH/theme/static/css/dist/styles.css $CODE_PATH/theme/static/css/dist/styles.css
 
 RUN groupadd -r -g 1000 celery && \
     useradd -r -u 1000 -g celery -d /home/celery -s /bin/sh celery && \

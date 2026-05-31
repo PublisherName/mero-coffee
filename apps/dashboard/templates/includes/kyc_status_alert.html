@@ -1,6 +1,6 @@
 {% if kyc_status == 'not_filed' %}
-    <div class="kyc-status-alert kyc-status-info flex items-start gap-4 p-5 bg-blue-500/5 border border-blue-500/20 rounded-2xl">
-        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400">
+    <div class="kyc-status-alert kyc-status-info flex items-start gap-4 p-5 bg-info/5 border border-info/20 rounded-2xl">
+        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-info/10 flex items-center justify-center text-info">
             <svg xmlns="http://www.w3.org/2000/svg"
                  fill="none"
                  viewBox="0 0 24 24"
@@ -12,12 +12,12 @@
         </div>
         <div class="flex-1">
             <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-1">Action Required</h3>
-            <p class="text-blue-100/70 text-sm leading-relaxed mb-3">
+            <p class="text-info text-sm leading-relaxed mb-3">
                 Please complete your identity verification to unlock
                 full account features and higher limits.
             </p>
             <a href="{% url 'dashboard:kyc' %}"
-               class="inline-flex items-center text-blue-400 hover:text-blue-300 font-semibold text-sm transition-colors group">
+               class="inline-flex items-center text-info hover:text-info font-semibold text-sm transition-colors group">
                 Start KYC Verification
                 <svg xmlns="http://www.w3.org/2000/svg"
                      fill="none"
@@ -31,8 +31,8 @@
         </div>
     </div>
 {% elif kyc_status == 'pending' %}
-    <div class="kyc-status-alert kyc-status-pending flex items-start gap-4 p-5 bg-amber-500/5 border border-amber-500/20 rounded-2xl">
-        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center text-amber-400">
+    <div class="kyc-status-alert kyc-status-pending flex items-start gap-4 p-5 bg-warning/5 border border-warning/20 rounded-2xl">
+        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center text-amber">
             <svg xmlns="http://www.w3.org/2000/svg"
                  fill="none"
                  viewBox="0 0 24 24"
@@ -44,12 +44,12 @@
         </div>
         <div class="flex-1">
             <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-1">Verification Processing</h3>
-            <p class="text-amber-100/70 text-sm leading-relaxed mb-3">
+            <p class="text-warning text-sm leading-relaxed mb-3">
                 Your KYC submission is currently being reviewed by our
                 team. This usually takes 24-48 hours.
             </p>
             <a href="{% url 'dashboard:kyc' %}"
-               class="inline-flex items-center text-amber-400 hover:text-amber-300 font-semibold text-sm transition-colors group">
+               class="inline-flex items-center text-amber hover:text-warning font-semibold text-sm transition-colors group">
                 Check Detailed Status
                 <svg xmlns="http://www.w3.org/2000/svg"
                      fill="none"
@@ -63,8 +63,8 @@
         </div>
     </div>
 {% elif kyc_status == 'rejected' %}
-    <div class="kyc-status-alert kyc-status-rejected flex items-start gap-4 p-5 bg-red-500/5 border border-red-500/20 rounded-2xl">
-        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400">
+    <div class="kyc-status-alert kyc-status-rejected flex items-start gap-4 p-5 bg-accent/5 border border-accent/20 rounded-2xl">
+        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent-muted">
             <svg xmlns="http://www.w3.org/2000/svg"
                  fill="none"
                  viewBox="0 0 24 24"
@@ -76,20 +76,20 @@
         </div>
         <div class="flex-1">
             <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-1">Verification Failed</h3>
-            <p class="text-red-100/70 text-sm leading-relaxed mb-2">
+            <p class="text-danger-light text-sm leading-relaxed mb-2">
                 Unfortunately, your verification was rejected. Please
                 review the details and resubmit.
             </p>
 
             {% if kyc and kyc.rejection_reason %}
-                <div class="bg-red-500/10 p-3 rounded-lg mb-3 border border-red-500/10">
-                    <p class="text-red-400 text-xs font-semibold uppercase tracking-tighter mb-1">Rejection Reason:</p>
-                    <p class="text-red-200/80 text-sm italic">"{{ kyc.rejection_reason }}"</p>
+                <div class="bg-accent/10 p-3 rounded-lg mb-3 border border-accent/10">
+                    <p class="text-accent-muted text-xs font-semibold uppercase tracking-tighter mb-1">Rejection Reason:</p>
+                    <p class="text-danger-muted text-sm italic">"{{ kyc.rejection_reason }}"</p>
                 </div>
             {% endif %}
 
             <a href="{% url 'dashboard:kyc' %}"
-               class="inline-flex items-center text-red-400 hover:text-red-300 font-semibold text-sm transition-colors group">
+               class="inline-flex items-center text-accent-muted hover:text-danger-muted font-semibold text-sm transition-colors group">
                 Resubmit KYC Details
                 <svg xmlns="http://www.w3.org/2000/svg"
                      fill="none"

@@ -36,12 +36,10 @@ dependencies = [
 
 [project.optional-dependencies]
 production = [
-    "django-tailwind>=4.4.1",
     "gunicorn>=23.0.0",
     "uvicorn>=0.38.0",
 ]
 development = [
-    "django-tailwind[cookiecutter,honcho,reload]>=4.4.1",
     "djlint>=1.36.4",
     "pre-commit>=4.3.0",
     "ruff>=0.14.2",

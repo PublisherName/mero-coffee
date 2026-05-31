@@ -18,15 +18,15 @@ class WithdrawalForm(PydanticValidationMixin, forms.ModelForm):
                 attrs={
                     "id": "amount",
                     "placeholder": "Enter amount",
-                    "class": "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 "
-                    "rounded-lg text-white placeholder-slate-500 "
-                    "focus:outline-none focus:border-red-500",
+                    "class": "w-full px-4 py-3 bg-page/50 border border-surface "
+                    "rounded-lg text-white placeholder-subtle "
+                    "focus:outline-none focus:border-accent",
                     "step": "1",
                 }
             ),
             "payment_method": forms.Select(
                 attrs={
-                    "class": "w-full px-4 py-3 bg-slate-900/50 border rounded-lg",
+                    "class": "w-full px-4 py-3 bg-page/50 border rounded-lg",
                 }
             ),
             "account_details": forms.Textarea(

@@ -1,143 +1,301 @@
-<nav class="sticky top-0 z-50 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 backdrop-blur-md shadow-2xl border-b border-slate-700/50">
+<nav class="pos-sticky top-0 z-50"
+     style="background: rgb(15 23 42 / 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgb(51 65 85 / 0.4)">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between items-center h-16">
+        <div class="flex justify-between items-center" style="height: 4rem;">
             <!-- Logo -->
-            <a href="{% url 'core:homepage' %}" class="flex items-center gap-2">
-                <span class="text-3xl">✨</span>
-                <div class="text-2xl font-bold bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent hover:scale-105 transition-transform duration-300">
-                    MeroCoffee
-                </div>
+            <a href="{% url 'core:homepage' %}" class="flex items-center gap-2.5 text-decoration-none">
+                <svg width="28"
+                     height="28"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="1.75"
+                     stroke-linecap="round"
+                     stroke-linejoin="round"
+                     style="color: rgb(239 68 68);
+                            flex-shrink: 0">
+                    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                    <line x1="6" y1="1" x2="6" y2="4" />
+                    <line x1="10" y1="1" x2="10" y2="4" />
+                    <line x1="14" y1="1" x2="14" y2="4" />
+                </svg>
+                <span class="fw-700"
+                      style="font-size: 1.35rem;
+                             letter-spacing: -0.03em;
+                             background: linear-gradient(90deg, rgb(239 68 68), rgb(249 115 22));
+                             -webkit-background-clip: text;
+                             background-clip: text;
+                             color: transparent">MeroCoffee</span>
             </a>
-            <!-- Desktop Navigation Links -->
-            <div class="hidden lg:flex items-center gap-8">
-                <a href="{% url 'core:homepage' %}"
-                   class="font-medium relative group transition-all duration-300 {% if request.resolver_match.url_name == 'homepage' %}text-transparent bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text{% else %}text-slate-300 hover:text-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-500 hover:bg-clip-text{% endif %}">
-                    Home
-                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-full transition-all duration-300"></span>
-                </a>
-                <a href="{% url 'creators:creators_list' %}"
-                   class="font-medium relative group transition-all duration-300 {% if request.resolver_match.url_name == 'creators_list' %}text-transparent bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text{% else %}text-slate-300 hover:text-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-500 hover:bg-clip-text{% endif %}">
-                    Browse Creators
-                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-full transition-all duration-300"></span>
-                </a>
-                <a href="{% url 'core:how_it_works' %}"
-                   class="font-medium relative group transition-all duration-300 {% if request.resolver_match.url_name == 'how_it_works' %}text-transparent bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text{% else %}text-slate-300 hover:text-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-500 hover:bg-clip-text{% endif %}">
-                    How It Works
-                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-full transition-all duration-300"></span>
-                </a>
-                <a href="{% url 'core:pricing' %}"
-                   class="font-medium relative group transition-all duration-300 {% if request.resolver_match.url_name == 'pricing' %}text-transparent bg-gradient-to-r from-red-500 to-orange-500 bg-clip-text{% else %}text-slate-300 hover:text-transparent hover:bg-gradient-to-r hover:from-red-500 hover:to-orange-500 hover:bg-clip-text{% endif %}">
-                    Pricing
-                    <span class="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500 group-hover:w-full transition-all duration-300"></span>
-                </a>
+
+            <!-- Desktop Navigation -->
+            <div class="d-none lg:d-flex items-center gap-1">
+                {% url 'core:homepage' as home_url %}
+                {% url 'creators:creators_list' as creators_url %}
+                {% url 'core:how_it_works' as how_url %}
+                {% url 'core:pricing' as pricing_url %}
+                {% with current=request.path %}
+                    <a href="{{ home_url }}"
+                       class="nav-link {% if request.resolver_match.url_name == 'homepage' %}nav-link--active{% endif %}">Home</a>
+                    <a href="{{ creators_url }}"
+                       class="nav-link {% if request.resolver_match.url_name == 'creators_list' %}nav-link--active{% endif %}">Browse Creators</a>
+                    <a href="{{ how_url }}"
+                       class="nav-link {% if request.resolver_match.url_name == 'how_it_works' %}nav-link--active{% endif %}">How It Works</a>
+                    <a href="{{ pricing_url }}"
+                       class="nav-link {% if request.resolver_match.url_name == 'pricing' %}nav-link--active{% endif %}">Pricing</a>
+                {% endwith %}
             </div>
-            <!-- Desktop Auth Buttons -->
-            <div class="hidden lg:flex items-center gap-4">
+
+            <!-- Desktop Auth -->
+            <div class="d-none lg:d-flex items-center gap-3">
                 {% if user.is_authenticated %}
                     {% if user.role == 'creator' %}
-                        <a href="{% url 'dashboard:dashboard' %}"
-                           class="text-slate-300 hover:text-red-400 font-medium transition-colors duration-300">
-                            Dashboard
-                        </a>
+                        <a href="{% url 'dashboard:dashboard' %}" class="nav-link">Dashboard</a>
                     {% endif %}
-                    <form action="{% url 'accounts:logout' %}" method="post" class="inline">
+                    <form action="{% url 'accounts:logout' %}" method="post" class="d-inline">
                         {% csrf_token %}
-                        <button type="submit"
-                                class="px-6 py-2 rounded-full font-semibold bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg hover:shadow-2xl hover:shadow-red-500/50 hover:-translate-y-1 transition-all duration-300 cursor-pointer">
-                            Logout
-                        </button>
+                        <button type="submit" class="nav-btn-primary">Logout</button>
                     </form>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}"
-                       class="text-slate-300 hover:text-red-400 font-medium transition-colors duration-300">Login</a>
-                    <a href="{% url 'accounts:signup' %}"
-                       class="px-6 py-2 rounded-full font-semibold bg-gradient-to-r from-red-500 to-orange-600 text-white shadow-lg hover:shadow-2xl hover:shadow-red-500/50 hover:-translate-y-1 transition-all duration-300">
+                    <a href="{% url 'accounts:login' %}" class="nav-link">Login</a>
+                    <a href="{% url 'accounts:signup' %}" class="nav-btn-primary">
                         Start My Page
+                        <svg width="14"
+                             height="14"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2.5"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                        </svg>
                     </a>
                 {% endif %}
             </div>
-            <!-- Mobile Menu Button -->
+
+            <!-- Mobile menu button -->
             <button id="mobile-menu-btn"
-                    class="lg:hidden p-2 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-red-500 transition-colors duration-300"
-                    aria-label="Toggle mobile menu">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                    class="d-block lg:d-none"
+                    aria-label="Toggle menu"
+                    style="background: none;
+                           border: none;
+                           cursor: pointer;
+                           padding: 0.5rem;
+                           border-radius: 0.5rem;
+                           color: rgb(203 213 225);
+                           transition: color 0.2s">
+                <svg width="24"
+                     height="24"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <line x1="4" y1="6" x2="20" y2="6" />
+                    <line x1="4" y1="12" x2="20" y2="12" />
+                    <line x1="4" y1="18" x2="20" y2="18" />
                 </svg>
             </button>
         </div>
     </div>
+
     <!-- Mobile Menu -->
     <div id="mobile-menu"
-         class="hidden lg:hidden bg-gradient-to-b from-slate-800 to-slate-900 border-t border-slate-700/50 shadow-xl">
-        <div class="px-4 pt-2 pb-4 space-y-2">
-            <a href="{% url 'core:homepage' %}"
-               class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium {% if request.resolver_match.url_name == 'homepage' %}bg-gradient-to-r from-red-500 to-orange-600 text-white{% endif %}">
-                Home
-            </a>
-            <a href="{% url 'creators:creators_list' %}"
-               class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium {% if request.resolver_match.url_name == 'creators_list' %}bg-gradient-to-r from-red-500 to-orange-600 text-white{% endif %}">
-                Browse Creators
-            </a>
-            <a href="{% url 'core:how_it_works' %}"
-               class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium {% if request.resolver_match.url_name == 'how_it_works' %}bg-gradient-to-r from-red-500 to-orange-600 text-white{% endif %}">
-                How It Works
-            </a>
-            <a href="{% url 'core:pricing' %}"
-               class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium {% if request.resolver_match.url_name == 'pricing' %}bg-gradient-to-r from-red-500 to-orange-600 text-white{% endif %}">
-                Pricing
-            </a>
-            <div class="border-t border-slate-700 pt-4 mt-4 space-y-2">
+         class="mobile-menu-hidden"
+         style="background: rgb(15 23 42);
+                border-top: 1px solid rgb(51 65 85 / 0.4)">
+        <div class="px-4 py-3" style="max-width: 80rem; margin: 0 auto;">
+            <div class="d-flex flex-col gap-1">
+                <a href="{% url 'core:homepage' %}"
+                   class="mobile-nav-link {% if request.resolver_match.url_name == 'homepage' %}mobile-nav-link--active{% endif %}">
+                    Home
+                    {% if request.resolver_match.url_name == 'homepage' %}<span class="mobile-nav-indicator"></span>{% endif %}
+                </a>
+                <a href="{% url 'creators:creators_list' %}"
+                   class="mobile-nav-link {% if request.resolver_match.url_name == 'creators_list' %}mobile-nav-link--active{% endif %}">
+                    Browse Creators
+                    {% if request.resolver_match.url_name == 'creators_list' %}<span class="mobile-nav-indicator"></span>{% endif %}
+                </a>
+                <a href="{% url 'core:how_it_works' %}"
+                   class="mobile-nav-link {% if request.resolver_match.url_name == 'how_it_works' %}mobile-nav-link--active{% endif %}">
+                    How It Works
+                    {% if request.resolver_match.url_name == 'how_it_works' %}<span class="mobile-nav-indicator"></span>{% endif %}
+                </a>
+                <a href="{% url 'core:pricing' %}"
+                   class="mobile-nav-link {% if request.resolver_match.url_name == 'pricing' %}mobile-nav-link--active{% endif %}">
+                    Pricing
+                    {% if request.resolver_match.url_name == 'pricing' %}<span class="mobile-nav-indicator"></span>{% endif %}
+                </a>
+            </div>
+            <div style="margin-top: 1rem; padding-top: 1rem; border-top: 1px solid rgb(51 65 85 / 0.4);">
                 {% if user.is_authenticated %}
                     {% if user.role == 'creator' %}
-                        <a href="{% url 'creators:profile' user.username %}"
-                           class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium">
-                            My Profile
-                        </a>
-                        <a href="{% url 'dashboard:dashboard' %}"
-                           class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium">
-                            Dashboard
-                        </a>
+                        <a href="{% url 'creators:profile' user.username %}" class="mobile-nav-link">My Profile</a>
+                        <a href="{% url 'dashboard:dashboard' %}" class="mobile-nav-link">Dashboard</a>
                     {% endif %}
-                    <form action="{% url 'accounts:logout' %}" method="post" class="block">
+                    <form action="{% url 'accounts:logout' %}" method="post" style="margin-top: 0.5rem;">
                         {% csrf_token %}
                         <button type="submit"
-                                class="w-full px-4 py-3 rounded-lg bg-gradient-to-r from-red-500 to-orange-600 text-white font-semibold hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 text-center cursor-pointer">
-                            Logout
-                        </button>
+                                style="width: 100%;
+                                       padding: 0.75rem 1rem;
+                                       border-radius: 0.625rem;
+                                       border: none;
+                                       background: linear-gradient(135deg, rgb(220 38 38), rgb(234 88 12));
+                                       color: white;
+                                       font-weight: 600;
+                                       font-size: 0.9375rem;
+                                       cursor: pointer;
+                                       text-align: center">Logout</button>
                     </form>
                 {% else %}
-                    <a href="{% url 'accounts:login' %}"
-                       class="block px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-700 hover:text-red-400 transition-all duration-300 font-medium">
-                        Login
-                    </a>
+                    <a href="{% url 'accounts:login' %}" class="mobile-nav-link">Login</a>
                     <a href="{% url 'accounts:signup' %}"
-                       class="block px-4 py-3 rounded-lg bg-gradient-to-r from-red-500 to-orange-600 text-white font-semibold hover:shadow-lg hover:shadow-red-500/50 transition-all duration-300 text-center">
+                       style="display: flex;
+                              align-items: center;
+                              justify-content: center;
+                              gap: 0.5rem;
+                              width: 100%;
+                              padding: 0.75rem 1rem;
+                              border-radius: 0.625rem;
+                              background: linear-gradient(135deg, rgb(220 38 38), rgb(234 88 12));
+                              color: white;
+                              font-weight: 600;
+                              font-size: 0.9375rem;
+                              text-decoration: none;
+                              margin-top: 0.5rem">
                         Start My Page
+                        <svg width="14"
+                             height="14"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2.5"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                        </svg>
                     </a>
                 {% endif %}
             </div>
         </div>
     </div>
 </nav>
+
+<style>
+.nav-link {
+  position: relative;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: rgb(148 163 184);
+  text-decoration: none;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.375rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.nav-link:hover {
+  color: rgb(241 245 249);
+  background: rgb(255 255 255 / 0.04);
+}
+.nav-link--active {
+  color: rgb(241 245 249);
+}
+.nav-link--active::after {
+  content: '';
+  position: absolute;
+  bottom: -0.125rem;
+  left: 0.875rem;
+  right: 0.875rem;
+  height: 2px;
+  background: linear-gradient(90deg, rgb(239 68 68), rgb(249 115 22));
+  border-radius: 1px;
+}
+
+.nav-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: 0.625rem;
+  background: linear-gradient(135deg, rgb(220 38 38), rgb(234 88 12));
+  color: white;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 14px rgb(239 68 68 / 0.2);
+}
+.nav-btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgb(239 68 68 / 0.3);
+}
+.nav-btn-primary:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Mobile menu */
+.mobile-menu-hidden {
+  display: none;
+}
+.mobile-nav-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: rgb(203 213 225);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.mobile-nav-link:hover {
+  background: rgb(255 255 255 / 0.04);
+  color: white;
+}
+.mobile-nav-link--active {
+  color: rgb(241 245 249);
+  background: rgb(255 255 255 / 0.04);
+}
+.mobile-nav-indicator {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: rgb(239 68 68);
+  flex-shrink: 0;
+}
+</style>
+
 <script>
-    const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-    const mobileMenu = document.getElementById('mobile-menu');
+(function() {
+  var btn = document.getElementById('mobile-menu-btn');
+  var menu = document.getElementById('mobile-menu');
+  if (!btn || !menu) return;
 
-    mobileMenuBtn.addEventListener('click', function () {
-        mobileMenu.classList.toggle('hidden');
-    });
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var isHidden = menu.classList.contains('mobile-menu-hidden');
+    menu.classList.toggle('mobile-menu-hidden');
+    btn.setAttribute('aria-expanded', isHidden);
+  });
 
-    // Close menu when clicking on a link
-    document.querySelectorAll('#mobile-menu a').forEach(link => {
-        link.addEventListener('click', function () {
-            mobileMenu.classList.add('hidden');
-        });
+  menu.querySelectorAll('a, button').forEach(function(el) {
+    el.addEventListener('click', function() {
+      menu.classList.add('mobile-menu-hidden');
     });
+  });
 
-    // Close menu when clicking outside
-    document.addEventListener('click', function (event) {
-        if (!event.target.closest('nav')) {
-            mobileMenu.classList.add('hidden');
-        }
-    });
+  document.addEventListener('click', function(e) {
+    if (!e.target.closest('nav')) {
+      menu.classList.add('mobile-menu-hidden');
+    }
+  });
+})();
 </script>

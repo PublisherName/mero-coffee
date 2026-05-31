@@ -10,5 +10,5 @@ else
     uv run manage.py seed_groups
     uv run manage.py seed_payment_gateways
     uv run manage.py seed_email_templates
-    uv run manage.py tailwind dev
+    uv run manage.py runserver
 fi

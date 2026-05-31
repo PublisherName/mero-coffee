@@ -105,9 +105,9 @@ class BuyCoffeeForm(PydanticValidationMixin, forms.Form):
         widget=forms.NumberInput(
             attrs={
                 "class": (
-                    "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
-                    "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
-                    "focus:ring-2 focus:ring-red-500/50 transition-all duration-300"
+                    "w-full px-4 py-3 bg-page/50 border border-surface rounded-lg "
+                    "text-white placeholder-subtle focus:outline-none focus:border-accent "
+                    "focus:ring-2 focus:ring-accent/50 transition-all duration-300"
                 ),
                 "id": "custom_amount",
                 "placeholder": "Enter custom amount",
@@ -121,9 +121,9 @@ class BuyCoffeeForm(PydanticValidationMixin, forms.Form):
         widget=forms.TextInput(
             attrs={
                 "class": (
-                    "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
-                    "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
-                    "focus:ring-2 focus:ring-red-500/50 transition-all duration-300"
+                    "w-full px-4 py-3 bg-page/50 border border-surface rounded-lg "
+                    "text-white placeholder-subtle focus:outline-none focus:border-accent "
+                    "focus:ring-2 focus:ring-accent/50 transition-all duration-300"
                 ),
                 "id": "supporter_name",
                 "placeholder": "Your name",
@@ -135,8 +135,8 @@ class BuyCoffeeForm(PydanticValidationMixin, forms.Form):
         required=False,
         widget=forms.CheckboxInput(
             attrs={
-                "class": "w-4 h-4 text-red-600 bg-slate-900"
-                "border-slate-700 rounded focus:ring-red-500",
+                "class": "w-4 h-4 text-accent-hover bg-page border-surface "
+                "rounded focus:ring-accent",
                 "id": "is_anonymous",
             }
         ),
@@ -149,9 +149,9 @@ class BuyCoffeeForm(PydanticValidationMixin, forms.Form):
             attrs={
                 "rows": 3,
                 "class": (
-                    "w-full px-4 py-3 bg-slate-900/50 border border-slate-700 rounded-lg "
-                    "text-white placeholder-slate-500 focus:outline-none focus:border-red-500 "
-                    "focus:ring-2 focus:ring-red-500/50 transition-all duration-300 resize-none"
+                    "w-full px-4 py-3 bg-page/50 border border-surface rounded-lg "
+                    "text-white placeholder-subtle focus:outline-none focus:border-accent "
+                    "focus:ring-2 focus:ring-accent/50 transition-all duration-300 resize-none"
                 ),
                 "id": "message",
                 "placeholder": "Write a supportive message...",

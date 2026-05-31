@@ -17,10 +17,10 @@ class NewsletterSubscribeForm(PydanticValidationMixin, forms.ModelForm):
                 attrs={
                     "placeholder": "Enter your email",
                     "class": (
-                        "flex-1 px-4 py-3 rounded-lg bg-slate-900 border border-slate-700 "
-                        "text-white placeholder-slate-500 focus:outline-none "
-                        "focus:ring-2 focus:ring-slate-500/50 transition-all duration-300"
-                        "focus:border-slate-500",
+                        "flex-1 px-4 py-3 rounded-lg bg-page border border-surface "
+                        "text-white placeholder-subtle focus:outline-none "
+                        "focus:ring-2 focus:ring-surface/50 transition-all duration-300"
+                        "focus:border-surface",
                     ),
                 }
             ),
