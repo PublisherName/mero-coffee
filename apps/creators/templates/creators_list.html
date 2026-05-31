@@ -9,120 +9,205 @@
     Browse Creators - MeroCoffee
 {% endblock title %}
 {% block content %}
-    <!-- Hero Section -->
-    <section class="creators-hero">
-        <div class="creators-hero-bg">
-            <div class="creators-hero-blob-1"></div>
-            <div class="creators-hero-blob-2"></div>
-        </div>
-        <div class="creators-hero-container">
-            <h1 class="creators-hero-title">Browse Creators</h1>
-            <p class="creators-hero-subtitle">Discover and support your favorite Nepali creators</p>
-            <!-- Search and Filters -->
-            <div class="search-filters-card">
-                <form method="get" action="{% url 'creators:creators_list' %}" class="search-filters-grid">
-
-                    <input type="text"
-                           name="q"
-                           placeholder="Search creators..."
-                           class="search-input"
-                           value="{{ search_query|default:'' }}">
-
-                    {% component "select_button" name="category" choices=category_choices placeholder="All Categories" disabled=True container_class="filter-container" select_class="filter-select-component" %}
+    <!-- Hero -->
+    <section class="cl-hero">
+        <div class="cl-hero-grid"></div>
+        <div class="cl-hero-blob"></div>
+        <div class="cl-hero-container">
+            <div class="cl-hero-content">
+                <span class="cl-hero-label">Creators</span>
+                <h1 class="cl-hero-title">
+                    Discover Nepal's
+                    <br>
+                    top creators
+                </h1>
+                <p class="cl-hero-subtitle">Find and support the creators you love with eSewa and Khalti.</p>
+            </div>
+            <div class="cl-search-card">
+                <form method="get" action="{% url 'creators:creators_list' %}" class="cl-search-grid">
+                    <div class="cl-search-wrap">
+                        <svg class="cl-search-icon"
+                             width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" />
+                        </svg>
+                        <input type="text"
+                               name="q"
+                               placeholder="Search creators..."
+                               class="cl-search-input"
+                               value="{{ search_query|default:'' }}">
+                    </div>
+                    {% component "select_button" name="sort" choices=sort_choices selected=sort_by placeholder="Sort By" container_class="cl-filter-wrap" select_class="cl-filter-select" %}
                 {% endcomponent %}
-
-                {% component "select_button" name="sort" choices=sort_choices selected=sort_by placeholder="Sort By" container_class="filter-container" select_class="filter-select-component" %}
-            {% endcomponent %}
-
-            <button type="submit" class="search-btn">Search</button>
-        </form>
+                <button type="submit" class="cl-search-btn">
+                    Search
+                    <svg width="14"
+                         height="14"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                    </svg>
+                </button>
+            </form>
+        </div>
     </div>
-</div>
 </section>
-<!-- Creators Grid -->
-<section class="creators-grid-section">
-    <div class="creators-grid-container">
+
+<!-- Grid -->
+<section class="cl-grid-section">
+    <div class="cl-grid-container">
         {% if search_query %}
-            <div style="margin-bottom: 2rem;
-                        padding: 1rem;
-                        background: rgba(139, 92, 246, 0.1);
-                        border-radius: 0.75rem;
-                        border: 1px solid rgba(139, 92, 246, 0.2)">
-                <p style="color: #e9d5ff; margin: 0;">
-                    Search results for "<strong>{{ search_query }}</strong>"
-                    - {{ creators|length }} creator{{ creators|length|pluralize }} found
-                    <a href="{% url 'creators:creators_list' %}"
-                       style="color: #a78bfa;
-                              text-decoration: none;
-                              margin-left: 1rem;
-                              font-weight: 500">Clear search</a>
+            <div class="cl-search-notice">
+                <p class="cl-search-notice-text">
+                    Results for "<strong>{{ search_query }}</strong>"
+                    , {{ creators|length }} creator{{ creators|length|pluralize }} found
+                    <a href="{% url 'creators:creators_list' %}" class="cl-search-clear">Clear</a>
                 </p>
             </div>
         {% endif %}
-        <div class="creators-grid">
+
+        <div class="cl-grid">
             {% for creator in creators %}
-                <a href="{% url 'creators:profile' creator.user.username %}" class="creator-card-link">
-                    <div class="creator-card">
-                        <!-- Creator Header Background -->
-                        <div class="creator-card-header"></div>
-                        <!-- Creator Info -->
-                        <div class="creator-card-body">
-                            <!-- Avatar -->
-                            <div class="creator-card-avatar"
-                                 style="background: linear-gradient(135deg, {{ creator.avatar_color }} 0%, {{ creator.avatar_color }}dd 100%)">
-                                {{ creator.display_name|slice:":1" }}
+                <a href="{% url 'creators:profile' creator.user.username %}" class="cl-card-link">
+                    <article class="cl-card" style="--accent: {{ creator.avatar_color }}; --card-index: {{ forloop.counter0 }}">
+                        <div class="cl-card-cover"
+                             style="background: linear-gradient(135deg, {{ creator.avatar_color }}22, {{ creator.avatar_color }}44)">
+                            <div class="cl-card-avatar">
+                                <img src="https://picsum.photos/seed/{{ creator.user.username }}/120/120"
+                                     alt="{{ creator.display_name }}"
+                                     width="120"
+                                     height="120"
+                                     loading="lazy">
                             </div>
-                            <h3 class="creator-card-name">{{ creator.display_name }}</h3>
-                            <p class="creator-card-bio">{{ creator.bio|truncatewords:10 }}</p>
-                            <!-- Stats -->
-                            <div class="creator-card-stats">
-                                <div class="creator-card-stat-row">
-                                    <span>Supporters:</span>
-                                    <span class="creator-card-stat-value">{{ creator.supporter_count }}</span>
-                                </div>
-                                <div class="creator-card-stat-row">
-                                    <span>Monthly:</span>
-                                    <span class="creator-card-monthly-value">Rs. {{ creator.monthly_income|default:"0" }}</span>
-                                </div>
-                            </div>
-                            <!-- Button -->
-                            <button class="creator-card-btn">Support Now</button>
                         </div>
-                    </div>
+                        <div class="cl-card-body">
+                            <h3 class="cl-card-name">{{ creator.display_name }}</h3>
+                            <p class="cl-card-bio">{{ creator.bio|truncatewords:10 }}</p>
+                            <div class="cl-card-stats">
+                                <div class="cl-card-stat">
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                        <circle cx="9" cy="7" r="4" />
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                    </svg>
+                                    <span class="cl-card-stat-value">{{ creator.supporter_count }}</span>
+                                    <span class="cl-card-stat-label">supporters</span>
+                                </div>
+                                <div class="cl-card-stat">
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+                                    </svg>
+                                    <span class="cl-card-stat-value">Rs. {{ creator.monthly_income|default:"0" }}</span>
+                                    <span class="cl-card-stat-label">/ month</span>
+                                </div>
+                            </div>
+                            <span class="cl-card-action">
+                                Support
+                                <svg width="14"
+                                     height="14"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                                </svg>
+                            </span>
+                        </div>
+                    </article>
                 </a>
             {% empty %}
-                <div class="creators-empty">
-                    <p class="creators-empty-text">No creators found</p>
+                <div class="cl-empty">
+                    <svg width="48"
+                         height="48"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round"
+                         style="color: rgb(100 116 139);
+                                margin-bottom: 1rem">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                    <p class="cl-empty-text">No creators found</p>
+                    <p class="cl-empty-sub">Try adjusting your search or check back later.</p>
                 </div>
             {% endfor %}
         </div>
-        <!-- Pagination -->
+
         {% if creators.has_other_pages %}
-            <div class="pagination">
+            <div class="cl-pagination">
                 {% if creators.has_previous %}
                     <a href="?page=1{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}"
-                       class="pagination-btn"><<</a>
+                       class="cl-page-btn">«</a>
                     <a href="?page={{ creators.previous_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}"
-                       class="pagination-btn">Previous</a>
+                       class="cl-page-btn">Previous</a>
                 {% endif %}
 
                 {% for num in page_range %}
                     {% if creators.number == num %}
-                        <span class="pagination-btn-active">{{ num }}</span>
+                        <span class="cl-page-btn cl-page-btn--active">{{ num }}</span>
                     {% else %}
                         <a href="?page={{ num }}{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}"
-                           class="pagination-btn">{{ num }}</a>
+                           class="cl-page-btn">{{ num }}</a>
                     {% endif %}
                 {% endfor %}
 
                 {% if creators.has_next %}
                     <a href="?page={{ creators.next_page_number }}{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}"
-                       class="pagination-btn">Next</a>
+                       class="cl-page-btn">Next</a>
                     <a href="?page={{ creators.paginator.num_pages }}{% if search_query %}&q={{ search_query }}{% endif %}{% if sort_by %}&sort={{ sort_by }}{% endif %}"
-                       class="pagination-btn">>></a>
+                       class="cl-page-btn">»</a>
                 {% endif %}
             </div>
         {% endif %}
     </div>
 </section>
 {% endblock content %}
+
+{% block extra_js %}
+    <script>
+(function() {
+  var cards = document.querySelectorAll('.cl-card');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('cl-revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+  cards.forEach(function(el) { observer.observe(el); });
+})();
+    </script>
+{% endblock extra_js %}
