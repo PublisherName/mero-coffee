@@ -1,0 +1,536 @@
+/* ========================================
+   Pricing Page
+   ======================================== */
+
+/* --- Shared --- */
+.pr-container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .pr-container { padding: 0 2rem; }
+}
+
+.pr-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(239 68 68);
+  margin-bottom: 0.75rem;
+}
+
+/* --- Hero --- */
+.pr-hero {
+  position: relative;
+  background: rgb(15 23 42);
+  padding: 4rem 0 3rem;
+  overflow: hidden;
+}
+
+.pr-hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(51 65 85 / 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(51 65 85 / 0.1) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent 70%);
+  pointer-events: none;
+}
+
+.pr-hero-blob {
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 40rem;
+  height: 40rem;
+  background: radial-gradient(circle, rgb(239 68 68 / 0.06), transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.pr-hero-content {
+  max-width: 36rem;
+}
+
+.pr-hero-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: rgb(241 245 249);
+  margin: 0 0 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .pr-hero-title { font-size: 3.25rem; }
+}
+
+.pr-hero-subtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgb(148 163 184);
+  margin: 0;
+  max-width: 32rem;
+}
+
+/* --- Plans --- */
+.pr-plans {
+  padding: 4rem 0 3rem;
+  background: rgb(15 23 42);
+}
+
+.pr-plans-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-bottom: 3rem;
+}
+
+@media (min-width: 768px) {
+  .pr-plans-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* --- Card --- */
+.pr-card {
+  position: relative;
+  border-radius: 1.25rem;
+  border: 1px solid rgb(51 65 85 / 0.4);
+  background: rgb(30 41 59 / 0.2);
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pr-card.pr-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(var(--card-index, 0) * 0.15s);
+}
+
+.pr-card:hover {
+  border-color: rgb(239 68 68 / 0.25);
+  background: rgb(30 41 59 / 0.35);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 0.2);
+  transform: translateY(-3px);
+}
+
+.pr-card.pr-revealed:hover {
+  transform: translateY(-3px);
+}
+
+.pr-card--featured {
+  border: 1.5px solid rgb(239 68 68 / 0.3);
+  background: rgb(30 41 59 / 0.3);
+}
+
+.pr-card--featured:hover {
+  border-color: rgb(239 68 68 / 0.5);
+  box-shadow: 0 8px 40px rgb(239 68 68 / 0.1);
+}
+
+.pr-card-badge {
+  position: absolute;
+  top: -0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: linear-gradient(135deg, rgb(220 38 38), rgb(234 88 12));
+  color: white;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.375rem 1.25rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+}
+
+.pr-card-body {
+  padding: 1.75rem;
+}
+
+.pr-card-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: rgb(241 245 249);
+  margin: 0 0 0.25rem;
+  letter-spacing: -0.02em;
+}
+
+.pr-card-desc {
+  font-size: 0.875rem;
+  color: rgb(148 163 184);
+  margin: 0 0 1.25rem;
+}
+
+.pr-card-price {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid rgb(51 65 85 / 0.25);
+}
+
+.pr-card-amount {
+  display: block;
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: rgb(241 245 249);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  margin-bottom: 0.375rem;
+}
+
+.pr-card-amount--accent {
+  background: linear-gradient(135deg, rgb(239 68 68), rgb(249 115 22));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.pr-card-note {
+  font-size: 0.8125rem;
+  color: rgb(100 116 139);
+}
+
+.pr-card-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.75rem;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  margin-bottom: 1.5rem;
+  box-sizing: border-box;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pr-card-btn--secondary {
+  background: rgb(51 65 85 / 0.5);
+  color: rgb(241 245 249);
+  border: 1px solid rgb(51 65 85 / 0.4);
+}
+
+.pr-card-btn--secondary:hover {
+  background: rgb(51 65 85 / 0.7);
+  border-color: rgb(100 116 139 / 0.5);
+}
+
+.pr-card-btn--primary {
+  background: linear-gradient(135deg, rgb(220 38 38), rgb(234 88 12));
+  color: white;
+  box-shadow: 0 4px 16px rgb(239 68 68 / 0.15);
+}
+
+.pr-card-btn--primary:hover {
+  box-shadow: 0 6px 24px rgb(239 68 68 / 0.3);
+  transform: translateY(-1px);
+}
+
+.pr-card-btn--primary:active {
+  transform: scale(0.98);
+}
+
+.pr-card-features {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.pr-card-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.pr-card-feature svg {
+  flex-shrink: 0;
+}
+
+.pr-card-feature--yes {
+  color: rgb(203 213 225);
+}
+
+.pr-card-feature--yes svg {
+  color: rgb(34 197 94);
+}
+
+.pr-card-feature--no {
+  color: rgb(100 116 139);
+}
+
+.pr-card-feature--no svg {
+  color: rgb(71 85 105);
+}
+
+/* --- Fee breakdown --- */
+.pr-fees {
+  background: rgb(30 41 59 / 0.2);
+  border: 1px solid rgb(51 65 85 / 0.35);
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+}
+
+.pr-fees-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: rgb(241 245 249);
+  margin: 0 0 1rem;
+  letter-spacing: -0.01em;
+}
+
+.pr-fees-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pr-fees-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.875rem 1rem;
+  background: rgb(15 23 42 / 0.4);
+  border: 1px solid rgb(51 65 85 / 0.25);
+  border-radius: 0.75rem;
+  opacity: 0;
+  transform: translateY(0.75rem);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pr-fees-item.pr-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pr-fees-item:nth-child(2).pr-revealed {
+  transition-delay: 0.1s;
+}
+
+.pr-fees-item:nth-child(3).pr-revealed {
+  transition-delay: 0.2s;
+}
+
+.pr-fees-label {
+  font-size: 0.875rem;
+  color: rgb(203 213 225);
+}
+
+.pr-fees-value {
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.pr-fees-value--free {
+  color: rgb(34 197 94);
+}
+
+.pr-fees-value--low {
+  color: rgb(96 165 250);
+}
+
+.pr-fees-value--high {
+  color: rgb(251 146 60);
+}
+
+.pr-fees-note {
+  font-size: 0.8125rem;
+  color: rgb(100 116 139);
+  margin: 1rem 0 0;
+}
+
+/* --- Comparison --- */
+.pr-compare {
+  padding: 4rem 0 5rem;
+  background: rgb(15 23 42);
+  border-top: 1px solid rgb(51 65 85 / 0.2);
+}
+
+.pr-compare-header {
+  margin-bottom: 2rem;
+}
+
+.pr-compare-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: rgb(241 245 249);
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .pr-compare-title { font-size: 2.5rem; }
+}
+
+.pr-compare-wrap {
+  overflow-x: auto;
+}
+
+.pr-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  overflow: hidden;
+  border: 1px solid rgb(51 65 85 / 0.3);
+  border-radius: 1rem;
+}
+
+.pr-th {
+  padding: 0.875rem 1.25rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgb(241 245 249);
+  background: rgb(30 41 59 / 0.5);
+  border-bottom: 1px solid rgb(51 65 85 / 0.3);
+}
+
+.pr-th--left {
+  text-align: left;
+}
+
+.pr-th--hl {
+  color: rgb(239 68 68);
+  background: rgb(239 68 68 / 0.06);
+}
+
+.pr-tr {
+  border-bottom: 1px solid rgb(51 65 85 / 0.15);
+  opacity: 0;
+  transform: translateY(0.5rem);
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pr-tr.pr-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pr-tr:nth-child(2).pr-revealed { transition-delay: 0.05s; }
+.pr-tr:nth-child(3).pr-revealed { transition-delay: 0.1s; }
+.pr-tr:nth-child(4).pr-revealed { transition-delay: 0.15s; }
+.pr-tr:nth-child(5).pr-revealed { transition-delay: 0.2s; }
+.pr-tr:nth-child(6).pr-revealed { transition-delay: 0.25s; }
+.pr-tr:nth-child(7).pr-revealed { transition-delay: 0.3s; }
+.pr-tr:nth-child(8).pr-revealed { transition-delay: 0.35s; }
+
+.pr-tr:hover {
+  background: rgb(30 41 59 / 0.3);
+}
+
+.pr-td {
+  padding: 0.875rem 1.25rem;
+  font-size: 0.875rem;
+  border-bottom: 1px solid rgb(51 65 85 / 0.1);
+}
+
+.pr-tr:last-child .pr-td {
+  border-bottom: none;
+}
+
+.pr-td--label {
+  color: rgb(203 213 225);
+}
+
+.pr-td--center {
+  text-align: center;
+}
+
+/* --- CTA --- */
+.pr-cta {
+  position: relative;
+  padding: 5rem 1.25rem;
+  text-align: center;
+  background: rgb(15 23 42);
+  overflow: hidden;
+}
+
+.pr-cta-glow {
+  position: absolute;
+  top: -40%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48rem;
+  height: 48rem;
+  background: radial-gradient(circle, rgb(239 68 68 / 0.06), transparent 60%);
+  pointer-events: none;
+}
+
+.pr-cta-inner {
+  max-width: 36rem;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.pr-cta-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: rgb(241 245 249);
+  margin: 0 0 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .pr-cta-title { font-size: 2.5rem; }
+}
+
+.pr-cta-desc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgb(148 163 184);
+  margin: 0 0 2rem;
+}
+
+.pr-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: linear-gradient(135deg, rgb(220 38 38), rgb(234 88 12));
+  color: white;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 20px rgb(239 68 68 / 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pr-cta-btn:hover {
+  box-shadow: 0 8px 28px rgb(239 68 68 / 0.3);
+  transform: translateY(-2px);
+}
+
+.pr-cta-btn:active {
+  transform: scale(0.98);
+}
+
+/* --- Responsive --- */
+@media (max-width: 767px) {
+  .pr-hero { padding: 3rem 0 2rem; }
+  .pr-hero-title { font-size: 2rem; }
+  .pr-plans { padding: 2.5rem 0 2rem; }
+  .pr-card-body { padding: 1.25rem; }
+  .pr-card-amount { font-size: 1.75rem; }
+  .pr-compare { padding: 2.5rem 0 3rem; }
+  .pr-cta { padding: 3rem 1.25rem; }
+  .pr-cta-title { font-size: 1.625rem; }
+}
