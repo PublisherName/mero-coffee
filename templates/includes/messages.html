@@ -1,166 +1,244 @@
 {% if messages %}
-    <div class="fixed top-20 right-4 z-50 max-w-sm">
+    <div class="fixed top-20 right-4 z-50 max-w-sm"
+         style="display: flex;
+                flex-direction: column;
+                gap: 0.5rem">
         {% for message in messages %}
             {% if "error" in message.tags %}
-                {% with bg_color="bg-alert-danger border-alert-danger" border_color="border-l-accent" text_color="text-danger" icon_color="text-accent" icon_path="M12 8v4m0 4h.01" %}
-                    <div class="flex items-start {{ bg_color }} {{ text_color }} border-l-4 {{ border_color }} rounded-lg p-4 mb-3 shadow-xl animate-slideIn"
-                         role="alert"
+                {% with icon_path="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" icon_color="rgb(239 68 68)" border_color="rgb(239 68 68)" text_color="rgb(248 113 113)" %}
+                    <div role="alert"
                          aria-live="assertive"
-                         aria-atomic="true">
-                        <!-- Icon -->
-                        <svg class="w-6 h-6 mr-3 flex-shrink-0 {{ icon_color }}"
+                         aria-atomic="true"
+                         class="messages-alert"
+                         style="display: flex;
+                                align-items: flex-start;
+                                gap: 0.75rem;
+                                padding: 1rem 1rem 1rem 0.875rem;
+                                border-radius: 0.75rem;
+                                background: rgb(30 41 59 / 0.85);
+                                backdrop-filter: blur(16px);
+                                -webkit-backdrop-filter: blur(16px);
+                                border: 1px solid rgb(239 68 68 / 0.15);
+                                border-left: 3px solid {{ border_color }};
+                                box-shadow: 0 8px 32px rgb(0 0 0 / 0.2)">
+                        <svg class="w-5 h-5 flex-shrink-0"
                              fill="none"
-                             stroke="currentColor"
+                             stroke="{{ icon_color }}"
                              stroke-width="2"
                              viewBox="0 0 24 24"
                              stroke-linecap="round"
                              stroke-linejoin="round"
-                             aria-hidden="true">
-                            <circle cx="12" cy="12" r="10" />
+                             aria-hidden="true"
+                             style="margin-top: 0.0625rem">
                             <path d="{{ icon_path }}" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
                         </svg>
-                        <!-- Message Text -->
-                        <div class="flex-1">
-                            <p class="text-sm font-medium">{{ message }}</p>
-                        </div>
-                        <!-- Close Button -->
+                        <div class="flex-1"
+                             style="font-size: 0.875rem;
+                                    font-weight: 500;
+                                    color: {{ text_color }};
+                                    line-height: 1.4">{{ message }}</div>
                         <button type="button"
-                                aria-label="Dismiss message"
-                                class="ml-auto {{ text_color }} hover:text-accent-hover focus:outline-none focus:ring-2 focus:ring-accent rounded"
-                                onclick="this.parentElement.parentElement.remove();">
-                            <svg class="w-5 h-5"
+                                aria-label="Dismiss"
+                                onclick="this.parentElement.remove();"
+                                style="flex-shrink: 0;
+                                       background: none;
+                                       border: none;
+                                       cursor: pointer;
+                                       padding: 0.125rem;
+                                       color: rgb(100 116 139);
+                                       transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                                       border-radius: 0.25rem"
+                                onmouseover="this.style.color='rgb(203 213 225)'"
+                                onmouseout="this.style.color='rgb(100 116 139)'">
+                            <svg class="w-4 h-4"
                                  fill="none"
                                  stroke="currentColor"
                                  stroke-width="2"
                                  viewBox="0 0 24 24"
                                  stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 aria-hidden="true">
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
+                                 stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                             </svg>
                         </button>
                     </div>
                 {% endwith %}
             {% elif "success" in message.tags %}
-                {% with bg_color="bg-alert-success border-alert-success" border_color="border-l-success" text_color="text-success-dark" icon_color="text-success" icon_path="M5 13l4 4L19 7" %}
-                    <div class="flex items-start {{ bg_color }} {{ text_color }} border-l-4 {{ border_color }} rounded-lg p-4 mb-3 shadow-xl animate-slideIn"
-                         role="alert"
+                {% with icon_path="M22 11.08V12a10 10 0 1 1-5.93-9.14" icon_color="rgb(34 197 94)" border_color="rgb(34 197 94)" text_color="rgb(134 239 172)" %}
+                    <div role="alert"
                          aria-live="assertive"
-                         aria-atomic="true">
-                        <!-- Icon -->
-                        <svg class="w-6 h-6 mr-3 flex-shrink-0 {{ icon_color }}"
+                         aria-atomic="true"
+                         class="messages-alert"
+                         style="display: flex;
+                                align-items: flex-start;
+                                gap: 0.75rem;
+                                padding: 1rem 1rem 1rem 0.875rem;
+                                border-radius: 0.75rem;
+                                background: rgb(30 41 59 / 0.85);
+                                backdrop-filter: blur(16px);
+                                -webkit-backdrop-filter: blur(16px);
+                                border: 1px solid rgb(34 197 94 / 0.15);
+                                border-left: 3px solid {{ border_color }};
+                                box-shadow: 0 8px 32px rgb(0 0 0 / 0.2)">
+                        <svg class="w-5 h-5 flex-shrink-0"
                              fill="none"
-                             stroke="currentColor"
+                             stroke="{{ icon_color }}"
                              stroke-width="2"
                              viewBox="0 0 24 24"
                              stroke-linecap="round"
                              stroke-linejoin="round"
-                             aria-hidden="true">
-                            <circle cx="12" cy="12" r="10" />
+                             aria-hidden="true"
+                             style="margin-top: 0.0625rem">
                             <path d="{{ icon_path }}" />
+                            <polyline points="9 11 12 14 22 4" />
                         </svg>
-                        <!-- Message Text -->
-                        <div class="flex-1">
-                            <p class="text-sm font-medium">{{ message }}</p>
-                        </div>
-                        <!-- Close Button -->
+                        <div class="flex-1"
+                             style="font-size: 0.875rem;
+                                    font-weight: 500;
+                                    color: {{ text_color }};
+                                    line-height: 1.4">{{ message }}</div>
                         <button type="button"
-                                aria-label="Dismiss message"
-                                class="ml-auto {{ text_color }} hover:text-success-dark focus:outline-none focus:ring-2 focus:ring-accent rounded"
-                                onclick="this.parentElement.parentElement.remove();">
-                            <svg class="w-5 h-5"
+                                aria-label="Dismiss"
+                                onclick="this.parentElement.remove();"
+                                style="flex-shrink: 0;
+                                       background: none;
+                                       border: none;
+                                       cursor: pointer;
+                                       padding: 0.125rem;
+                                       color: rgb(100 116 139);
+                                       transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                                       border-radius: 0.25rem"
+                                onmouseover="this.style.color='rgb(203 213 225)'"
+                                onmouseout="this.style.color='rgb(100 116 139)'">
+                            <svg class="w-4 h-4"
                                  fill="none"
                                  stroke="currentColor"
                                  stroke-width="2"
                                  viewBox="0 0 24 24"
                                  stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 aria-hidden="true">
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
+                                 stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                             </svg>
                         </button>
                     </div>
                 {% endwith %}
             {% elif "warning" in message.tags %}
-                {% with bg_color="bg-alert-warning border-alert-warning" border_color="border-l-warning" text_color="text-warning" icon_color="text-warning" icon_path="M12 9v2m0 4h.01" %}
-                    <div class="flex items-start {{ bg_color }} {{ text_color }} border-l-4 {{ border_color }} rounded-lg p-4 mb-3 shadow-xl animate-slideIn"
-                         role="alert"
+                {% with icon_path="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" icon_color="rgb(250 204 21)" border_color="rgb(250 204 21)" text_color="rgb(253 230 138)" %}
+                    <div role="alert"
                          aria-live="assertive"
-                         aria-atomic="true">
-                        <!-- Icon -->
-                        <svg class="w-6 h-6 mr-3 flex-shrink-0 {{ icon_color }}"
+                         aria-atomic="true"
+                         class="messages-alert"
+                         style="display: flex;
+                                align-items: flex-start;
+                                gap: 0.75rem;
+                                padding: 1rem 1rem 1rem 0.875rem;
+                                border-radius: 0.75rem;
+                                background: rgb(30 41 59 / 0.85);
+                                backdrop-filter: blur(16px);
+                                -webkit-backdrop-filter: blur(16px);
+                                border: 1px solid rgb(250 204 21 / 0.15);
+                                border-left: 3px solid {{ border_color }};
+                                box-shadow: 0 8px 32px rgb(0 0 0 / 0.2)">
+                        <svg class="w-5 h-5 flex-shrink-0"
                              fill="none"
-                             stroke="currentColor"
+                             stroke="{{ icon_color }}"
                              stroke-width="2"
                              viewBox="0 0 24 24"
                              stroke-linecap="round"
                              stroke-linejoin="round"
-                             aria-hidden="true">
-                            <circle cx="12" cy="12" r="10" />
+                             aria-hidden="true"
+                             style="margin-top: 0.0625rem">
                             <path d="{{ icon_path }}" />
+                            <line x1="12" y1="9" x2="12" y2="13" />
+                            <line x1="12" y1="17" x2="12.01" y2="17" />
                         </svg>
-                        <!-- Message Text -->
-                        <div class="flex-1">
-                            <p class="text-sm font-medium">{{ message }}</p>
-                        </div>
-                        <!-- Close Button -->
+                        <div class="flex-1"
+                             style="font-size: 0.875rem;
+                                    font-weight: 500;
+                                    color: {{ text_color }};
+                                    line-height: 1.4">{{ message }}</div>
                         <button type="button"
-                                aria-label="Dismiss message"
-                                class="ml-auto {{ text_color }} hover:text-warning focus:outline-none focus:ring-2 focus:ring-accent rounded"
-                                onclick="this.parentElement.parentElement.remove();">
-                            <svg class="w-5 h-5"
+                                aria-label="Dismiss"
+                                onclick="this.parentElement.remove();"
+                                style="flex-shrink: 0;
+                                       background: none;
+                                       border: none;
+                                       cursor: pointer;
+                                       padding: 0.125rem;
+                                       color: rgb(100 116 139);
+                                       transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                                       border-radius: 0.25rem"
+                                onmouseover="this.style.color='rgb(203 213 225)'"
+                                onmouseout="this.style.color='rgb(100 116 139)'">
+                            <svg class="w-4 h-4"
                                  fill="none"
                                  stroke="currentColor"
                                  stroke-width="2"
                                  viewBox="0 0 24 24"
                                  stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 aria-hidden="true">
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
+                                 stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                             </svg>
                         </button>
                     </div>
                 {% endwith %}
             {% else %}
-                {% with bg_color="bg-alert-info border-alert-info" border_color="border-l-info" text_color="text-info" icon_color="text-info" icon_path="M13 16h-1v-4h-1m1-4h.01" %}
-                    <div class="flex items-start {{ bg_color }} {{ text_color }} border-l-4 {{ border_color }} rounded-lg p-4 mb-3 shadow-xl animate-slideIn"
-                         role="alert"
+                {% with icon_path="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" icon_color="rgb(96 165 250)" border_color="rgb(96 165 250)" text_color="rgb(191 219 254)" %}
+                    <div role="alert"
                          aria-live="assertive"
-                         aria-atomic="true">
-                        <!-- Icon -->
-                        <svg class="w-6 h-6 mr-3 flex-shrink-0 {{ icon_color }}"
+                         aria-atomic="true"
+                         class="messages-alert"
+                         style="display: flex;
+                                align-items: flex-start;
+                                gap: 0.75rem;
+                                padding: 1rem 1rem 1rem 0.875rem;
+                                border-radius: 0.75rem;
+                                background: rgb(30 41 59 / 0.85);
+                                backdrop-filter: blur(16px);
+                                -webkit-backdrop-filter: blur(16px);
+                                border: 1px solid rgb(96 165 250 / 0.15);
+                                border-left: 3px solid {{ border_color }};
+                                box-shadow: 0 8px 32px rgb(0 0 0 / 0.2)">
+                        <svg class="w-5 h-5 flex-shrink-0"
                              fill="none"
-                             stroke="currentColor"
+                             stroke="{{ icon_color }}"
                              stroke-width="2"
                              viewBox="0 0 24 24"
                              stroke-linecap="round"
                              stroke-linejoin="round"
-                             aria-hidden="true">
+                             aria-hidden="true"
+                             style="margin-top: 0.0625rem">
                             <circle cx="12" cy="12" r="10" />
-                            <path d="{{ icon_path }}" />
+                            <line x1="12" y1="16" x2="12" y2="12" />
+                            <line x1="12" y1="8" x2="12.01" y2="8" />
                         </svg>
-                        <!-- Message Text -->
-                        <div class="flex-1">
-                            <p class="text-sm font-medium">{{ message }}</p>
-                        </div>
-                        <!-- Close Button -->
+                        <div class="flex-1"
+                             style="font-size: 0.875rem;
+                                    font-weight: 500;
+                                    color: {{ text_color }};
+                                    line-height: 1.4">{{ message }}</div>
                         <button type="button"
-                                aria-label="Dismiss message"
-                                class="ml-auto {{ text_color }} hover:text-info focus:outline-none focus:ring-2 focus:ring-accent rounded"
-                                onclick="this.parentElement.parentElement.remove();">
-                            <svg class="w-5 h-5"
+                                aria-label="Dismiss"
+                                onclick="this.parentElement.remove();"
+                                style="flex-shrink: 0;
+                                       background: none;
+                                       border: none;
+                                       cursor: pointer;
+                                       padding: 0.125rem;
+                                       color: rgb(100 116 139);
+                                       transition: color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+                                       border-radius: 0.25rem"
+                                onmouseover="this.style.color='rgb(203 213 225)'"
+                                onmouseout="this.style.color='rgb(100 116 139)'">
+                            <svg class="w-4 h-4"
                                  fill="none"
                                  stroke="currentColor"
                                  stroke-width="2"
                                  viewBox="0 0 24 24"
                                  stroke-linecap="round"
-                                 stroke-linejoin="round"
-                                 aria-hidden="true">
-                                <line x1="18" y1="6" x2="6" y2="18" />
-                                <line x1="6" y1="6" x2="18" y2="18" />
+                                 stroke-linejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
                             </svg>
                         </button>
                     </div>
@@ -170,11 +248,11 @@
     </div>
 {% endif %}
 <style>
- @keyframes slideIn {
- from {opacity: 0; transform: translateX(20px) scale(0.95);}
- to {opacity: 1; transform: translateX(0) scale(1);}
- }
- .animate-slideIn {
- animation: slideIn 0.4s ease-out forwards;
- }
+    .messages-alert {
+        animation: msgSlideIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    @keyframes msgSlideIn {
+        from { opacity: 0; transform: translateX(1.5rem) scale(0.95); }
+        to { opacity: 1; transform: translateX(0) scale(1); }
+    }
 </style>
