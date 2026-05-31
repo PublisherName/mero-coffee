@@ -64,15 +64,3 @@ jobs:
           echo VERSION=$VERSION
           docker tag merocoffee $IMAGE_ID:$VERSION
           docker push $IMAGE_ID:$VERSION
-
-  deploy:
-    needs: push-image
-    runs-on: ubuntu-latest
-    steps:
-      - name: SSH into host and run command
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: ${{ secrets.DEPLOY_COMMAND }}
