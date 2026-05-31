@@ -4,9 +4,9 @@
 
 /* --- Page Container --- */
 .auth-page-container {
-  min-height: 100dvh;
+  min-height: calc(100dvh - 4rem);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   padding: 3rem 1rem;
   background: rgb(15 23 42);
@@ -388,7 +388,7 @@
 /* --- Responsive --- */
 @media (max-width: 639px) {
   .auth-page-container {
-    padding: 2rem 0.75rem;
+    padding: 1.5rem 0.75rem;
   }
 
   .auth-card {
