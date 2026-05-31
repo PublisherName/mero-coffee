@@ -1,205 +1,398 @@
 {% extends "base.html" %}
 {% load static %}
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'css/core/shared.css' %}">
+    <link rel="stylesheet" href="{% static 'css/core/how_it_works.css' %}">
 {% endblock extra_css %}
 {% block title %}
     How It Works - MeroCoffee
 {% endblock title %}
 {% block content %}
-    <!-- Hero Section -->
-    <section class="page-hero-section">
-        <div class="page-hero-bg">
-            <div class="page-hero-blob"></div>
-        </div>
-        <div class="page-hero-container">
-            <h1 class="page-hero-title">How It Works</h1>
-            <p class="page-hero-subtitle">Get started in just 3 simple steps</p>
+
+    <!-- Hero -->
+    <section class="hiw-hero">
+        <div class="hiw-hero-grid"></div>
+        <div class="hiw-hero-blob"></div>
+        <div class="hiw-container">
+            <div class="hiw-hero-content">
+                <span class="hiw-label">How It Works</span>
+                <h1 class="hiw-title">
+                    Get supported by your
+                    <br>
+                    fans in 3 simple steps
+                </h1>
+                <p class="hiw-subtitle">From signup to your first rupee — here's how MeroCoffee works.</p>
+            </div>
         </div>
     </section>
-    <!-- Step-by-Step Section -->
-    <section class="steps-section">
-        <div class="steps-container">
-            <div class="steps-list">
+
+    <!-- Steps -->
+    <section class="hiw-steps">
+        <div class="hiw-container">
+            <div class="hiw-timeline">
                 <!-- Step 1 -->
-                <div class="step-row">
-                    <div class="step-order-2 step-order-1-md">
-                        <div class="step-content-card">
-                            <div class="step-header">
-                                <div class="step-number-badge step-number-badge-1">1</div>
-                                <h2 class="step-heading">Create Your Page</h2>
+                <div class="hiw-step" style="--step-index: 0">
+                    <div class="hiw-step-left">
+                        <div class="hiw-step-circle">
+                            <span class="hiw-step-num">01</span>
+                        </div>
+                        <div class="hiw-step-line"></div>
+                    </div>
+                    <div class="hiw-step-card">
+                        <div class="hiw-step-card-inner">
+                            <div class="hiw-step-icon-wrap">
+                                <svg width="24"
+                                     height="24"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <path d="M12 20h9" />
+                                    <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                                </svg>
                             </div>
-                            <p class="step-text">
-                                Sign up with your email in just 2 minutes. Fill in your profile details, add a bio, and set
-                                your coffee price. Your page will be live instantly on merocoffee.com/yourname.
+                            <h2 class="hiw-step-title">Create Your Page</h2>
+                            <p class="hiw-step-text">
+                                Sign up with your email in just 2 minutes. Fill in your profile, add a bio, and set your coffee price. Your page is live instantly at merocoffee.com/yourname.
                             </p>
-                            <ul class="step-features-list">
-                                <li class="step-feature-item">
-                                    <span class="step-feature-icon">✓</span>
-                                    <span>Free account setup</span>
+                            <ul class="hiw-step-list">
+                                <li>
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Free account setup
                                 </li>
-                                <li class="step-feature-item">
-                                    <span class="step-feature-icon">✓</span>
-                                    <span>Personalized profile page</span>
+                                <li>
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Personalized profile page
                                 </li>
-                                <li class="step-feature-item">
-                                    <span class="step-feature-icon">✓</span>
-                                    <span>Customizable coffee price</span>
+                                <li>
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Customizable coffee price
                                 </li>
                             </ul>
                         </div>
                     </div>
-                    <div class="step-order-1 step-order-2-md">
-                        <div class="step-visual-card">
-                            <div class="step-visual-content">
-                                <div class="step-visual-icon">📝</div>
-                                <p class="step-visual-text">Profile creation form</p>
-                            </div>
-                        </div>
-                    </div>
                 </div>
+
                 <!-- Step 2 -->
-                <div class="step-row">
-                    <div>
-                        <div class="step-visual-card">
-                            <div class="step-visual-content">
-                                <div class="step-visual-icon">📱</div>
-                                <p class="step-visual-text">Share your unique link</p>
-                            </div>
+                <div class="hiw-step" style="--step-index: 1">
+                    <div class="hiw-step-left">
+                        <div class="hiw-step-circle">
+                            <span class="hiw-step-num">02</span>
                         </div>
+                        <div class="hiw-step-line"></div>
                     </div>
-                    <div>
-                        <div class="step-content-card">
-                            <div class="step-header">
-                                <div class="step-number-badge step-number-badge-2">2</div>
-                                <h2 class="step-heading">Share Your Link</h2>
+                    <div class="hiw-step-card">
+                        <div class="hiw-step-card-inner">
+                            <div class="hiw-step-icon-wrap">
+                                <svg width="24"
+                                     height="24"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><line x1="8.59" y1="13.51" x2="15.42" y2="17.49" /><line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
+                                </svg>
                             </div>
-                            <p class="step-text">
-                                Copy your unique MeroCoffee link and share it on your social media, blog, YouTube, or
-                                anywhere your fans are. Every click counts!
+                            <h2 class="hiw-step-title">Share Your Link</h2>
+                            <p class="hiw-step-text">
+                                Copy your unique MeroCoffee link and share it on your social media, blog, YouTube, or anywhere your fans are. Every share counts.
                             </p>
-                            <ul class="step-features-list">
-                                <li class="step-feature-item">
-                                    <span class="step-feature-icon">✓</span>
-                                    <span>Share on Instagram, TikTok, Twitter</span>
+                            <ul class="hiw-step-list">
+                                <li>
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Share on Instagram, TikTok, Twitter
                                 </li>
-                                <li class="step-feature-item">
-                                    <span class="step-feature-icon">✓</span>
-                                    <span>Add to YouTube channel</span>
+                                <li>
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Add to your YouTube channel
                                 </li>
-                                <li class="step-feature-item">
-                                    <span class="step-feature-icon">✓</span>
-                                    <span>Track clicks and visits</span>
+                                <li>
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Track clicks and visits
                                 </li>
                             </ul>
                         </div>
                     </div>
                 </div>
+
                 <!-- Step 3 -->
-                <div class="step-row">
-                    <div class="step-order-2 step-order-1-md">
-                        <div class="step-content-card">
-                            <div class="step-header">
-                                <div class="step-number-badge step-number-badge-3">3</div>
-                                <h2 class="step-heading">Get Paid Instantly</h2>
-                            </div>
-                            <p class="step-text">
-                                Your fans can support you instantly using eSewa or Khalti. No payment gateway setup needed.
-                                Money goes directly to your wallet.
-                            </p>
-                            <ul class="step-features-list">
-                                <li class="step-feature-item">
-                                    <span class="step-feature-icon">✓</span>
-                                    <span>Instant payments via eSewa & Khalti</span>
-                                </li>
-                                <li class="step-feature-item">
-                                    <span class="step-feature-icon">✓</span>
-                                    <span>First Rs. 5,000/month free</span>
-                                </li>
-                                <li class="step-feature-item">
-                                    <span class="step-feature-icon">✓</span>
-                                    <span>Easy withdrawal to your bank</span>
-                                </li>
-                            </ul>
+                <div class="hiw-step" style="--step-index: 2">
+                    <div class="hiw-step-left">
+                        <div class="hiw-step-circle">
+                            <span class="hiw-step-num">03</span>
                         </div>
                     </div>
-                    <div class="step-order-1 step-order-2-md">
-                        <div class="step-visual-card">
-                            <div class="step-visual-content">
-                                <div class="step-visual-icon">💰</div>
-                                <p class="step-visual-text">Payment received notification</p>
+                    <div class="hiw-step-card">
+                        <div class="hiw-step-card-inner">
+                            <div class="hiw-step-icon-wrap">
+                                <svg width="24"
+                                     height="24"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="1.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+                                </svg>
                             </div>
+                            <h2 class="hiw-step-title">Get Paid Instantly</h2>
+                            <p class="hiw-step-text">
+                                Your fans can support you instantly using eSewa or Khalti. No payment gateway setup needed. Money goes directly to your wallet.
+                            </p>
+                            <ul class="hiw-step-list">
+                                <li>
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Instant payments via eSewa &amp; Khalti
+                                </li>
+                                <li>
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    First Rs. 5,000/month free
+                                </li>
+                                <li>
+                                    <svg width="14"
+                                         height="14"
+                                         viewBox="0 0 24 24"
+                                         fill="none"
+                                         stroke="currentColor"
+                                         stroke-width="2.5"
+                                         stroke-linecap="round"
+                                         stroke-linejoin="round">
+                                        <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                    Easy withdrawal to your bank
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- FAQ Section -->
-    <section class="faq-section">
-        <div class="faq-container">
-            <h2 class="faq-title">Frequently Asked Questions</h2>
-            <p class="faq-subtitle">Everything you need to know</p>
-            <div class="faq-list">
-                <details class="faq-item">
-                    <summary class="faq-question">
-                        How long does it take to get paid?
-                        <span class="faq-icon">▼</span>
+
+    <!-- FAQ -->
+    <section class="hiw-faq">
+        <div class="hiw-container">
+            <div class="hiw-faq-header">
+                <span class="hiw-label">FAQ</span>
+                <h2 class="hiw-title">
+                    Frequently asked
+                    <br>
+                    questions
+                </h2>
+            </div>
+            <div class="hiw-faq-list">
+                <details class="hiw-faq-item">
+                    <summary class="hiw-faq-q">
+                        <span>How long does it take to get paid?</span>
+                        <svg class="hiw-faq-chevron"
+                             width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
                     </summary>
-                    <p class="faq-answer">
-                        Payments are processed instantly through eSewa and Khalti. You can withdraw to your bank account
-                        within 24 hours.
+                    <p class="hiw-faq-a">
+                        Payments are processed instantly through eSewa and Khalti. You can withdraw to your bank account within 24 hours.
                     </p>
                 </details>
-                <details class="faq-item">
-                    <summary class="faq-question">
-                        What are the fees?
-                        <span class="faq-icon">▼</span>
+                <details class="hiw-faq-item">
+                    <summary class="hiw-faq-q">
+                        <span>What are the fees?</span>
+                        <svg class="hiw-faq-chevron"
+                             width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
                     </summary>
-                    <p class="faq-answer">
-                        First Rs. 5,000 earned every month is completely free. After that, we charge 3-5% transaction fee.
-                        No hidden charges!
+                    <p class="hiw-faq-a">
+                        First Rs. 5,000 earned every month is completely free. After that, we charge 3-5% transaction fee. No hidden charges.
                     </p>
                 </details>
-                <details class="faq-item">
-                    <summary class="faq-question">
-                        Can I change my coffee price?
-                        <span class="faq-icon">▼</span>
+                <details class="hiw-faq-item">
+                    <summary class="hiw-faq-q">
+                        <span>Can I change my coffee price?</span>
+                        <svg class="hiw-faq-chevron"
+                             width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
                     </summary>
-                    <p class="faq-answer">
-                        Yes! You can change your coffee price anytime from your dashboard. Your fans will see the updated
-                        price.
+                    <p class="hiw-faq-a">
+                        Yes. You can change your coffee price anytime from your dashboard. Your fans will always see the updated price.
                     </p>
                 </details>
-                <details class="faq-item">
-                    <summary class="faq-question">
-                        Is my data secure?
-                        <span class="faq-icon">▼</span>
+                <details class="hiw-faq-item">
+                    <summary class="hiw-faq-q">
+                        <span>Is my data secure?</span>
+                        <svg class="hiw-faq-chevron"
+                             width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
                     </summary>
-                    <p class="faq-answer">
-                        Absolutely! We use industry-standard encryption and partner with trusted payment gateways. Your data
-                        is always secure.
+                    <p class="hiw-faq-a">
+                        Absolutely. We use industry-standard encryption and partner with trusted payment gateways. Your data is always secure.
                     </p>
                 </details>
-                <details class="faq-item">
-                    <summary class="faq-question">
-                        Can I delete my account?
-                        <span class="faq-icon">▼</span>
+                <details class="hiw-faq-item">
+                    <summary class="hiw-faq-q">
+                        <span>Can I delete my account?</span>
+                        <svg class="hiw-faq-chevron"
+                             width="16"
+                             height="16"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <polyline points="6 9 12 15 18 9" />
+                        </svg>
                     </summary>
-                    <p class="faq-answer">
-                        Yes, you can delete your account anytime. We'll process any pending payments first, then remove all
-                        your data.
+                    <p class="hiw-faq-a">
+                        Yes. You can delete your account anytime. We process any pending payments first, then remove all your data.
                     </p>
                 </details>
             </div>
         </div>
     </section>
-    <!-- CTA Section -->
-    <section class="page-cta-section">
-        <div class="page-cta-container">
-            <h2 class="page-cta-title">Ready to Get Started?</h2>
-            <p class="page-cta-subtitle">Create your page in 2 minutes and start receiving support today</p>
-            <a href="{% url 'accounts:signup' %}" class="page-cta-button">Create Your Free Page</a>
+
+    <!-- CTA -->
+    <section class="hiw-cta">
+        <div class="hiw-cta-glow"></div>
+        <div class="hiw-cta-inner">
+            <h2 class="hiw-cta-title">Ready to get started?</h2>
+            <p class="hiw-cta-desc">Create your page in 2 minutes and start receiving support today.</p>
+            <a href="{% url 'accounts:signup' %}" class="hiw-cta-btn">
+                Create Your Free Page
+                <svg width="16"
+                     height="16"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
+                </svg>
+            </a>
         </div>
     </section>
+
 {% endblock content %}
+
+{% block extra_js %}
+    <script>
+(function() {
+  var steps = document.querySelectorAll('.hiw-step, .hiw-faq-item');
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('hiw-revealed');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+  steps.forEach(function(el) { observer.observe(el); });
+})();
+    </script>
+{% endblock extra_js %}

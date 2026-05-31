@@ -1,0 +1,419 @@
+/* ========================================
+   How It Works Page
+   ======================================== */
+
+/* --- Shared --- */
+.hiw-container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1.25rem;
+  position: relative;
+  z-index: 2;
+}
+
+@media (min-width: 768px) {
+  .hiw-container { padding: 0 2rem; }
+}
+
+.hiw-label {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(239 68 68);
+  margin-bottom: 0.75rem;
+}
+
+/* --- Hero --- */
+.hiw-hero {
+  position: relative;
+  background: rgb(15 23 42);
+  padding: 4rem 0 3rem;
+  overflow: hidden;
+}
+
+.hiw-hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgb(51 65 85 / 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(51 65 85 / 0.1) 1px, transparent 1px);
+  background-size: 4rem 4rem;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 30%, black, transparent 70%);
+  pointer-events: none;
+}
+
+.hiw-hero-blob {
+  position: absolute;
+  top: -40%;
+  right: -10%;
+  width: 40rem;
+  height: 40rem;
+  background: radial-gradient(circle, rgb(239 68 68 / 0.06), transparent 60%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.hiw-hero-content {
+  max-width: 36rem;
+}
+
+.hiw-hero .hiw-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+  color: rgb(241 245 249);
+  margin: 0 0 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .hiw-hero .hiw-title { font-size: 3.25rem; }
+}
+
+.hiw-subtitle {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgb(148 163 184);
+  margin: 0;
+  max-width: 32rem;
+}
+
+/* --- Steps --- */
+.hiw-steps {
+  padding: 4rem 0 5rem;
+  background: rgb(15 23 42);
+}
+
+.hiw-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  max-width: 48rem;
+  margin: 0 auto;
+}
+
+.hiw-step {
+  display: flex;
+  gap: 1.5rem;
+  opacity: 0;
+  transform: translateY(1.5rem);
+  transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hiw-step.hiw-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: calc(var(--step-index, 0) * 0.15s);
+}
+
+.hiw-step-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 3.5rem;
+}
+
+.hiw-step-circle {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgb(239 68 68 / 0.15), rgb(249 115 22 / 0.15));
+  border: 1.5px solid rgb(239 68 68 / 0.25);
+  flex-shrink: 0;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hiw-step.hiw-revealed .hiw-step-circle {
+  background: linear-gradient(135deg, rgb(220 38 38), rgb(234 88 12));
+  border-color: transparent;
+  box-shadow: 0 4px 16px rgb(239 68 68 / 0.3);
+}
+
+.hiw-step-num {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: rgb(239 68 68);
+  letter-spacing: 0.02em;
+  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hiw-step.hiw-revealed .hiw-step-num {
+  color: white;
+}
+
+.hiw-step-line {
+  width: 1.5px;
+  flex: 1;
+  background: linear-gradient(to bottom, rgb(239 68 68 / 0.2), rgb(239 68 68 / 0.05));
+  min-height: 2rem;
+  margin: 0.5rem 0;
+}
+
+.hiw-step:last-child .hiw-step-line {
+  display: none;
+}
+
+.hiw-step-card {
+  flex: 1;
+  min-width: 0;
+  margin-bottom: 2.5rem;
+}
+
+.hiw-step:last-child .hiw-step-card {
+  margin-bottom: 0;
+}
+
+.hiw-step-card-inner {
+  background: rgb(30 41 59 / 0.25);
+  border: 1px solid rgb(51 65 85 / 0.35);
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hiw-step.hiw-revealed .hiw-step-card-inner {
+  border-color: rgb(51 65 85 / 0.5);
+  background: rgb(30 41 59 / 0.35);
+}
+
+.hiw-step-card-inner:hover {
+  border-color: rgb(239 68 68 / 0.25);
+  background: rgb(30 41 59 / 0.45);
+  box-shadow: 0 8px 32px rgb(0 0 0 / 0.15);
+  transform: translateY(-2px);
+}
+
+.hiw-step-icon-wrap {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(239 68 68 / 0.1);
+  color: rgb(239 68 68);
+  margin-bottom: 1rem;
+}
+
+.hiw-step-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: rgb(241 245 249);
+  margin: 0 0 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hiw-step-text {
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: rgb(148 163 184);
+  margin: 0 0 1.25rem;
+}
+
+.hiw-step-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.hiw-step-list li {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  color: rgb(203 213 225);
+}
+
+.hiw-step-list li svg {
+  flex-shrink: 0;
+  color: rgb(239 68 68 / 0.8);
+}
+
+/* --- FAQ --- */
+.hiw-faq {
+  padding: 5rem 0;
+  background: rgb(15 23 42);
+  border-top: 1px solid rgb(51 65 85 / 0.2);
+}
+
+.hiw-faq-header {
+  margin-bottom: 2.5rem;
+}
+
+.hiw-faq-header .hiw-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: rgb(241 245 249);
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .hiw-faq-header .hiw-title { font-size: 2.5rem; }
+}
+
+.hiw-faq-list {
+  max-width: 48rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.hiw-faq-item {
+  border: 1px solid rgb(51 65 85 / 0.35);
+  border-radius: 1rem;
+  background: rgb(30 41 59 / 0.2);
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  transform: translateY(1rem);
+}
+
+.hiw-faq-item.hiw-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.hiw-faq-item[open] {
+  border-color: rgb(239 68 68 / 0.2);
+  background: rgb(30 41 59 / 0.35);
+}
+
+.hiw-faq-q {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1.125rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: rgb(241 245 249);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.hiw-faq-q::-webkit-details-marker {
+  display: none;
+}
+
+.hiw-faq-q:hover {
+  color: white;
+}
+
+.hiw-faq-chevron {
+  flex-shrink: 0;
+  color: rgb(100 116 139);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hiw-faq-item[open] .hiw-faq-chevron {
+  transform: rotate(180deg);
+  color: rgb(239 68 68);
+}
+
+.hiw-faq-a {
+  padding: 0 1.25rem 1.125rem;
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: rgb(148 163 184);
+}
+
+/* --- CTA --- */
+.hiw-cta {
+  position: relative;
+  padding: 5rem 1.25rem;
+  text-align: center;
+  background: rgb(15 23 42);
+  overflow: hidden;
+}
+
+.hiw-cta-glow {
+  position: absolute;
+  top: -40%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 48rem;
+  height: 48rem;
+  background: radial-gradient(circle, rgb(239 68 68 / 0.06), transparent 60%);
+  pointer-events: none;
+}
+
+.hiw-cta-inner {
+  max-width: 36rem;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.hiw-cta-title {
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  color: rgb(241 245 249);
+  margin: 0 0 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .hiw-cta-title { font-size: 2.5rem; }
+}
+
+.hiw-cta-desc {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgb(148 163 184);
+  margin: 0 0 2rem;
+}
+
+.hiw-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  background: linear-gradient(135deg, rgb(220 38 38), rgb(234 88 12));
+  color: white;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 20px rgb(239 68 68 / 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hiw-cta-btn:hover {
+  box-shadow: 0 8px 28px rgb(239 68 68 / 0.3);
+  transform: translateY(-2px);
+}
+
+.hiw-cta-btn:active {
+  transform: scale(0.98);
+}
+
+/* --- Responsive --- */
+@media (max-width: 767px) {
+  .hiw-hero { padding: 3rem 0 2rem; }
+  .hiw-hero .hiw-title { font-size: 2rem; }
+  .hiw-steps { padding: 2.5rem 0 3rem; }
+  .hiw-step { gap: 1rem; }
+  .hiw-step-left { width: 2.5rem; }
+  .hiw-step-circle { width: 2.5rem; height: 2.5rem; }
+  .hiw-step-num { font-size: 0.6875rem; }
+  .hiw-step-card-inner { padding: 1.25rem; }
+  .hiw-step-title { font-size: 1.125rem; }
+  .hiw-faq { padding: 3rem 0; }
+  .hiw-cta { padding: 3rem 1.25rem; }
+  .hiw-cta-title { font-size: 1.625rem; }
+}
