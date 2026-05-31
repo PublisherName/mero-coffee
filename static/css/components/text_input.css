@@ -1,5 +1,9 @@
 /* Text Input Component Styles */
 
+.text-input-field {
+    box-sizing: border-box;
+}
+
 .text-input-container {
     display: flex;
     flex-direction: column;

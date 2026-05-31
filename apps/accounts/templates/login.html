@@ -9,22 +9,37 @@
 {% endblock extra_css %}
 {% block content %}
     <div class="auth-page-container">
-        <div class="max-w-md w-full">
+        <div class="auth-bg-grid"></div>
+        <div class="auth-bg-glow"></div>
+        <div class="max-w-md w-full auth-card-wrapper">
             <div class="auth-card">
-                <div class="auth-icon-container">
-                    <span class="text-4xl">✨</span>
+                <div class="auth-icon-container auth-card-stagger" style="animation-delay: 0s;">
+                    <svg width="44"
+                         height="44"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="1.75"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+                        <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+                        <line x1="6" y1="1" x2="6" y2="4" />
+                        <line x1="10" y1="1" x2="10" y2="4" />
+                        <line x1="14" y1="1" x2="14" y2="4" />
+                    </svg>
                 </div>
-                <h2 class="auth-title">Welcome Back</h2>
-                <p class="auth-subtitle">Login to your MeroCoffee account</p>
-                {% include "includes/form_error.html" %}
-                <form method="post" class="auth-form" novalidate>
+                <h2 class="auth-title auth-card-stagger" style="animation-delay: 0.08s">Welcome Back</h2>
+                <p class="auth-subtitle auth-card-stagger" style="animation-delay: 0.14s">Login to your MeroCoffee account</p>
+                <div class="auth-card-stagger" style="animation-delay: 0.2s">{% include "includes/form_error.html" %}</div>
+                <form method="post" class="auth-form auth-card-stagger" style="animation-delay: 0.26s" novalidate>
                     {% csrf_token %}
                     {% component "text_input" field=form.username %} {% endcomponent %}
                     {% component "password_input" field=form.password %} {% endcomponent %}
                     {% component "turnstile_input" field=form.turnstile %} {% endcomponent %}
                     <button type="submit" class="auth-btn-primary">Login</button>
                 </form>
-                <div class="auth-footer-links">
+                <div class="auth-footer-links auth-card-stagger" style="animation-delay: 0.34s">
                     <p class="auth-text-small">
                         Don't have an account? <a href="{% url 'accounts:signup' %}" class="auth-link-bold">Sign up</a>
                     </p>
