@@ -1,105 +1,109 @@
 {% if kyc_status == 'not_filed' %}
-    <div class="kyc-status-alert kyc-status-info flex items-start gap-4 p-5 bg-info/5 border border-info/20 rounded-2xl">
-        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-info/10 flex items-center justify-center text-info">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 fill="none"
+    <div class="kyc-alert kyc-alert--info">
+        <div class="kyc-alert-icon kyc-alert-icon--info">
+            <svg width="20"
+                 height="20"
                  viewBox="0 0 24 24"
-                 stroke-width="2"
+                 fill="none"
                  stroke="currentColor"
-                 class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
             </svg>
         </div>
-        <div class="flex-1">
-            <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-1">Action Required</h3>
-            <p class="text-info text-sm leading-relaxed mb-3">
-                Please complete your identity verification to unlock
-                full account features and higher limits.
-            </p>
-            <a href="{% url 'dashboard:kyc' %}"
-               class="inline-flex items-center text-info hover:text-info font-semibold text-sm transition-colors group">
-                Start KYC Verification
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
+        <div class="kyc-alert-body">
+            <div class="kyc-alert-content">
+                <h3 class="kyc-alert-title">Action Required</h3>
+                <p class="kyc-alert-desc">Complete your identity verification to unlock withdrawals and higher limits.</p>
+            </div>
+            <a href="{% url 'dashboard:kyc' %}" class="kyc-alert-btn kyc-alert-btn--info">
+                Start KYC
+                <svg width="14"
+                     height="14"
                      viewBox="0 0 24 24"
-                     stroke-width="2"
+                     fill="none"
                      stroke="currentColor"
-                     class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                 </svg>
             </a>
         </div>
     </div>
 {% elif kyc_status == 'pending' %}
-    <div class="kyc-status-alert kyc-status-pending flex items-start gap-4 p-5 bg-warning/5 border border-warning/20 rounded-2xl">
-        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center text-amber">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 fill="none"
+    <div class="kyc-alert kyc-alert--pending">
+        <div class="kyc-alert-icon kyc-alert-icon--pending">
+            <svg width="20"
+                 height="20"
                  viewBox="0 0 24 24"
-                 stroke-width="2"
+                 fill="none"
                  stroke="currentColor"
-                 class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
             </svg>
         </div>
-        <div class="flex-1">
-            <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-1">Verification Processing</h3>
-            <p class="text-warning text-sm leading-relaxed mb-3">
-                Your KYC submission is currently being reviewed by our
-                team. This usually takes 24-48 hours.
-            </p>
-            <a href="{% url 'dashboard:kyc' %}"
-               class="inline-flex items-center text-amber hover:text-warning font-semibold text-sm transition-colors group">
-                Check Detailed Status
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
+        <div class="kyc-alert-body">
+            <div class="kyc-alert-content">
+                <h3 class="kyc-alert-title">Under Review</h3>
+                <p class="kyc-alert-desc">Your verification is being processed. We typically respond within 24–48 hours.</p>
+            </div>
+            <a href="{% url 'dashboard:kyc' %}" class="kyc-alert-btn kyc-alert-btn--pending">
+                Check Status
+                <svg width="14"
+                     height="14"
                      viewBox="0 0 24 24"
-                     stroke-width="2"
+                     fill="none"
                      stroke="currentColor"
-                     class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                 </svg>
             </a>
         </div>
     </div>
 {% elif kyc_status == 'rejected' %}
-    <div class="kyc-status-alert kyc-status-rejected flex items-start gap-4 p-5 bg-accent/5 border border-accent/20 rounded-2xl">
-        <div class="flex-shrink-0 w-10 h-10 rounded-xl bg-accent/10 flex items-center justify-center text-accent-muted">
-            <svg xmlns="http://www.w3.org/2000/svg"
-                 fill="none"
+    <div class="kyc-alert kyc-alert--rejected">
+        <div class="kyc-alert-icon kyc-alert-icon--rejected">
+            <svg width="20"
+                 height="20"
                  viewBox="0 0 24 24"
-                 stroke-width="2"
+                 fill="none"
                  stroke="currentColor"
-                 class="w-6 h-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+                 stroke-width="2"
+                 stroke-linecap="round"
+                 stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
             </svg>
         </div>
-        <div class="flex-1">
-            <h3 class="text-white font-bold text-sm uppercase tracking-wider mb-1">Verification Failed</h3>
-            <p class="text-danger-light text-sm leading-relaxed mb-2">
-                Unfortunately, your verification was rejected. Please
-                review the details and resubmit.
-            </p>
-
-            {% if kyc and kyc.rejection_reason %}
-                <div class="bg-accent/10 p-3 rounded-lg mb-3 border border-accent/10">
-                    <p class="text-accent-muted text-xs font-semibold uppercase tracking-tighter mb-1">Rejection Reason:</p>
-                    <p class="text-danger-muted text-sm italic">"{{ kyc.rejection_reason }}"</p>
-                </div>
-            {% endif %}
-
-            <a href="{% url 'dashboard:kyc' %}"
-               class="inline-flex items-center text-accent-muted hover:text-danger-muted font-semibold text-sm transition-colors group">
-                Resubmit KYC Details
-                <svg xmlns="http://www.w3.org/2000/svg"
-                     fill="none"
+        <div class="kyc-alert-body">
+            <div class="kyc-alert-content">
+                <h3 class="kyc-alert-title">Verification Failed</h3>
+                <p class="kyc-alert-desc">We couldn't verify your identity. Please review the reason and resubmit.</p>
+            </div>
+            <a href="{% url 'dashboard:kyc' %}" class="kyc-alert-btn kyc-alert-btn--rejected">
+                Resubmit
+                <svg width="14"
+                     height="14"
                      viewBox="0 0 24 24"
-                     stroke-width="2"
+                     fill="none"
                      stroke="currentColor"
-                     class="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                     stroke-width="2.5"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                 </svg>
             </a>
         </div>
+        {% if kyc and kyc.rejection_reason %}
+            <div class="kyc-alert-reason">
+                <p class="kyc-alert-reason-label">Rejection reason</p>
+                <p class="kyc-alert-reason-text">{{ kyc.rejection_reason }}</p>
+            </div>
+        {% endif %}
     </div>
 {% endif %}

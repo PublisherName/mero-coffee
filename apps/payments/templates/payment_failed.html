@@ -7,49 +7,59 @@
     Payment Failed - MeroCoffee
 {% endblock title %}
 {% block content %}
-    <div class="failed-container">
-        <div class="failed-card">
-            <div class="failed-emoji">😔</div>
-            <h1 class="failed-title">Payment Failed</h1>
-            <p class="failed-message">
+    <div class="payment-status-page">
+        <div class="payment-status-card">
+            <div class="payment-status-icon payment-status-icon--failed">
+                <svg width="28"
+                     height="28"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" /><line x1="15" y1="9" x2="9" y2="15" /><line x1="9" y1="9" x2="15" y2="15" />
+                </svg>
+            </div>
+            <h1 class="payment-status-title payment-status-title--failed">Payment Failed</h1>
+            <p class="payment-status-message">
                 {% if error %}
                     {{ error }}
                 {% else %}
                     Unfortunately, your payment could not be processed. Please try again.
                 {% endif %}
             </p>
+
             {% if transaction %}
-                <div class="transaction-details-card">
-                    <h2 class="transaction-details-title">Transaction Details</h2>
-                    <div class="transaction-details-list">
-                        <div class="transaction-detail-row">
-                            <span class="transaction-detail-label">Transaction ID:</span>
-                            <span class="transaction-id">{{ transaction.transaction_id }}</span>
-                        </div>
-                        <div class="transaction-detail-row">
-                            <span class="transaction-detail-label">Amount:</span>
-                            <span class="transaction-amount-value">Rs. {{ transaction.amount }}</span>
-                        </div>
-                        <div class="transaction-detail-row">
-                            <span class="transaction-detail-label">Creator:</span>
-                            <span class="transaction-detail-value">{{ transaction.creator.display_name }}</span>
-                        </div>
-                        <div class="transaction-detail-row">
-                            <span class="transaction-detail-label">Status:</span>
-                            <span class="transaction-detail-value">{{ transaction.payment_status|title }}</span>
-                        </div>
+                <div class="payment-status-details">
+                    <div class="payment-detail-row">
+                        <span class="payment-detail-label">Transaction ID</span>
+                        <span class="payment-detail-value payment-detail-value--mono">{{ transaction.transaction_id }}</span>
+                    </div>
+                    <div class="payment-detail-row">
+                        <span class="payment-detail-label">Amount</span>
+                        <span class="payment-detail-value payment-detail-value--amount">Rs. {{ transaction.amount }}</span>
+                    </div>
+                    <div class="payment-detail-row">
+                        <span class="payment-detail-label">Creator</span>
+                        <span class="payment-detail-value">{{ transaction.creator.display_name }}</span>
+                    </div>
+                    <div class="payment-detail-row">
+                        <span class="payment-detail-label">Status</span>
+                        <span class="payment-detail-value payment-detail-value--status">{{ transaction.payment_status|title }}</span>
                     </div>
                 </div>
             {% endif %}
-            <div class="failed-actions">
+
+            <div class="payment-status-actions">
                 {% if transaction %}
-                    <a href="{% url 'payments:checkout' transaction.transaction_id %}" class="btn-retry-payment">Try Again</a>
+                    <a href="{% url 'payments:checkout' transaction.transaction_id %}"
+                       class="payment-btn payment-btn--primary">Try Again</a>
                 {% endif %}
-                <a href="{% url 'creators:creators_list' %}" class="btn-browse-creators">Browse Creators</a>
+                <a href="{% url 'creators:creators_list' %}" class="payment-btn payment-btn--ghost">Browse Creators</a>
             </div>
-            <div class="help-section">
-                <p class="help-text">If you continue to experience issues, please contact our support team.</p>
-            </div>
+
+            <p class="payment-status-help">If you continue to experience issues, please contact our support team.</p>
         </div>
     </div>
 {% endblock content %}

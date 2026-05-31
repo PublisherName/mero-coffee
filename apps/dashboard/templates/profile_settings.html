@@ -8,33 +8,178 @@
     Page Settings - MeroCoffee
 {% endblock title %}
 {% block main_content %}
-    <div class="dashboard-header">
-        <h1 class="dashboard-title">Profile Details</h1>
-        <p class="dashboard-subtitle">Manage your creator profile and public information</p>
+    <div class="dash-header">
+        <h1 class="dash-title">Profile Details</h1>
+        <p class="dash-subtitle">Manage your creator profile and public information</p>
     </div>
 
     {% include "includes/kyc_status_alert.html" %}
     {% include "includes/form_error.html" %}
 
-    <div class="profile-settings-container">
-        <form method="post" novalidate class="profile-settings-form">
+    <div class="profile-settings-layout">
+        <form method="post" novalidate class="profile-form">
             {% csrf_token %}
-            {% component "text_input" field=form.display_name %} {% endcomponent %}
-            {% component "email_input" field=form.email %} {% endcomponent %}
-            {% component "textarea_input" field=form.bio rows=5 %} {% endcomponent %}
-            {% component "text_input" field=form.avatar_url %} {% endcomponent %}
-            {% component "number_input" field=form.coffee_price prefix="Rs." %} {% endcomponent %}
-            <button type="submit" class="form-submit-btn">Save Changes</button>
+
+            <!-- Avatar + Identity Section -->
+            <div class="profile-section">
+                <div class="profile-section-head">
+                    <div class="profile-section-icon">
+                        <svg width="18"
+                             height="18"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                            <circle cx="12" cy="7" r="4" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="profile-section-title">Identity</h2>
+                        <p class="profile-section-desc">Your public display name and email address.</p>
+                    </div>
+                </div>
+                <div class="profile-avatar-preview">
+                    <div class="profile-avatar-placeholder">{{ user.display_name|default:user.username|first|upper }}</div>
+                    <div class="profile-avatar-info">
+                        <p class="profile-avatar-name">{{ user.display_name|default:user.username }}</p>
+                        <p class="profile-avatar-hint">Avatar loads from the URL below</p>
+                    </div>
+                </div>
+                <div class="profile-field-group">
+                    {% component "text_input" field=form.display_name %} {% endcomponent %}
+                    {% component "email_input" field=form.email %} {% endcomponent %}
+                    {% component "text_input" field=form.avatar_url %} {% endcomponent %}
+                </div>
+            </div>
+
+            <!-- Bio Section -->
+            <div class="profile-section">
+                <div class="profile-section-head">
+                    <div class="profile-section-icon">
+                        <svg width="18"
+                             height="18"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                            <polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="profile-section-title">About You</h2>
+                        <p class="profile-section-desc">Tell supporters who you are and what you create.</p>
+                    </div>
+                </div>
+                {% component "textarea_input" field=form.bio rows=5 %} {% endcomponent %}
+            </div>
+
+            <!-- Support Settings -->
+            <div class="profile-section">
+                <div class="profile-section-head">
+                    <div class="profile-section-icon">
+                        <svg width="18"
+                             height="18"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="2"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <line x1="12" y1="1" x2="12" y2="23" />
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                        </svg>
+                    </div>
+                    <div>
+                        <h2 class="profile-section-title">Support Settings</h2>
+                        <p class="profile-section-desc">Set the amount per supporter contribution.</p>
+                    </div>
+                </div>
+                {% component "number_input" field=form.coffee_price prefix="Rs." %} {% endcomponent %}
+            </div>
+
+            <!-- Submit -->
+            <div class="profile-form-footer">
+                <button type="submit" class="dash-btn dash-btn--primary">
+                    <svg width="16"
+                         height="16"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2.5"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                    Save Changes
+                </button>
+                <a href="{% url 'creators:profile' user.username %}" class="profile-form-preview">
+                    <svg width="16"
+                         height="16"
+                         viewBox="0 0 24 24"
+                         fill="none"
+                         stroke="currentColor"
+                         stroke-width="2"
+                         stroke-linecap="round"
+                         stroke-linejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    Preview Page
+                </a>
+            </div>
         </form>
 
-        <div class="profile-settings-info">
-            <h3 class="profile-settings-info-title">💡 Profile Tips</h3>
-            <ul class="profile-settings-info-list">
-                <li>Use a clear, professional display name that represents your brand</li>
-                <li>Write a compelling bio that explains what you create and why supporters should back you</li>
-                <li>Set a reasonable coffee price - you can always adjust it later</li>
-                <li>Use a high-quality avatar image URL for better recognition</li>
+        <aside class="profile-tips">
+            <div class="profile-tips-head">
+                <svg width="18"
+                     height="18"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" /><line x1="12" y1="16" x2="12" y2="12" /><line x1="12" y1="8" x2="12.01" y2="8" />
+                </svg>
+                <h3 class="profile-tips-title">Tips</h3>
+            </div>
+            <ul class="profile-tips-list">
+                <li>
+                    <span class="profile-tips-bullet"></span>
+                    <span>Use a clear, professional display name that represents your brand.</span>
+                </li>
+                <li>
+                    <span class="profile-tips-bullet"></span>
+                    <span>Write a compelling bio that explains what you create and why supporters should back you.</span>
+                </li>
+                <li>
+                    <span class="profile-tips-bullet"></span>
+                    <span>Set a reasonable coffee price — you can always adjust it later.</span>
+                </li>
+                <li>
+                    <span class="profile-tips-bullet"></span>
+                    <span>Use a high-quality avatar image URL for better recognition.</span>
+                </li>
             </ul>
-        </div>
+            <div class="profile-tips-footer">
+                <svg width="14"
+                     height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+                <span>Your profile is visible to everyone.</span>
+            </div>
+        </aside>
     </div>
 {% endblock main_content %}

@@ -8,36 +8,74 @@
     Withdrawal - MeroCoffee
 {% endblock title %}
 {% block main_content %}
-    <div class="dashboard-header">
-        <h1 class="dashboard-title">Withdrawal</h1>
-        <p class="dashboard-subtitle">Request a withdrawal from your available earnings</p>
+    <div class="dash-header">
+        <h1 class="dash-title">Withdrawal</h1>
+        <p class="dash-subtitle">Request a withdrawal from your available earnings</p>
     </div>
     {% include "includes/kyc_status_alert.html" %}
 
     <!-- Balance Overview -->
     <div class="balance-overview-grid">
-        <div class="balance-card available-balance-card">
-            <div class="balance-card-content">
+        <div class="balance-card balance-card--available">
+            <div class="balance-card-icon balance-card-icon--available">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+            </div>
+            <div class="balance-card-body">
                 <div class="balance-card-label">Available Balance</div>
                 <div class="balance-card-amount">Rs. {{ available_balance }}</div>
                 <div class="balance-card-hint">Ready for withdrawal</div>
             </div>
         </div>
-        <div class="balance-card pending-balance-card">
-            <div class="balance-card-content">
+        <div class="balance-card balance-card--pending">
+            <div class="balance-card-icon balance-card-icon--pending">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" />
+                </svg>
+            </div>
+            <div class="balance-card-body">
                 <div class="balance-card-label">Pending Balance</div>
                 <div class="balance-card-amount">Rs. {{ pending_balance }}</div>
                 <div class="balance-card-hint">In processing</div>
             </div>
         </div>
-        <div class="balance-card withdrawn-balance-card">
-            <div class="balance-card-content">
+        <div class="balance-card balance-card--withdrawn">
+            <div class="balance-card-icon balance-card-icon--withdrawn">
+                <svg width="20"
+                     height="20"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" /><polyline points="17 6 23 6 23 12" />
+                </svg>
+            </div>
+            <div class="balance-card-body">
                 <div class="balance-card-label">Withdrawn Balance</div>
                 <div class="balance-card-amount">Rs. {{ withdrawn_balance }}</div>
                 <div class="balance-card-hint">Total withdrawn</div>
             </div>
         </div>
     </div>
+
     {% include "includes/form_error.html" %}
     {% if show_withdrawal_form %}
         <!-- Withdrawal Form -->
@@ -52,11 +90,10 @@
                 </div>
                 <div>{% component "select_button" field=form.payment_method %} {% endcomponent %}</div>
                 <div>{% component "text_input" field=form.account_details %} {% endcomponent %}</div>
-                <button type="submit" class="form-submit-btn">Request Withdrawal</button>
+                <button type="submit" class="dash-btn dash-btn--primary" style="align-self: flex-start;">Request Withdrawal</button>
             </form>
         </div>
     {% else %}
-        <!-- Insufficient Balance Message -->
         <div class="withdrawal-form-card">
             <h2 class="withdrawal-form-title">Request Withdrawal</h2>
             <p class="withdrawal-subtitle-message">
@@ -64,42 +101,45 @@
             </p>
         </div>
     {% endif %}
-    <!-- Previous Withdrawals Table -->
+
+    <!-- Previous Withdrawals -->
     <div class="withdrawal-history-card">
         <h2 class="withdrawal-history-title">Previous Withdrawals</h2>
         {% if withdrawals %}
-            <table class="withdrawal-table">
-                <thead class="withdrawal-table-head">
-                    <tr>
-                        <th class="withdrawal-table-header-cell">Date</th>
-                        <th class="withdrawal-table-header-cell">Amount</th>
-                        <th class="withdrawal-table-header-cell">Payment Method</th>
-                        <th class="withdrawal-table-header-cell">Remarks</th>
-                        <th class="withdrawal-table-header-cell">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="withdrawal-table-body">
-                    {% for withdrawal in withdrawals %}
-                        <tr class="withdrawal-table-row">
-                            <td class="withdrawal-table-cell withdrawal-date-cell">{{ withdrawal.requested_at|date:"M d, Y" }}</td>
-                            <td class="withdrawal-table-cell withdrawal-amount-cell">Rs. {{ withdrawal.amount }}</td>
-                            <td class="withdrawal-table-cell withdrawal-method-cell">{{ withdrawal.get_payment_method_display }}</td>
-                            <td class="withdrawal-table-cell">{{ withdrawal.remarks|truncatechars:30|default:"-" }}</td>
-                            <td class="withdrawal-table-cell">
-                                {% if withdrawal.status == 'pending' %}
-                                    <span class="withdrawal-status-badge withdrawal-status-pending">Pending</span>
-                                {% elif withdrawal.status == 'processed' %}
-                                    <span class="withdrawal-status-badge withdrawal-status-completed">Processed</span>
-                                {% elif withdrawal.status == 'rejected' %}
-                                    <span class="withdrawal-status-badge withdrawal-status-rejected">Rejected</span>
-                                {% else %}
-                                    <span class="withdrawal-status-badge withdrawal-status-default">{{ withdrawal.get_status_display }}</span>
-                                {% endif %}
-                            </td>
+            <div class="dash-table-wrap">
+                <table class="dash-table">
+                    <thead>
+                        <tr>
+                            <th class="dash-th">Date</th>
+                            <th class="dash-th">Amount</th>
+                            <th class="dash-th">Payment Method</th>
+                            <th class="dash-th">Remarks</th>
+                            <th class="dash-th">Status</th>
                         </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {% for withdrawal in withdrawals %}
+                            <tr class="dash-tr">
+                                <td class="dash-td dash-td--muted">{{ withdrawal.requested_at|date:"M d, Y" }}</td>
+                                <td class="dash-td dash-td--amount">Rs. {{ withdrawal.amount }}</td>
+                                <td class="dash-td">{{ withdrawal.get_payment_method_display }}</td>
+                                <td class="dash-td dash-td--muted">{{ withdrawal.remarks|truncatechars:30|default:"-" }}</td>
+                                <td class="dash-td">
+                                    {% if withdrawal.status == 'pending' %}
+                                        <span class="dash-badge dash-badge--pending">Pending</span>
+                                    {% elif withdrawal.status == 'processed' %}
+                                        <span class="dash-badge dash-badge--completed">Processed</span>
+                                    {% elif withdrawal.status == 'rejected' %}
+                                        <span class="dash-badge dash-badge--rejected">Rejected</span>
+                                    {% else %}
+                                        <span class="dash-badge dash-badge--default">{{ withdrawal.get_status_display }}</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         {% else %}
             <p class="withdrawal-empty-state">No previous withdrawals.</p>
         {% endif %}

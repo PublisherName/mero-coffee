@@ -8,99 +8,138 @@
 {% endblock title %}
 {% block content %}
     <div class="checkout-container">
+
         <!-- Progress Steps -->
         <div class="checkout-progress">
             <div class="checkout-progress-wrapper">
-                <div class="checkout-progress-step">
-                    <div class="progress-step-inactive">1</div>
-                    <span>Details</span>
+                <div class="progress-step">
+                    <span class="progress-circle progress-circle--done">
+                        <svg width="14"
+                             height="14"
+                             viewBox="0 0 24 24"
+                             fill="none"
+                             stroke="currentColor"
+                             stroke-width="3"
+                             stroke-linecap="round"
+                             stroke-linejoin="round">
+                            <polyline points="20 6 9 17 4 12" />
+                        </svg>
+                    </span>
+                    <span class="progress-label progress-label--done">Details</span>
                 </div>
-                <div class="progress-divider"></div>
-                <div class="checkout-progress-step-active">
-                    <div class="progress-step-active">2</div>
-                    <span class="font-bold">Checkout</span>
+                <span class="progress-line"></span>
+                <div class="progress-step">
+                    <span class="progress-circle progress-circle--active">2</span>
+                    <span class="progress-label progress-label--active">Checkout</span>
                 </div>
-                <div class="progress-divider"></div>
-                <div class="checkout-progress-step">
-                    <div class="progress-step-inactive">3</div>
-                    <span>Done</span>
+                <span class="progress-line"></span>
+                <div class="progress-step">
+                    <span class="progress-circle">3</span>
+                    <span class="progress-label">Done</span>
                 </div>
             </div>
         </div>
-        <div class="checkout-card" style="--brand-color: {{ gateway.brand_color }}">
+
+        <!-- Checkout Card -->
+        <div class="checkout-card">
+            <div class="checkout-card-bg"></div>
+
             <!-- Header -->
             <div class="checkout-header">
-                <div class="checkout-avatar">{{ transaction.creator.display_name|slice:":1" }}</div>
-                <h2 class="checkout-title">Support {{ transaction.creator.display_name }}</h2>
-                <p class="checkout-subtitle">Complete your contribution</p>
+                <div class="checkout-avatar">{{ transaction.creator.display_name|first|upper }}</div>
+                <h1 class="checkout-title">Support {{ transaction.creator.display_name }}</h1>
+                <p class="checkout-subtitle">Complete your contribution below</p>
             </div>
-            <div class="checkout-content">
-                <!-- Transaction Details Card -->
-                <div class="transaction-details">
-                    <div class="transaction-row">
-                        <span class="transaction-label">Amount</span>
-                        <span class="transaction-amount">Rs. {{ transaction.amount }}</span>
+
+            <div class="checkout-body">
+                <!-- Transaction Summary -->
+                <div class="checkout-summary">
+                    <div class="checkout-summary-row">
+                        <span class="checkout-summary-label">Amount</span>
+                        <span class="checkout-amount">Rs. {{ transaction.amount }}</span>
                     </div>
-                    <div class="transaction-row">
-                        <span class="transaction-label">Payment Method</span>
-                        <div class="payment-method-badge">
+                    <div class="checkout-summary-row">
+                        <span class="checkout-summary-label">Payment</span>
+                        <span class="checkout-payment-badge" style="--brand-color: {{ gateway.brand_color }}">
                             {% if gateway.icon %}
                                 <img src="{{ gateway.icon.url }}"
                                      alt="{{ gateway.name }}"
-                                     class="payment-method-icon"
-                                     width="24"
-                                     height="24">
-                            {% else %}
-                                <span class="text-xl" style="color: var(--brand-color);">●</span>
+                                     class="checkout-payment-icon"
+                                     width="20"
+                                     height="20">
                             {% endif %}
-                            <span class="payment-method-name">{{ gateway.name }}</span>
-                        </div>
+                            <span class="checkout-payment-dot" style="background: {{ gateway.brand_color }};"></span>
+                            {{ gateway.name }}
+                        </span>
                     </div>
-                    <div class="transaction-row">
-                        <span class="transaction-label">Supporter</span>
-                        <span class="transaction-value">{{ transaction.supporter_name }}</span>
+                    <div class="checkout-summary-row">
+                        <span class="checkout-summary-label">Supporter</span>
+                        <span class="checkout-summary-value">{{ transaction.supporter_name }}</span>
                     </div>
                 </div>
+
+                <!-- Message -->
                 {% if transaction.message %}
-                    <div class="message-section">
-                        <label class="message-label">Your Message</label>
-                        <div class="message-box">
-                            <span class="message-quote-open">"</span>
-                            <p class="message-text">{{ transaction.message }}</p>
-                            <span class="message-quote-close">"</span>
+                    <div class="checkout-message-section">
+                        <span class="checkout-message-label">Message</span>
+                        <div class="checkout-message-box">
+                            <svg class="checkout-message-quote"
+                                 width="20"
+                                 height="20"
+                                 viewBox="0 0 24 24"
+                                 fill="currentColor"
+                                 stroke="none">
+                                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                            </svg>
+                            <p class="checkout-message-text">{{ transaction.message }}</p>
                         </div>
                     </div>
                 {% endif %}
-                <!-- Action Buttons -->
+
+                <!-- Actions -->
                 <div class="checkout-actions">
                     <form action="{{ payment_context.payment_url }}" method="{{ payment_context.method|default:'POST' }}">
                         {% for key, value in payment_context.payment_params.items %}
                             <input type="hidden" name="{{ key }}" value="{{ value }}">
                         {% endfor %}
                         <button type="submit"
-                                class="btn-payment"
-                                style="background: linear-gradient(to right, {{ gateway.brand_color }}, {{ gateway.brand_color }}dd);
-                                       box-shadow: 0 10px 15px -3px {{ gateway.brand_color }}4d">
-                            <div class="btn-payment-overlay"></div>
-                            <span class="btn-payment-content">
+                                class="checkout-pay-btn"
+                                style="background: linear-gradient(135deg, {{ gateway.brand_color }}, {{ gateway.brand_color }}cc);
+                                       box-shadow: 0 4px 16px {{ gateway.brand_color }}33">
+                            <span class="checkout-pay-label">
                                 Pay with {{ gateway.name }}
-                                <svg class="btn-payment-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                                <svg class="checkout-pay-arrow"
+                                     width="16"
+                                     height="16"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2.5"
+                                     stroke-linecap="round"
+                                     stroke-linejoin="round">
+                                    <line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" />
                                 </svg>
                             </span>
                         </button>
                     </form>
-                    <div class="checkout-cancel">
-                        <a href="{% url 'creators:profile' transaction.creator.user.username %}" class="link-subtle">Cancel
-                        and return to profile</a>
-                    </div>
+                    <a href="{% url 'creators:profile' transaction.creator.user.username %}" class="checkout-cancel-link">
+                        Cancel and return to profile
+                    </a>
                 </div>
             </div>
+
             <!-- Security Footer -->
-            <div class="security-footer">
-                <svg class="security-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z">
-                    </path>
+            <div class="checkout-security">
+                <svg width="14"
+                     height="14"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2"
+                     stroke-linecap="round"
+                     stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                 </svg>
                 Secure Payment Processing
             </div>

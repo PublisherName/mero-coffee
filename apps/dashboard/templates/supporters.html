@@ -7,37 +7,38 @@
     Supporters - MeroCoffee
 {% endblock title %}
 {% block main_content %}
-
-    <div class="supporters-header">
-        <h1 class="supporters-title">Supporters</h1>
-        <p class="supporters-subtitle">See who has supported you recently.</p>
-        {% include "includes/kyc_status_alert.html" %}
-        <div class="supporters-table-card">
-            <h2 class="supporters-table-title">Support List</h2>
-            {% if supporters %}
-                <table class="supporters-table">
-                    <thead class="supporters-table-head">
+    <div class="dash-header">
+        <h1 class="dash-title">Supporters</h1>
+        <p class="dash-subtitle">See who has supported you recently.</p>
+    </div>
+    {% include "includes/kyc_status_alert.html" %}
+    <div class="dash-card">
+        <h2 class="dash-card-title">Support List</h2>
+        {% if supporters %}
+            <div class="dash-table-wrap">
+                <table class="dash-table">
+                    <thead>
                         <tr>
-                            <th class="supporters-table-header-cell">Name</th>
-                            <th class="supporters-table-header-cell">Amount</th>
-                            <th class="supporters-table-header-cell">Message</th>
-                            <th class="supporters-table-header-cell">Date</th>
+                            <th class="dash-th">Name</th>
+                            <th class="dash-th">Amount</th>
+                            <th class="dash-th">Message</th>
+                            <th class="dash-th">Date</th>
                         </tr>
                     </thead>
-                    <tbody class="supporters-table-body">
+                    <tbody>
                         {% for supporter in supporters %}
-                            <tr class="supporters-table-row">
-                                <td class="supporters-table-cell supporter-name-cell">{{ supporter.supporter_name }}</td>
-                                <td class="supporters-table-cell supporter-amount-cell">Rs. {{ supporter.amount }}</td>
-                                <td class="supporters-table-cell supporter-message-cell">{{ supporter.message|default:"—" }}</td>
-                                <td class="supporters-table-cell supporter-date-cell">{{ supporter.created_at|date:"M d, Y" }}</td>
+                            <tr class="dash-tr">
+                                <td class="dash-td dash-td--name">{{ supporter.supporter_name }}</td>
+                                <td class="dash-td dash-td--amount">Rs. {{ supporter.amount }}</td>
+                                <td class="dash-td dash-td--muted">{{ supporter.message|default:"—" }}</td>
+                                <td class="dash-td dash-td--muted">{{ supporter.created_at|date:"M d, Y" }}</td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-            {% else %}
-                <div class="supporters-empty">You have no supporters yet.</div>
-            {% endif %}
-        </div>
+            </div>
+        {% else %}
+            <p class="dash-empty">You have no supporters yet.</p>
+        {% endif %}
     </div>
 {% endblock main_content %}
