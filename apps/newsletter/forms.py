@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django import forms
 
 from root.forms.pydantic_mixins import PydanticValidationMixin
@@ -12,7 +14,7 @@ class NewsletterSubscribeForm(PydanticValidationMixin, forms.ModelForm):
     class Meta:
         model = NewsletterSubscriber
         fields = ("email",)
-        widgets = {
+        widgets: ClassVar[dict] = {
             "email": forms.EmailInput(
                 attrs={
                     "placeholder": "Enter your email",

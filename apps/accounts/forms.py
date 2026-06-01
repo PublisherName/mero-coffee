@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import AdminUserCreationForm, UserChangeForm
@@ -75,7 +77,7 @@ class SignUpForm(PydanticValidationMixin, forms.ModelForm):
     class Meta:
         model = User
         fields = ("username", "email", "first_name", "last_name")
-        widgets = {
+        widgets: ClassVar[dict] = {
             "username": forms.TextInput(
                 attrs={
                     "placeholder": "Username",
@@ -177,7 +179,7 @@ class KYCForm(PydanticValidationMixin, forms.ModelForm):
             "back_image",
             "selfie_with_document",
         )
-        widgets = {
+        widgets: ClassVar[dict] = {
             "full_name": forms.TextInput(
                 attrs={"placeholder": "Full Name"},
             ),

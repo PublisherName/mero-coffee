@@ -1,3 +1,4 @@
+from typing import ClassVar
 from unittest.mock import patch
 
 from django.conf import settings
@@ -116,7 +117,7 @@ class VerifyEmailViewTests(BaseTestCase):
         self.assertIn("verified successfully", str(messages[0]))
         self.assertRedirects(response, self.login_url)
 
-    TEST_MIDDLEWARE = list(settings.MIDDLEWARE)
+    TEST_MIDDLEWARE: ClassVar[list] = list(settings.MIDDLEWARE)
     TEST_MIDDLEWARE.insert(-1, "django_ratelimit.middleware.RatelimitMiddleware")
 
     @override_settings(

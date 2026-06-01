@@ -63,7 +63,7 @@ class EmailService:
 
                 email.send()
                 return True
-        except Exception:
+        except Exception:  # noqa: BLE001
             return False
 
     @classmethod
@@ -108,21 +108,21 @@ class EmailService:
             # Check subject template
             try:
                 Template(template.subject).render(Context({}))
-            except Exception as e:
-                errors.append(f"Subject template error: {str(e)}")
+            except Exception as e:  # noqa: BLE001
+                errors.append(f"Subject template error: {e!s}")
 
             # Check HTML template
             try:
                 Template(template.html_content).render(Context({}))
-            except Exception as e:
-                errors.append(f"HTML template error: {str(e)}")
+            except Exception as e:  # noqa: BLE001
+                errors.append(f"HTML template error: {e!s}")
 
             # Check text template if provided
             if template.text_content:
                 try:
                     Template(template.text_content).render(Context({}))
-                except Exception as e:
-                    warnings.append(f"Text template error: {str(e)}")
+                except Exception as e:  # noqa: BLE001
+                    warnings.append(f"Text template error: {e!s}")
 
             # Check for required variables
             variables = template.get_context_variables()

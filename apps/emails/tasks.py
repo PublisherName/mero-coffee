@@ -32,6 +32,6 @@ def send_email_task(
         logger.info(f"Email sent to {recipient_list} ({len(attachments or [])} attachments)")
         return True
 
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         logger.error(f"Email task failed: {exc}")
         raise self.retry(exc=exc, countdown=60)

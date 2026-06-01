@@ -1,6 +1,6 @@
 import logging
 import uuid
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
 import django.db.transaction as db_tx
 from django.conf import settings
@@ -87,15 +87,14 @@ class PayPalStrategy(PaymentStrategy):
         except PayPalOrderFetchError:
             raise
         except Exception as e:
-            logger.error(
-                f"Unexpected error fetching PayPal order {token}: {str(e)}",
-                exc_info=True,
+            logger.exception(
+                f"Unexpected error fetching PayPal order {token}",
                 extra={"token": token},
             )
-            raise PayPalOrderFetchError(f"Order retrieval error: {str(e)}") from e
+            raise PayPalOrderFetchError(f"Order retrieval error: {e!s}") from e
 
     @staticmethod
-    def _extract_transaction_id(order) -> Optional[str]:
+    def _extract_transaction_id(order) -> str | None:
         if (
             hasattr(order, "purchase_units")
             and order.purchase_units
@@ -135,7 +134,7 @@ class PayPalStrategy(PaymentStrategy):
         return transaction
 
     @staticmethod
-    def _extract_capture_details(capture_result) -> Tuple[Optional[str], Optional[str]]:
+    def _extract_capture_details(capture_result) -> tuple[str | None, str | None]:
         capture_id = None
         captured_amount = None
 
@@ -162,8 +161,8 @@ class PayPalStrategy(PaymentStrategy):
     def _create_payment_log(
         transaction: SupportTransaction,
         status: str,
-        request_payload: Dict[str, Any],
-        response_payload: Dict[str, Any],
+        request_payload: dict[str, Any],
+        response_payload: dict[str, Any],
     ) -> PaymentLog:
         return PaymentLog.objects.create(
             transaction=transaction,
@@ -190,9 +189,8 @@ class PayPalStrategy(PaymentStrategy):
                 },
             )
         except Exception:
-            logger.error(
+            logger.exception(
                 f"Failed to send success email for transaction {transaction.transaction_id}",
-                exc_info=True,
                 extra={"transaction_id": transaction.transaction_id},
             )
 
@@ -284,7 +282,7 @@ class PayPalStrategy(PaymentStrategy):
         order,
         transaction: SupportTransaction,
         gateway: PaymentGateway,
-    ) -> Tuple[str, Dict[str, Any]]:
+    ) -> tuple[str, dict[str, Any]]:
         if transaction.payment_status == SupportTransactionStatus.COMPLETED:
             logger.info(
                 f"Transaction {transaction.transaction_id} already completed, skipping capture",
@@ -358,15 +356,14 @@ class PayPalStrategy(PaymentStrategy):
                         },
                     }
 
-            logger.error(
-                f"Unexpected error during payment capture for token {token}: {str(e)}",
-                exc_info=True,
+            logger.exception(
+                f"Unexpected error during payment capture for token {token}",
                 extra={"token": token, "transaction_id": transaction.transaction_id},
             )
-            raise PayPalCaptureError(f"Capture error: {str(e)}") from e
+            raise PayPalCaptureError(f"Capture error: {e!s}") from e
 
     @classmethod
-    def get_payment_context(cls, transaction: SupportTransaction, request=None) -> Dict[str, Any]:
+    def get_payment_context(cls, transaction: SupportTransaction, request=None) -> dict[str, Any]:
         try:
             gateway = PaymentGateway.objects.get(slug=PaymentMethods.PAYPAL)
         except PaymentGateway.DoesNotExist:
@@ -475,9 +472,8 @@ class PayPalStrategy(PaymentStrategy):
                 "transaction": transaction,
             }
         except Exception as e:
-            logger.error(
+            logger.exception(
                 f"Unexpected error creating PayPal order for tx {transaction.transaction_id}",
-                exc_info=True,
                 extra={"transaction_id": transaction.transaction_id},
             )
 
@@ -497,7 +493,7 @@ class PayPalStrategy(PaymentStrategy):
             }
 
     @staticmethod
-    def handle_success(token: str) -> Tuple[str, Dict[str, Any]]:
+    def handle_success(token: str) -> tuple[str, dict[str, Any]]:
         try:
             gateway = PaymentGateway.objects.get(slug=PaymentMethods.PAYPAL)
         except PaymentGateway.DoesNotExist:
@@ -514,23 +510,20 @@ class PayPalStrategy(PaymentStrategy):
                 return PayPalStrategy._capture_payment(client, token, order, transaction, gateway)
 
         except PayPalOrderFetchError as e:
-            logger.error(f"Order fetch error for token {token}: {str(e)}", extra={"token": token})
+            logger.error(f"Order fetch error for token {token}: {e!s}", extra={"token": token})
             return "payment_failed.html", {"error": "Failed to retrieve order details"}
 
         except PayPalTransactionNotFoundError as e:
-            logger.error(
-                f"Transaction not found for token {token}: {str(e)}", extra={"token": token}
-            )
+            logger.error(f"Transaction not found for token {token}: {e!s}", extra={"token": token})
             return "payment_failed.html", {"error": "No pending transaction found"}
 
         except PayPalCaptureError as e:
-            logger.error(f"Capture error for token {token}: {str(e)}", extra={"token": token})
+            logger.error(f"Capture error for token {token}: {e!s}", extra={"token": token})
             return "payment_failed.html", {"error": "Payment capture failed"}
 
-        except Exception as e:
-            logger.error(
-                f"Unexpected error in handle_success for token {token}: {str(e)}",
-                exc_info=True,
+        except Exception:
+            logger.exception(
+                f"Unexpected error in handle_success for token {token}",
                 extra={"token": token},
             )
             return "payment_failed.html", {
@@ -538,7 +531,7 @@ class PayPalStrategy(PaymentStrategy):
             }
 
     @staticmethod
-    def handle_cancel(token: str) -> Tuple[str, Dict[str, Any]]:
+    def handle_cancel(token: str) -> tuple[str, dict[str, Any]]:
         context = {"error": "Payment was cancelled"}
 
         try:
@@ -561,13 +554,12 @@ class PayPalStrategy(PaymentStrategy):
 
         except (PayPalOrderFetchError, PayPalTransactionNotFoundError) as e:
             logger.warning(
-                f"Error in handle_cancel for token {token}: {str(e)}", extra={"token": token}
+                f"Error in handle_cancel for token {token}: {e!s}", extra={"token": token}
             )
 
-        except Exception as e:
-            logger.error(
-                f"Unexpected error in handle_cancel for token {token}: {str(e)}",
-                exc_info=True,
+        except Exception:
+            logger.exception(
+                f"Unexpected error in handle_cancel for token {token}",
                 extra={"token": token},
             )
 

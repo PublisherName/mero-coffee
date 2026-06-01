@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django.db import models
 
 from .enums import (
@@ -53,7 +55,7 @@ class SupportTransaction(models.Model):
         return f"{self.supporter_name} -> {self.creator} - Rs.{self.amount}"
 
     class Meta:
-        indexes = [
+        indexes: ClassVar[list] = [
             models.Index(fields=["payment_status", "created_at"]),
             models.Index(fields=["payment_status", "supporter_name"]),
             models.Index(fields=["creator", "payment_status"]),

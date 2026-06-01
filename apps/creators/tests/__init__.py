@@ -4,8 +4,8 @@ from .test_profile import ProfileViewTests
 from .test_profile_settings import ProfileSettingsViewTests
 
 __all__ = [
-    "CreatorsListViewTests",
     "CreatorProfileManagerTests",
-    "ProfileViewTests",
+    "CreatorsListViewTests",
     "ProfileSettingsViewTests",
+    "ProfileViewTests",
 ]

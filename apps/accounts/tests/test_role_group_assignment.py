@@ -47,7 +47,7 @@ class RoleGroupAssignmentTests(TestCase):
 
         self.assertTrue(user.groups.filter(name="creator").exists())
         self.assertEqual(user.groups.count(), 1)
-        self.assertEqual(list(user.groups.all())[0].name, "creator")
+        self.assertEqual(next(iter(user.groups.all())).name, "creator")
 
     def test_supporter_role_gets_supporter_group(self):
         """Test that a user with supporter role gets the supporter group."""
@@ -57,7 +57,7 @@ class RoleGroupAssignmentTests(TestCase):
 
         self.assertTrue(user.groups.filter(name="supporter").exists())
         self.assertEqual(user.groups.count(), 1)
-        self.assertEqual(list(user.groups.all())[0].name, "supporter")
+        self.assertEqual(next(iter(user.groups.all())).name, "supporter")
 
     def test_manager_role_gets_manager_group(self):
         """Test that a user with manager role gets the manager group."""
@@ -67,7 +67,7 @@ class RoleGroupAssignmentTests(TestCase):
 
         self.assertTrue(user.groups.filter(name="manager").exists())
         self.assertEqual(user.groups.count(), 1)
-        self.assertEqual(list(user.groups.all())[0].name, "manager")
+        self.assertEqual(next(iter(user.groups.all())).name, "manager")
 
     def test_admin_role_gets_admin_group(self):
         """Test that a user with admin role gets the admin group."""
@@ -77,7 +77,7 @@ class RoleGroupAssignmentTests(TestCase):
 
         self.assertTrue(user.groups.filter(name="admin").exists())
         self.assertEqual(user.groups.count(), 1)
-        self.assertEqual(list(user.groups.all())[0].name, "admin")
+        self.assertEqual(next(iter(user.groups.all())).name, "admin")
 
     def test_super_admin_role_gets_super_admin_group(self):
         """Test that a user with super_admin role gets the super_admin group."""
@@ -87,7 +87,7 @@ class RoleGroupAssignmentTests(TestCase):
 
         self.assertTrue(user.groups.filter(name="super_admin").exists())
         self.assertEqual(user.groups.count(), 1)
-        self.assertEqual(list(user.groups.all())[0].name, "super_admin")
+        self.assertEqual(next(iter(user.groups.all())).name, "super_admin")
 
     def test_merchant_role_gets_merchant_group(self):
         """Test that a user with merchant role gets the merchant group."""
@@ -97,7 +97,7 @@ class RoleGroupAssignmentTests(TestCase):
 
         self.assertTrue(user.groups.filter(name="merchant").exists())
         self.assertEqual(user.groups.count(), 1)
-        self.assertEqual(list(user.groups.all())[0].name, "merchant")
+        self.assertEqual(next(iter(user.groups.all())).name, "merchant")
 
     def test_support_role_gets_support_group(self):
         """Test that a user with support role gets the support group."""
@@ -107,7 +107,7 @@ class RoleGroupAssignmentTests(TestCase):
 
         self.assertTrue(user.groups.filter(name="support").exists())
         self.assertEqual(user.groups.count(), 1)
-        self.assertEqual(list(user.groups.all())[0].name, "support")
+        self.assertEqual(next(iter(user.groups.all())).name, "support")
 
     def test_role_change_updates_group(self):
         """Test that changing a user's role updates their group assignment."""

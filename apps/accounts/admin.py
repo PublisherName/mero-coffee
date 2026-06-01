@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseAdmin
 from django.db import transaction
@@ -185,7 +187,7 @@ class KYCAdmin(admin.ModelAdmin):
         "id_type",
         "id_number",
     )
-    autocomplete_fields = ["country", "state", "city"]
+    autocomplete_fields: ClassVar[list[str]] = ["country", "state", "city"]
     fieldsets = (
         (
             "Personal Details",
@@ -216,7 +218,7 @@ class KYCAdmin(admin.ModelAdmin):
         ("Status", {"fields": ("status", "rejection_reason")}),
         ("Timestamps", {"fields": ("created_at", "updated_at")}),
     )
-    actions = ["approve_kyc", "reject_kyc"]
+    actions: ClassVar[list[str]] = ["approve_kyc", "reject_kyc"]
 
     def get_queryset(self, request):
         """Exclude staff accounts from KYC list."""

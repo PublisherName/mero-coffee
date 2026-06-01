@@ -4,7 +4,7 @@ import hmac
 import json
 import logging
 import uuid
-from typing import Any, Dict, Optional, Tuple
+from typing import Any
 
 import requests
 from django.conf import settings
@@ -35,7 +35,7 @@ class EsewaStrategy(PaymentStrategy):
     SIGNED_FIELDS = "total_amount,transaction_uuid,product_code"
 
     @staticmethod
-    def _get_gateway() -> Optional[PaymentGateway]:
+    def _get_gateway() -> PaymentGateway | None:
         try:
             return PaymentGateway.objects.get(slug=EsewaStrategy.GATEWAY_SLUG)
         except PaymentGateway.DoesNotExist:
@@ -116,8 +116,8 @@ class EsewaStrategy(PaymentStrategy):
                     + reverse("dashboard:dashboard"),
                 },
             )
-        except Exception as e:
-            logger.error(f"Failed to send success email: {e}", exc_info=True)
+        except Exception:
+            logger.exception("Failed to send success email")
 
     def verify_signature(
         self,
@@ -164,7 +164,7 @@ class EsewaStrategy(PaymentStrategy):
     @staticmethod
     def verify_payment(
         transaction: SupportTransaction,
-    ) -> Tuple[Optional[dict], Optional[str]]:
+    ) -> tuple[dict | None, str | None]:
         gateway = EsewaStrategy._get_gateway()
         if not gateway:
             return None, "Payment gateway not configured"
@@ -212,16 +212,14 @@ class EsewaStrategy(PaymentStrategy):
             error_msg = "Payment verification timed out"
             error_detail = error_msg
         except requests.RequestException as e:
-            logger.error(
-                f"Request error verifying payment for {transaction.transaction_id}: {e}",
-                exc_info=True,
+            logger.exception(
+                f"Request error verifying payment for {transaction.transaction_id}",
             )
             error_msg = "Payment verification failed"
             error_detail = str(e)
         except Exception as e:
-            logger.error(
-                f"Unexpected error verifying payment for {transaction.transaction_id}: {e}",
-                exc_info=True,
+            logger.exception(
+                f"Unexpected error verifying payment for {transaction.transaction_id}",
             )
             error_msg = "An unexpected error occurred"
             error_detail = str(e)
@@ -240,8 +238,8 @@ class EsewaStrategy(PaymentStrategy):
         transaction: SupportTransaction,
         gateway: PaymentGateway,
         data: dict,
-        ref_id: Optional[str],
-    ) -> Tuple[str, dict]:
+        ref_id: str | None,
+    ) -> tuple[str, dict]:
         status = data.get("status")
         transaction_code = data.get("transaction_code")
 
@@ -332,7 +330,7 @@ class EsewaStrategy(PaymentStrategy):
         self,
         transaction: SupportTransaction,
         request=None,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         gateway = self._get_gateway()
         if not gateway:
             return {
@@ -388,7 +386,7 @@ class EsewaStrategy(PaymentStrategy):
         }
 
     @staticmethod
-    def handle_failure(encoded_data: Optional[str]) -> Tuple[str, dict]:
+    def handle_failure(encoded_data: str | None) -> tuple[str, dict]:
         if not encoded_data:
             return "payment_failed.html", {
                 "error": "Payment verification failed. Please contact support.",

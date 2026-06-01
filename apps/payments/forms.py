@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django import forms
 from django.conf import settings
 
@@ -12,8 +14,8 @@ class WithdrawalForm(PydanticValidationMixin, forms.ModelForm):
 
     class Meta:
         model = Withdrawal
-        fields = ["amount", "payment_method", "account_details"]
-        widgets = {
+        fields: ClassVar[list[str]] = ["amount", "payment_method", "account_details"]
+        widgets: ClassVar[dict] = {
             "amount": forms.NumberInput(
                 attrs={
                     "id": "amount",
@@ -46,7 +48,7 @@ class WithdrawalForm(PydanticValidationMixin, forms.ModelForm):
 
         self._available_balance = None
         self._total_earnings = None
-        self._min_withdrawal = getattr(settings, "MIN_WITHDRAWAL_AMOUNT")
+        self._min_withdrawal = settings.MIN_WITHDRAWAL_AMOUNT
 
         if self.creator_profile:
             self._available_balance = self.creator_profile.available_balance

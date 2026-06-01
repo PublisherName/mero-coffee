@@ -1,4 +1,5 @@
 import uuid
+from typing import ClassVar
 
 from django.db import models
 
@@ -11,7 +12,7 @@ class NewsletterSubscriber(models.Model):
     verified_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        ordering = ["-subscribed_at"]
+        ordering: ClassVar[list[str]] = ["-subscribed_at"]
 
     def __str__(self):
         return self.email

@@ -51,10 +51,9 @@ def checkout(request, transaction_id):
         }
         return render(request, "checkout.html", context)
 
-    except Exception as e:
-        logger.error(
-            f"Checkout error for transaction {transaction_id}: {str(e)}",
-            exc_info=True,
+    except Exception:
+        logger.exception(
+            f"Checkout error for transaction {transaction_id}",
             extra={"transaction_id": transaction_id, "gateway": gateway.slug},
         )
         messages.error(request, "An error occurred while setting up payment. Please try again.")
@@ -161,10 +160,9 @@ def paypal_success(request):
     try:
         template, context = strategy.handle_success(token)
         return render(request, template, context)
-    except Exception as e:
-        logger.error(
-            f"Unexpected error in paypal_success for token {token}: {str(e)}",
-            exc_info=True,
+    except Exception:
+        logger.exception(
+            f"Unexpected error in paypal_success for token {token}",
             extra={"token": token},
         )
         return render(
@@ -190,10 +188,9 @@ def paypal_cancel(request):
     try:
         template, context = strategy.handle_cancel(token)
         return render(request, template, context)
-    except Exception as e:
-        logger.error(
-            f"Unexpected error in paypal_cancle for token {token}: {str(e)}",
-            exc_info=True,
+    except Exception:
+        logger.exception(
+            f"Unexpected error in paypal_cancle for token {token}",
             extra={"token": token},
         )
         return render(

@@ -14,8 +14,7 @@ class CustomTestLoader(TestLoader):
             sys.path.insert(0, apps_dir_str)
 
     def loadTestsFromName(self, name, module=None):
-        if name.startswith("apps."):
-            name = name[5:]
+        name = name.removeprefix("apps.")
         return super().loadTestsFromName(name, module)
 
 

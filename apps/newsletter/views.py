@@ -42,7 +42,7 @@ def subscribe(request):
 
             return redirect("core:homepage")
         else:
-            for field, errors in form.errors.items():
+            for errors in form.errors.values():
                 for error in errors:
                     messages.error(request, f"{error}")
             return redirect("core:homepage")

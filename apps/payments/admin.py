@@ -1,4 +1,5 @@
 from time import timezone
+from typing import ClassVar
 
 from django.contrib import admin
 
@@ -17,7 +18,7 @@ from apps.payments.models import (
 class PaymentGatewayAdmin(admin.ModelAdmin):
     list_display = ("name", "slug", "is_active", "is_sandbox")
     list_filter = ("is_active", "is_sandbox")
-    prepopulated_fields = {"slug": ("name",)}
+    prepopulated_fields: ClassVar[dict] = {"slug": ("name",)}
 
 
 @admin.register(SupportTransaction)
@@ -82,7 +83,7 @@ class WithdrawalAdmin(admin.ModelAdmin):
         ),
     )
 
-    actions = ["mark_processed", "mark_rejected"]
+    actions: ClassVar[list[str]] = ["mark_processed", "mark_rejected"]
 
     @admin.action(description="Mark selected withdrawals as processed")
     def mark_processed(self, request, queryset):

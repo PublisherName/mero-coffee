@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django.contrib import admin
 
 from .models import EmailTemplate
@@ -7,10 +9,31 @@ from .models import EmailTemplate
 class EmailTemplateAdmin(admin.ModelAdmin):
     """Admin interface for EmailTemplate model"""
 
-    list_display = ["name", "template_type", "subject", "is_active", "created_at", "updated_at"]
-    list_filter = ["template_type", "is_active", "created_at", "updated_at"]
-    search_fields = ["name", "subject", "html_content", "text_content"]
-    readonly_fields = ["created_at", "updated_at", "context_variables_preview"]
+    list_display: ClassVar[list[str]] = [
+        "name",
+        "template_type",
+        "subject",
+        "is_active",
+        "created_at",
+        "updated_at",
+    ]
+    list_filter: ClassVar[list[str]] = [
+        "template_type",
+        "is_active",
+        "created_at",
+        "updated_at",
+    ]
+    search_fields: ClassVar[list[str]] = [
+        "name",
+        "subject",
+        "html_content",
+        "text_content",
+    ]
+    readonly_fields: ClassVar[list[str]] = [
+        "created_at",
+        "updated_at",
+        "context_variables_preview",
+    ]
 
     fieldsets = (
         ("Basic Information", {"fields": ("name", "template_type", "subject", "is_active")}),
@@ -33,7 +56,7 @@ class EmailTemplateAdmin(admin.ModelAdmin):
             return ", ".join(variables) if variables else "No variables found"
         return "-"
 
-    actions = ["mark_active", "mark_inactive"]
+    actions: ClassVar[list[str]] = ["mark_active", "mark_inactive"]
 
     @admin.action(description="Mark selected templates as active")
     def mark_active(self, request, queryset):

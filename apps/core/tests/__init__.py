@@ -6,8 +6,8 @@ from .test_sitemaps import (
 )
 
 __all__ = [
-    "StaticViewSitemapTestCase",
-    "RobotsTxtTestCase",
     "CreatorProfileSitemapTestCase",
+    "RobotsTxtTestCase",
     "SitemapIntegrationTestCase",
+    "StaticViewSitemapTestCase",
 ]

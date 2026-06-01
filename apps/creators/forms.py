@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django import forms
 from django.conf import settings
 
@@ -24,8 +26,8 @@ class CreatorProfileForm(PydanticValidationMixin, forms.ModelForm):
 
     class Meta:
         model = CreatorProfile
-        fields = ["display_name", "bio", "avatar_url", "coffee_price"]
-        widgets = {
+        fields: ClassVar[list[str]] = ["display_name", "bio", "avatar_url", "coffee_price"]
+        widgets: ClassVar[dict] = {
             "display_name": forms.TextInput(
                 attrs={
                     "id": "display_name",

@@ -146,14 +146,14 @@ class WithdrawalFormTests(BasePaymentsTestCase):
         """Test available balance calculation with pending and processed withdrawals"""
 
         self.create_withdrawal(
-            self.creator_profile, amount=Decimal("100"), status=WithdrawalStatus.PENDING
+            self.creator_profile, amount=Decimal(100), status=WithdrawalStatus.PENDING
         )
         self.create_withdrawal(
-            self.creator_profile, amount=Decimal("200"), status=WithdrawalStatus.PROCESSED
+            self.creator_profile, amount=Decimal(200), status=WithdrawalStatus.PROCESSED
         )
 
         form = WithdrawalForm(creator_profile=self.creator_profile)
-        self.assertEqual(form._available_balance, Decimal("200"))  # 500 - 100 -200
+        self.assertEqual(form._available_balance, Decimal(200))  # 500 - 100 -200
 
         form_data = {
             "amount": "200",

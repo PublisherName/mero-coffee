@@ -1,6 +1,6 @@
 import logging
 import uuid
-from typing import Any, Dict
+from typing import Any
 
 import django.db.transaction as db_tx
 import stripe
@@ -20,7 +20,7 @@ class StripeStrategy(PaymentStrategy):
     """All Stripe payment logic encapsulated here"""
 
     @classmethod
-    def get_payment_context(self, transaction: SupportTransaction, request=None) -> Dict[str, Any]:
+    def get_payment_context(self, transaction: SupportTransaction, request=None) -> dict[str, Any]:
         gateway = PaymentGateway.objects.get(slug="stripe")
         stripe.api_key = gateway.secret_key
 
@@ -77,9 +77,8 @@ class StripeStrategy(PaymentStrategy):
                 "method": "GET",
             }
         except stripe.error.StripeError as e:
-            logger.error(
-                f"Stripe session creation error tx id {transaction.transaction_id}: {str(e)}",
-                exc_info=True,
+            logger.exception(
+                f"Stripe session creation error tx id {transaction.transaction_id}",
             )
 
             PaymentLog.objects.create(
@@ -202,16 +201,16 @@ class StripeStrategy(PaymentStrategy):
                         "error": "Payment was not completed",
                         "transaction": transaction,
                     }
-        except stripe.error.StripeError as e:
-            logger.error(f"Stripe error for session {session_id}: {str(e)}", exc_info=True)
+        except stripe.error.StripeError:
+            logger.exception(f"Stripe error for session {session_id}")
 
             return "payment_failed.html", {
                 "error": "Payment verification failed. Please contact support."
             }
 
-        except Exception as e:
-            logger.error(
-                f"Unexpected error in handle_success {session_id}: {str(e)}", exc_info=True
+        except Exception:
+            logger.exception(
+                f"Unexpected error in handle_success {session_id}",
             )
 
             return "payment_failed.html", {
@@ -260,10 +259,10 @@ class StripeStrategy(PaymentStrategy):
 
                         context["transaction"] = transaction
 
-        except stripe.error.StripeError as e:
-            logger.error(f"Stripe error in cancel {session_id}: {str(e)}", exc_info=True)
+        except stripe.error.StripeError:
+            logger.exception(f"Stripe error in cancel {session_id}")
 
-        except Exception as e:
-            logger.error(f"Error in handle_cancel {session_id}: {str(e)}", exc_info=True)
+        except Exception:
+            logger.exception(f"Error in handle_cancel {session_id}")
 
         return "payment_failed.html", context

@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from decimal import Decimal
 
 from django.conf import settings
@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db import models
 from django.shortcuts import redirect, render
+from django.utils import timezone
 
 from apps.accounts.decorators import role_required
 from apps.accounts.forms import KYCForm
@@ -73,8 +74,9 @@ def earnings(request):
 
     total_earnings = completed_transactions.aggregate(total=models.Sum("amount"))["total"] or 0
 
-    current_month = datetime.now().month
-    current_year = datetime.now().year
+    now = timezone.now()
+    current_month = now.month
+    current_year = now.year
     monthly_earnings = (
         completed_transactions.filter(
             created_at__year=current_year, created_at__month=current_month
@@ -99,7 +101,7 @@ def earnings(request):
     chart_labels = []
     chart_data = []
     for i in range(5, -1, -1):
-        month_date = datetime.now() - timedelta(days=30 * i)
+        month_date = timezone.now() - timedelta(days=30 * i)
         month = month_date.month
         year = month_date.year
         monthly_sum = (

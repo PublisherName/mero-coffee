@@ -31,7 +31,7 @@ class StaticViewSitemap(Sitemap):
 
     def lastmod(self, obj):  # noqa: PLR6301
         """Return None as static pages don't have modification dates."""
-        return None
+        return
 
 
 class CreatorProfileSitemap(Sitemap):

@@ -49,7 +49,7 @@ class BasePaymentsTestCase(TestCase):
     def create_support_transaction(
         cls,
         creator_profile,
-        amount=Decimal("100"),
+        amount=Decimal(100),
         payment_status=SupportTransactionStatus.COMPLETED,
     ):
         txn = SupportTransaction.objects.create(
@@ -67,7 +67,7 @@ class BasePaymentsTestCase(TestCase):
     def create_withdrawal(
         cls,
         creator_profile,
-        amount=Decimal("100"),
+        amount=Decimal(100),
         status=WithdrawalStatus.PENDING,
         payment_method=PaymentMethods.BANK,
     ):

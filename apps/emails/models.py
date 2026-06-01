@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from django.db import models
 from django.db.models import TextChoices
 from django.utils.translation import gettext_lazy as _
@@ -30,8 +32,8 @@ class EmailTemplate(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ["name"]
-        indexes = [
+        ordering: ClassVar[list[str]] = ["name"]
+        indexes: ClassVar[list] = [
             models.Index(fields=["name"]),
             models.Index(fields=["template_type"]),
             models.Index(fields=["is_active"]),

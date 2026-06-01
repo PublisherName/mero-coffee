@@ -50,7 +50,7 @@ class EsewaPaymentTestCase(BasePaymentsTestCase):
         try:
             decoded = base64.b64decode(signature)
             self.assertEqual(len(decoded), 32)
-        except Exception:
+        except Exception:  # noqa: BLE001
             self.fail("Signature is not valid base64")
 
     def test_create_payment_log(self):

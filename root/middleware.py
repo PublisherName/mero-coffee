@@ -12,7 +12,7 @@ class FileRenameMiddleware:
 
     def __call__(self, request):
         if request.method in ["POST", "PUT", "PATCH"] and request.FILES:
-            for _, file_obj in request.FILES.items():
+            for file_obj in request.FILES.values():
                 ext = os.path.splitext(file_obj.name)[1]
                 file_obj.name = f"{uuid.uuid4().hex}{ext}"
         return self.get_response(request)

@@ -1,3 +1,4 @@
+from typing import ClassVar
 from unittest.mock import patch
 
 from django.conf import settings
@@ -53,7 +54,7 @@ class ResendConfirmationViewTests(BaseTestCase):
         response = self.client.post(resend_url)
         self.assertEqual(response.status_code, 404)
 
-    TEST_MIDDLEWARE = list(settings.MIDDLEWARE)
+    TEST_MIDDLEWARE: ClassVar[list] = list(settings.MIDDLEWARE)
     TEST_MIDDLEWARE.insert(-1, "django_ratelimit.middleware.RatelimitMiddleware")
 
     @override_settings(RATELIMIT_ENABLE=True, RATELIMIT_RATE="3/30m", MIDDLEWARE=TEST_MIDDLEWARE)

@@ -13,19 +13,19 @@ from .test_validate_role_change import ValidateRoleChangeTestCase
 from .test_verify_email import VerifyEmailViewTests
 
 __all__ = [
+    "ActivateEmailViewTests",
     "LoginViewTests",
     "LogoutViewTests",
-    "ResendConfirmationViewTests",
-    "ServeKYCDocumentViewTests",
-    "SignUpViewTests",
-    "VerifyEmailViewTests",
-    "ActivateEmailViewTests",
-    "UserAdminPermissionTestCase",
     "LowercaseNormalizationTests",
     "NameFieldNormalizationTests",
     "PasswordResetConfirmTests",
     "PasswordResetTests",
+    "ResendConfirmationViewTests",
     "RoleGroupAssignmentTests",
-    "ValidateRoleChangeTestCase",
+    "ServeKYCDocumentViewTests",
+    "SignUpViewTests",
+    "UserAdminPermissionTestCase",
     "UserAdminQuerysetTestCase",
+    "ValidateRoleChangeTestCase",
+    "VerifyEmailViewTests",
 ]

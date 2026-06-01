@@ -2,7 +2,7 @@ import base64
 import json
 import logging
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
+from typing import Any
 
 from apps.payments.models import PaymentGateway, SupportTransaction
 
@@ -13,7 +13,7 @@ class PaymentStrategy(ABC):
     """Abstract base class for payment strategies"""
 
     @abstractmethod
-    def get_payment_context(self, transaction: SupportTransaction, request=None) -> Dict[str, Any]:
+    def get_payment_context(self, transaction: SupportTransaction, request=None) -> dict[str, Any]:
         pass
 
     @staticmethod
@@ -32,7 +32,7 @@ class PaymentStrategy(ABC):
         return transaction, gateway, None
 
     @staticmethod
-    def base64_decode(encoded_data: Optional[str]):
+    def base64_decode(encoded_data: str | None):
         if not encoded_data:
             return None, "Invalid payment response - no data received"
 
@@ -43,4 +43,4 @@ class PaymentStrategy(ABC):
             return data, None
 
         except (base64.binascii.Error, json.JSONDecodeError, UnicodeDecodeError) as e:
-            return None, f"Invalid payment response format: {str(e)}"
+            return None, f"Invalid payment response format: {e!s}"
